@@ -20,6 +20,7 @@ const BusinessProfile = () => {
     industry: "",
     website: "",
     email: email,
+    apiKey: "",
   };
 
   const fetchProfile = async () => {
@@ -93,6 +94,9 @@ const BusinessProfile = () => {
             </Form.Item>
             <Form.Item name="website" label="Website URL">
               <Input placeholder="https://yourcompany.com" />
+            </Form.Item>
+            <Form.Item name="apiKey" label="Payman API Key">
+              <Input placeholder="*****" />
             </Form.Item>
             <Button type="primary" htmlType="submit" block>
               Save

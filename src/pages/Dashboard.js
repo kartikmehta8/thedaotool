@@ -11,7 +11,7 @@ const Dashboard = ({ user }) => {
 
   return (
     <Layout style={{ minHeight: "100vh", backgroundColor: "#141414" }}>
-      <Navbar email={user.email} />
+      <Navbar />
       <Content style={{ padding: "2rem" }}>
         {role === "business" && <BusinessDashboard />}
         {role === "contractor" && <ContractorDashboard />}
