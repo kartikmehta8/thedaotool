@@ -56,7 +56,6 @@ const BusinessDashboard = () => {
     try {
       const businessSnap = await getDoc(doc(db, "businesses", uid));
       const key = businessSnap.data()?.apiKey;
-      if (!key) toast.warning("Missing API key in business profile");
       setApiKey(key);
 
       const q = query(
