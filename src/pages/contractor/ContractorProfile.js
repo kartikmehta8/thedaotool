@@ -21,6 +21,8 @@ const ContractorProfile = () => {
     portfolio: "",
     linkedin: "",
     email: email,
+    accountNumber: "",
+    routingNumber: "",
   };
 
   const fetchProfile = async () => {
@@ -34,7 +36,6 @@ const ContractorProfile = () => {
         form.setFieldsValue(defaultFields); // initial empty values.
       }
     } catch (err) {
-      console.log(err);
       toast.error("Failed to fetch profile");
     } finally {
       setLoading(false);
@@ -50,7 +51,6 @@ const ContractorProfile = () => {
       });
       toast.success("Profile updated");
     } catch (err) {
-      console.log(err);
       toast.error("Error saving profile");
     }
   };
@@ -67,6 +67,8 @@ const ContractorProfile = () => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
+          marginTop: 50,
+          marginBottom: 50,
         }}
       >
         <Card
@@ -94,6 +96,12 @@ const ContractorProfile = () => {
             </Form.Item>
             <Form.Item name="linkedin" label="LinkedIn Profile">
               <Input placeholder="https://linkedin.com/in/yourprofile" />
+            </Form.Item>
+            <Form.Item name="accountNumber" label="Bank Account Number">
+              <Input placeholder="1234567890" />
+            </Form.Item>
+            <Form.Item name="routingNumber" label="Bank Routing Number">
+              <Input placeholder="1234567890" />
             </Form.Item>
             <Button type="primary" htmlType="submit" block>
               Save

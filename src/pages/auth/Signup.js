@@ -24,7 +24,6 @@ const Signup = () => {
         password
       );
       const userRef = doc(db, "users", result.user.uid);
-      console.log("Saving user to Firestore:", result.user.uid, role);
 
       await setDoc(userRef, { email, role });
       localStorage.setItem(

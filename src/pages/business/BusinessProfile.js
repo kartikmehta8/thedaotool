@@ -67,6 +67,8 @@ const BusinessProfile = () => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
+          marginTop: 50,
+          marginBottom: 50,
         }}
       >
         <Card

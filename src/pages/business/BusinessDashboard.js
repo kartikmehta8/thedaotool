@@ -27,6 +27,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../../firebase";
 import toast from "../../utils/toast";
+import Paymanai from "paymanai";
 
 const { Title, Text } = Typography;
 const { Option } = Select;
@@ -46,12 +47,18 @@ const BusinessDashboard = () => {
   const [viewModal, setViewModal] = useState(false);
   const [selectedContract, setSelectedContract] = useState(null);
   const [form] = Form.useForm();
+  const [apiKey, setApiKey] = useState("");
 
   const user = JSON.parse(localStorage.getItem("payman-user")) || {};
   const uid = user.uid;
 
   const fetchContracts = async () => {
     try {
+      const businessSnap = await getDoc(doc(db, "businesses", uid));
+      const key = businessSnap.data()?.apiKey;
+      if (!key) toast.warning("Missing API key in business profile");
+      setApiKey(key);
+
       const q = query(
         collection(db, "contracts"),
         where("businessId", "==", uid)
@@ -66,7 +73,10 @@ const BusinessDashboard = () => {
             const contractorRef = doc(db, "contractors", data.contractorId);
             const contractorSnap = await getDoc(contractorRef);
             if (contractorSnap.exists()) {
-              contractorInfo = contractorSnap.data();
+              contractorInfo = {
+                id: data.contractorId,
+                ...contractorSnap.data(),
+              };
             }
           }
 
@@ -131,6 +141,81 @@ const BusinessDashboard = () => {
     }
   };
 
+  const handlePayeeSetup = async () => {
+    if (!selectedContract?.contractorInfo || !apiKey) return;
+    try {
+      const payman = new Paymanai({ xPaymanAPISecret: apiKey });
+      const { name, email, accountNumber, routingNumber } =
+        selectedContract.contractorInfo;
+
+      const contractorRef = doc(
+        db,
+        "contractors",
+        selectedContract.contractorId
+      );
+      const contractorSnap = await getDoc(contractorRef);
+
+      if (contractorSnap.exists()) {
+        const contractorData = contractorSnap.data();
+
+        if (contractorData.payeeId) {
+          toast.warning("Payee already exists for this contractor.");
+          return;
+        }
+
+        const payee = await payman.payments.createPayee({
+          type: "US_ACH",
+          name,
+          accountHolderName: name,
+          accountHolderType: "individual",
+          accountNumber,
+          routingNumber,
+          accountType: "checking",
+          contactDetails: { email },
+        });
+
+        await updateDoc(contractorRef, { payeeId: payee.id });
+        toast.success(`Payee created and saved for ${name}`);
+      }
+    } catch (err) {
+      toast.error("Failed to create payee");
+    }
+  };
+
+  const handleSendPayment = async () => {
+    if (!selectedContract?.contractorInfo || !apiKey) return;
+    try {
+      const contractorSnap = await getDoc(
+        doc(db, "contractors", selectedContract.contractorId)
+      );
+
+      if (!contractorSnap.exists()) {
+        toast.error("Contractor profile not found");
+        return;
+      }
+
+      const contractorData = contractorSnap.data();
+      const payeeId = contractorData.payeeId;
+
+      if (!payeeId) {
+        toast.warning("No payee found. Please create payee first.");
+        return;
+      }
+
+      const payman = new Paymanai({ xPaymanAPISecret: apiKey });
+      await payman.payments.sendPayment({
+        amountDecimal: Number(selectedContract.amount),
+        payeeId,
+        memo: `Payment for ${selectedContract.name}`,
+        metadata: { contractId: selectedContract.id },
+      });
+
+      toast.success("Payment sent successfully");
+    } catch (err) {
+      toast.error("Failed to send payment");
+    }
+  };
+
   useEffect(() => {
     fetchContracts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -189,46 +274,6 @@ const BusinessDashboard = () => {
         ))}
       </Row>
 
-      {/* Create Contract Modal */}
-      <Modal
-        title="Create New Contract"
-        open={modalVisible}
-        onCancel={() => setModalVisible(false)}
-        footer={null}
-        closeIcon={<span style={{ color: "#fff", fontSize: "16px" }}>×</span>}
-      >
-        <Form layout="vertical" onFinish={handleCreate} form={form}>
-          <Form.Item name="name" label="Task Name" rules={[{ required: true }]}>
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="description"
-            label="Description"
-            rules={[{ required: true }]}
-          >
-            <Input.TextArea rows={3} />
-          </Form.Item>
-          <Form.Item
-            name="deadline"
-            label="Deadline"
-            rules={[{ required: true }]}
-          >
-            <DatePicker style={{ width: "100%" }} />
-          </Form.Item>
-          <Form.Item
-            name="amount"
-            label="Amount ($)"
-            rules={[{ required: true }]}
-          >
-            <Input type="number" />
-          </Form.Item>
-          <Button type="primary" htmlType="submit" block>
-            Create
-          </Button>
-        </Form>
-      </Modal>
-
-      {/* View/Edit Contract Modal */}
       <Modal
         title={selectedContract?.name}
         open={viewModal}
@@ -281,15 +326,69 @@ const BusinessDashboard = () => {
                     selectedContract.contractorId
                   )}
                 </p>
-
                 <p>
                   <strong>Work Link:</strong>{" "}
                   {selectedContract.submittedLink || "Not submitted yet"}
                 </p>
+                <Divider />
+                <Button
+                  type="dashed"
+                  onClick={handlePayeeSetup}
+                  block
+                  style={{ marginBottom: 10 }}
+                >
+                  Create Payee
+                </Button>
+                <Button type="primary" onClick={handleSendPayment} block>
+                  Send Payment
+                </Button>
               </>
             )}
           </>
         )}
+      </Modal>
+
+      <Modal
+        title="Create New Contract"
+        open={modalVisible}
+        onCancel={() => setModalVisible(false)}
+        footer={null}
+        closeIcon={<span style={{ color: "#fff", fontSize: "16px" }}>×</span>}
+      >
+        <Form layout="vertical" onFinish={handleCreate} form={form}>
+          <Form.Item name="name" label="Task Name" rules={[{ required: true }]}>
+            {" "}
+            <Input />{" "}
+          </Form.Item>
+          <Form.Item
+            name="description"
+            label="Description"
+            rules={[{ required: true }]}
+          >
+            {" "}
+            <Input.TextArea rows={3} />{" "}
+          </Form.Item>
+          <Form.Item
+            name="deadline"
+            label="Deadline"
+            rules={[{ required: true }]}
+          >
+            {" "}
+            <DatePicker style={{ width: "100%" }} />{" "}
+          </Form.Item>
+          <Form.Item
+            name="amount"
+            label="Amount ($)"
+            rules={[{ required: true }]}
+          >
+            {" "}
+            <Input type="number" />{" "}
+          </Form.Item>
+          <Button type="primary" htmlType="submit" block>
+            {" "}
+            Create{" "}
+          </Button>
+        </Form>
       </Modal>
     </div>
   );

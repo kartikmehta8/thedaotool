@@ -22,7 +22,6 @@ const Login = () => {
       const userSnap = await getDoc(userRef);
 
       if (userSnap.exists()) {
-        console.log(result.user);
         const userProfile = {
           uid: result.user.uid,
           email: result.user.email,
