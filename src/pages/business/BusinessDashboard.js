@@ -95,20 +95,26 @@ const BusinessDashboard = () => {
     }
   };
 
-  const handleCreate = async (values) => {
+  const handleCreate = async () => {
     try {
+      const values = await form.validateFields();
+
       const newContract = {
-        ...values,
-        deadline: values.deadline.format("YYYY-MM-DD"),
+        name: values.name || "",
+        description: values.description || "",
+        deadline: values.deadline?.format("YYYY-MM-DD") || "",
+        amount: Number(values.amount || 0),
         businessId: uid,
         contractorId: null,
         status: "open",
         submittedLink: "",
         createdAt: new Date().toISOString(),
       };
+
       await addDoc(collection(db, "contracts"), newContract);
       toast.success("Contract created");
       setModalVisible(false);
+      form.resetFields();
       fetchContracts();
     } catch (err) {
       toast.error("Failed to create contract");
@@ -355,38 +361,38 @@ const BusinessDashboard = () => {
         footer={null}
         closeIcon={<span style={{ color: "#fff", fontSize: "16px" }}>×</span>}
       >
-        <Form layout="vertical" onFinish={handleCreate} form={form}>
-          <Form.Item name="name" label="Task Name" rules={[{ required: true }]}>
-            {" "}
-            <Input />{" "}
+        <Form layout="vertical" form={form}>
+          <Form.Item
+            name="name"
+            label="Task Name"
+            rules={[{ required: true, message: "Please enter Task Name" }]}
+          >
+            <Input />
           </Form.Item>
           <Form.Item
             name="description"
             label="Description"
-            rules={[{ required: true }]}
+            rules={[{ required: true, message: "Please enter Description" }]}
           >
-            {" "}
-            <Input.TextArea rows={3} />{" "}
+            <Input.TextArea rows={3} />
           </Form.Item>
           <Form.Item
             name="deadline"
             label="Deadline"
-            rules={[{ required: true }]}
+            rules={[{ required: true, message: "Please enter Deadline" }]}
           >
-            {" "}
-            <DatePicker style={{ width: "100%" }} />{" "}
+            <DatePicker style={{ width: "100%" }} />
           </Form.Item>
           <Form.Item
             name="amount"
             label="Amount ($)"
-            rules={[{ required: true }]}
+            rules={[{ required: true, message: "Please enter Amount ($)" }]}
           >
-            {" "}
-            <Input type="number" />{" "}
+            <Input type="number" />
           </Form.Item>
-          <Button type="primary" htmlType="submit" block>
-            {" "}
-            Create{" "}
+
+          <Button type="primary" block onClick={handleCreate}>
+            Create
           </Button>
         </Form>
       </Modal>
