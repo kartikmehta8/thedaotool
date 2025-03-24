@@ -404,7 +404,7 @@ const BusinessDashboard = () => {
               <>
                 <Divider />
                 <p>
-                  <strong>Submitted By:</strong>{" "}
+                  <strong>Contractor:</strong>{" "}
                   {selectedContract.contractorInfo?.linkedin ? (
                     <a
                       href={selectedContract.contractorInfo.linkedin}

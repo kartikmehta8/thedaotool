@@ -2,6 +2,7 @@ import React from "react";
 import { Typography, Button, Layout, Row, Col, Card } from "antd";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
+import InfoPopup from "../components/InfoPopup";
 const { Title, Paragraph } = Typography;
 const { Content } = Layout;
 
@@ -47,7 +48,8 @@ const Landing = () => {
                 onClick={() => navigate("/signup")}
               >
                 Get Started
-              </Button>
+              </Button>{" "}
+              <InfoPopup />
             </Col>
             <Col xs={24} md={12}>
               <img
