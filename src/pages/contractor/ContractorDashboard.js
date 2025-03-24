@@ -1,15 +1,26 @@
 import React, { useEffect, useState } from "react";
-import { Card, Typography, Button, Modal, Input, Row, Col, Tag } from "antd";
+import {
+  Card,
+  Typography,
+  Button,
+  Modal,
+  Input,
+  Row,
+  Col,
+  Tag,
+  List,
+} from "antd";
 import {
   collection,
-  getDocs,
   doc,
-  updateDoc,
+  getDocs,
+  getDoc,
   query,
   where,
-  getDoc,
+  updateDoc,
 } from "firebase/firestore";
-import { db } from "../../firebase";
+import { onChildAdded, push, ref } from "firebase/database";
+import { db, rtdb } from "../../firebase";
 import toast from "../../utils/toast";
 
 const { Title, Text } = Typography;
@@ -26,6 +37,10 @@ const ContractorDashboard = () => {
   const [selected, setSelected] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [submission, setSubmission] = useState("");
+  const [chatModalVisible, setChatModalVisible] = useState(false);
+  const [chatInput, setChatInput] = useState("");
+  const [messages, setMessages] = useState([]);
+
   const user = JSON.parse(localStorage.getItem("payman-user")) || {};
   const uid = user.uid;
 
@@ -67,7 +82,6 @@ const ContractorDashboard = () => {
       toast.success("Applied to contract");
       fetchContracts();
     } catch (err) {
-      console.error(err);
       toast.error("Application failed");
     }
   };
@@ -84,6 +98,28 @@ const ContractorDashboard = () => {
     } catch (err) {
       toast.error("Failed to submit");
     }
+  };
+
+  const openChat = (contract) => {
+    setSelected(contract);
+    setMessages([]);
+    setChatModalVisible(true);
+    const chatRef = ref(rtdb, `chats/${contract.id}`);
+    onChildAdded(chatRef, (snapshot) => {
+      setMessages((prev) => [...prev, snapshot.val()]);
+    });
+  };
+
+  const sendMessage = () => {
+    if (!chatInput.trim()) return;
+    const msgRef = ref(rtdb, `chats/${selected.id}`);
+    push(msgRef, {
+      sender: uid,
+      senderName: "Contractor",
+      text: chatInput,
+      timestamp: Date.now(),
+    });
+    setChatInput("");
   };
 
   useEffect(() => {
@@ -136,22 +172,27 @@ const ContractorDashboard = () => {
                   Apply
                 </Button>
               )}
-              {c.contractorId === uid && c.status === "assigned" && (
-                <Button
-                  type="dashed"
-                  block
-                  onClick={() => {
-                    setSelected(c);
-                    setModalVisible(true);
-                  }}
-                >
-                  Submit Work
-                </Button>
-              )}
-              {c.contractorId === uid && c.status === "pending_payment" && (
-                <p>
-                  <strong>Submitted Link:</strong> {c.submittedLink}
-                </p>
+
+              {c.contractorId === uid && (
+                <>
+                  {c.status === "assigned" && (
+                    <Button
+                      type="dashed"
+                      block
+                      onClick={() => {
+                        setSelected(c);
+                        setModalVisible(true);
+                      }}
+                      style={{ marginBottom: 8 }}
+                    >
+                      Submit Work
+                    </Button>
+                  )}
+
+                  <Button type="default" block onClick={() => openChat(c)}>
+                    Open Chat
+                  </Button>
+                </>
               )}
             </Card>
           </Col>
@@ -170,6 +211,38 @@ const ContractorDashboard = () => {
           value={submission}
           onChange={(e) => setSubmission(e.target.value)}
         />
+      </Modal>
+
+      <Modal
+        open={chatModalVisible}
+        title={`Chat with ${selected?.businessInfo?.companyName}`}
+        onCancel={() => setChatModalVisible(false)}
+        footer={null}
+      >
+        <List
+          size="small"
+          dataSource={messages}
+          renderItem={(msg) => (
+            <List.Item>
+              <strong>{msg.sender === uid ? "You" : "Them"}:</strong> {msg.text}
+            </List.Item>
+          )}
+          style={{ maxHeight: 300, overflowY: "auto", marginBottom: 10 }}
+        />
+        <Input.TextArea
+          value={chatInput}
+          onChange={(e) => setChatInput(e.target.value)}
+          rows={2}
+          placeholder="Type your message..."
+        />
+        <Button
+          onClick={sendMessage}
+          type="primary"
+          block
+          style={{ marginTop: 8 }}
+        >
+          Send
+        </Button>
       </Modal>
     </div>
   );

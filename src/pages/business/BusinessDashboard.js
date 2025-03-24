@@ -12,8 +12,9 @@ import {
   Tag,
   Divider,
   Select,
+  List,
 } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import { PlusOutlined, MessageOutlined } from "@ant-design/icons";
 import {
   collection,
   addDoc,
@@ -25,7 +26,8 @@ import {
   where,
   updateDoc,
 } from "firebase/firestore";
-import { db } from "../../firebase";
+import { ref, onChildAdded, push, off } from "firebase/database";
+import { db, rtdb } from "../../firebase";
 import toast from "../../utils/toast";
 import Paymanai from "paymanai";
 
@@ -45,6 +47,10 @@ const BusinessDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [viewModal, setViewModal] = useState(false);
+  const [chatModal, setChatModal] = useState(false);
+  const [messages, setMessages] = useState([]);
+  const [newMessage, setNewMessage] = useState("");
+  const [chatContractId, setChatContractId] = useState(null);
   const [selectedContract, setSelectedContract] = useState(null);
   const [form] = Form.useForm();
   const [apiKey, setApiKey] = useState("");
@@ -222,6 +228,40 @@ const BusinessDashboard = () => {
     }
   };
 
+  const handleChatOpen = (contractId) => {
+    setChatContractId(contractId);
+    setMessages([]);
+    setChatModal(true);
+    const chatRef = ref(rtdb, `chats/${contractId}`);
+    onChildAdded(chatRef, (snapshot) => {
+      const msg = snapshot.val();
+      setMessages((prev) => [...prev, msg]);
+    });
+  };
+
+  const handleSendMessage = async () => {
+    console.log(newMessage);
+    if (!newMessage.trim()) return;
+    const chatRef = ref(rtdb, `chats/${chatContractId}`);
+    await push(chatRef, {
+      senderId: uid,
+      senderName: "Business",
+      text: newMessage.trim(),
+      timestamp: new Date().toISOString(),
+    });
+    setNewMessage("");
+  };
+
+  const handleChatClose = () => {
+    if (chatContractId) {
+      const chatRef = ref(rtdb, `chats/${chatContractId}`);
+      off(chatRef);
+    }
+    setChatModal(false);
+    setChatContractId(null);
+    setMessages([]);
+  };
+
   useEffect(() => {
     fetchContracts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -274,11 +314,57 @@ const BusinessDashboard = () => {
                 }}
               >
                 Delete
+              </Button>{" "}
+              <Button
+                icon={<MessageOutlined />}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleChatOpen(contract.id);
+                }}
+              >
+                Chat
               </Button>
             </Card>
           </Col>
         ))}
       </Row>
+
+      {/* Chat Modal */}
+      <Modal
+        open={chatModal}
+        onCancel={handleChatClose}
+        onOk={handleChatClose}
+        title={`Chat with Contractor`}
+        footer={null}
+        width={600}
+      >
+        <div
+          style={{
+            maxHeight: "300px",
+            overflowY: "auto",
+            backgroundColor: "#111",
+            padding: "1rem",
+            marginBottom: "1rem",
+            borderRadius: "8px",
+          }}
+        >
+          <List
+            dataSource={messages}
+            renderItem={(item) => (
+              <List.Item>
+                <strong>{item.senderName}:</strong> {item.text}
+              </List.Item>
+            )}
+          />
+        </div>
+        <Input.Search
+          placeholder="Type a message..."
+          enterButton="Send"
+          value={newMessage}
+          onChange={(e) => setNewMessage(e.target.value)}
+          onSearch={handleSendMessage}
+        />
+      </Modal>
 
       <Modal
         title={selectedContract?.name}
