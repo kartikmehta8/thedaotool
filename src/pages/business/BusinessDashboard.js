@@ -108,6 +108,7 @@ const BusinessDashboard = () => {
         status: "open",
         submittedLink: "",
         createdAt: new Date().toISOString(),
+        tags: values.tags ? values.tags.split(",") : [],
       };
 
       await addDoc(collection(db, "contracts"), newContract);
@@ -388,6 +389,13 @@ const BusinessDashboard = () => {
             rules={[{ required: true, message: "Please enter Amount ($)" }]}
           >
             <Input type="number" />
+          </Form.Item>
+          <Form.Item
+            name="tags"
+            label="Tags (comma separated)"
+            rules={[{ required: false }]}
+          >
+            <Input />
           </Form.Item>
 
           <Button type="primary" block onClick={handleCreate}>

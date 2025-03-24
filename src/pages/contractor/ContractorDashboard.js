@@ -116,6 +116,17 @@ const ContractorDashboard = () => {
                 <Tag color="purple">Amount</Tag> ${c.amount}
               </p>
               <p>{c.description}</p>
+
+              {Array.isArray(c.tags) && c.tags.length > 0 && (
+                <div style={{ margin: "8px 0" }}>
+                  {c.tags.map((tag) => (
+                    <Tag key={tag} color="pink" style={{ marginBottom: 4 }}>
+                      {tag}
+                    </Tag>
+                  ))}
+                </div>
+              )}
+
               {c.status === "open" && (
                 <Button
                   onClick={() => applyToContract(c.id)}
