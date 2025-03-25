@@ -1,19 +1,19 @@
-import React, { useState } from "react";
-import { Button, Input, Typography, Select, Card, Layout } from "antd";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
-import { auth, db } from "../../firebase";
-import { useNavigate } from "react-router-dom";
-import toast from "../../utils/toast";
+import React, { useState } from 'react';
+import { Button, Input, Typography, Select, Card, Layout } from 'antd';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
+import { auth, db } from '../../firebase';
+import { useNavigate } from 'react-router-dom';
+import toast from '../../utils/toast';
 
 const { Title } = Typography;
 const { Option } = Select;
 const { Content } = Layout;
 
 const Signup = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [role, setRole] = useState("business");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [role, setRole] = useState('business');
   const navigate = useNavigate();
 
   const handleSignup = async () => {
@@ -23,38 +23,38 @@ const Signup = () => {
         email,
         password
       );
-      const userRef = doc(db, "users", result.user.uid);
+      const userRef = doc(db, 'users', result.user.uid);
 
       await setDoc(userRef, { email, role });
       localStorage.setItem(
-        "payman-user",
+        'payman-user',
         JSON.stringify({ ...result.user, role })
       );
-      toast.success("Account created");
-      navigate("/dashboard");
+      toast.success('Account created');
+      navigate('/dashboard');
     } catch (err) {
-      toast.error("Something went wrong");
+      toast.error('Something went wrong');
     }
   };
 
   return (
-    <Layout style={{ minHeight: "100vh", backgroundColor: "#141414" }}>
+    <Layout style={{ minHeight: '100vh', backgroundColor: '#141414' }}>
       <Content
         style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
         }}
       >
         <Card
           style={{
             width: 400,
-            backgroundColor: "#1f1f1f",
-            color: "#fff",
+            backgroundColor: '#1f1f1f',
+            color: '#fff',
             marginTop: 100,
           }}
         >
-          <Title level={3} style={{ color: "#fff", textAlign: "center" }}>
+          <Title level={3} style={{ color: '#fff', textAlign: 'center' }}>
             Sign Up
           </Title>
           <Input
@@ -72,7 +72,7 @@ const Signup = () => {
           <Select
             value={role}
             onChange={(val) => setRole(val)}
-            style={{ width: "100%", marginBottom: 10 }}
+            style={{ width: '100%', marginBottom: 10 }}
           >
             <Option value="business">Business</Option>
             <Option value="contractor">Contractor</Option>
@@ -84,7 +84,7 @@ const Signup = () => {
           <Button
             type="link"
             block
-            onClick={() => navigate("/login")}
+            onClick={() => navigate('/login')}
             style={{ marginTop: 10 }}
           >
             Already have an account? Sign in

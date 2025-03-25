@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import {
   Card,
   Typography,
@@ -9,7 +9,7 @@ import {
   Col,
   Tag,
   List,
-} from "antd";
+} from 'antd';
 import {
   collection,
   doc,
@@ -18,44 +18,44 @@ import {
   query,
   where,
   updateDoc,
-} from "firebase/firestore";
-import { onChildAdded, push, ref } from "firebase/database";
-import { db, rtdb } from "../../firebase";
-import toast from "../../utils/toast";
+} from 'firebase/firestore';
+import { onChildAdded, push, ref } from 'firebase/database';
+import { db, rtdb } from '../../firebase';
+import toast from '../../utils/toast';
 
 const { Title, Text } = Typography;
 
 const statusColors = {
-  open: "green",
-  assigned: "gold",
-  pending_payment: "blue",
-  closed: "red",
+  open: 'green',
+  assigned: 'gold',
+  pending_payment: 'blue',
+  closed: 'red',
 };
 
 const ContractorDashboard = () => {
   const [contracts, setContracts] = useState([]);
   const [selected, setSelected] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const [submission, setSubmission] = useState("");
+  const [submission, setSubmission] = useState('');
   const [chatModalVisible, setChatModalVisible] = useState(false);
-  const [chatInput, setChatInput] = useState("");
+  const [chatInput, setChatInput] = useState('');
   const [messages, setMessages] = useState([]);
 
-  const user = JSON.parse(localStorage.getItem("payman-user")) || {};
+  const user = JSON.parse(localStorage.getItem('payman-user')) || {};
   const uid = user.uid;
 
   const fetchContracts = async () => {
     try {
       const q = query(
-        collection(db, "contracts"),
-        where("status", "!=", "closed")
+        collection(db, 'contracts'),
+        where('status', '!=', 'closed')
       );
       const snap = await getDocs(q);
       const all = await Promise.all(
         snap.docs.map(async (docRef) => {
           const data = docRef.data();
           const businessSnap = await getDoc(
-            doc(db, "businesses", data.businessId)
+            doc(db, 'businesses', data.businessId)
           );
           return {
             id: docRef.id,
@@ -65,38 +65,38 @@ const ContractorDashboard = () => {
         })
       );
       const filtered = all.filter(
-        (c) => c.status === "open" || c.contractorId === uid
+        (c) => c.status === 'open' || c.contractorId === uid
       );
       setContracts(filtered);
     } catch (err) {
-      toast.error("Failed to fetch contracts");
+      toast.error('Failed to fetch contracts');
     }
   };
 
   const applyToContract = async (contractId) => {
     try {
-      await updateDoc(doc(db, "contracts", contractId), {
-        status: "assigned",
+      await updateDoc(doc(db, 'contracts', contractId), {
+        status: 'assigned',
         contractorId: uid,
       });
-      toast.success("Applied to contract");
+      toast.success('Applied to contract');
       fetchContracts();
     } catch (err) {
-      toast.error("Application failed");
+      toast.error('Application failed');
     }
   };
 
   const submitWork = async () => {
     try {
-      await updateDoc(doc(db, "contracts", selected.id), {
-        status: "pending_payment",
+      await updateDoc(doc(db, 'contracts', selected.id), {
+        status: 'pending_payment',
         submittedLink: submission,
       });
-      toast.success("Work submitted");
+      toast.success('Work submitted');
       setModalVisible(false);
       fetchContracts();
     } catch (err) {
-      toast.error("Failed to submit");
+      toast.error('Failed to submit');
     }
   };
 
@@ -115,11 +115,11 @@ const ContractorDashboard = () => {
     const msgRef = ref(rtdb, `chats/${selected.id}`);
     push(msgRef, {
       sender: uid,
-      senderName: "Contractor",
+      senderName: 'Contractor',
       text: chatInput,
       timestamp: Date.now(),
     });
-    setChatInput("");
+    setChatInput('');
   };
 
   useEffect(() => {
@@ -128,8 +128,8 @@ const ContractorDashboard = () => {
   }, []);
 
   return (
-    <div style={{ padding: "2rem" }}>
-      <Title level={3} style={{ color: "#fff" }}>
+    <div style={{ padding: '2rem' }}>
+      <Title level={3} style={{ color: '#fff' }}>
         Available Contracts
       </Title>
       <Row gutter={[16, 16]}>
@@ -137,13 +137,13 @@ const ContractorDashboard = () => {
           <Col xs={24} sm={12} md={8} key={c.id}>
             <Card
               hoverable
-              style={{ backgroundColor: "#1f1f1f" }}
+              style={{ backgroundColor: '#1f1f1f' }}
               title={<Text strong>{c.name}</Text>}
               extra={<Tag color={statusColors[c.status]}>{c.status}</Tag>}
             >
               <p>
-                <Tag color="cyan">Company</Tag>{" "}
-                {c.businessInfo?.companyName || "Unknown"}
+                <Tag color="cyan">Company</Tag>{' '}
+                {c.businessInfo?.companyName || 'Unknown'}
               </p>
               <p>
                 <Tag color="blue">Deadline</Tag> {c.deadline}
@@ -154,7 +154,7 @@ const ContractorDashboard = () => {
               <p>{c.description}</p>
 
               {Array.isArray(c.tags) && c.tags.length > 0 && (
-                <div style={{ margin: "8px 0" }}>
+                <div style={{ margin: '8px 0' }}>
                   {c.tags.map((tag) => (
                     <Tag key={tag} color="pink" style={{ marginBottom: 4 }}>
                       {tag}
@@ -163,7 +163,7 @@ const ContractorDashboard = () => {
                 </div>
               )}
 
-              {c.status === "open" && (
+              {c.status === 'open' && (
                 <Button
                   onClick={() => applyToContract(c.id)}
                   type="primary"
@@ -175,7 +175,7 @@ const ContractorDashboard = () => {
 
               {c.contractorId === uid && (
                 <>
-                  {c.status === "assigned" && (
+                  {c.status === 'assigned' && (
                     <Button
                       type="dashed"
                       block
@@ -224,10 +224,10 @@ const ContractorDashboard = () => {
           dataSource={messages}
           renderItem={(msg) => (
             <List.Item>
-              <strong>{msg.sender === uid ? "You" : "Them"}:</strong> {msg.text}
+              <strong>{msg.sender === uid ? 'You' : 'Them'}:</strong> {msg.text}
             </List.Item>
           )}
-          style={{ maxHeight: 300, overflowY: "auto", marginBottom: 10 }}
+          style={{ maxHeight: 300, overflowY: 'auto', marginBottom: 10 }}
         />
         <Input.TextArea
           value={chatInput}

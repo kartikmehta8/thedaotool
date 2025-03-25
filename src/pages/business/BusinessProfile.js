@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { Layout, Typography, Input, Button, Card, Form } from "antd";
-import { db } from "../../firebase";
-import { doc, getDoc, setDoc } from "firebase/firestore";
-import toast from "../../utils/toast";
+import React, { useEffect, useState } from 'react';
+import { Layout, Typography, Input, Button, Card, Form } from 'antd';
+import { db } from '../../firebase';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
+import toast from '../../utils/toast';
 
 const { Content } = Layout;
 const { Title } = Typography;
@@ -10,22 +10,22 @@ const { Title } = Typography;
 const BusinessProfile = () => {
   const [loading, setLoading] = useState(true);
   const [form] = Form.useForm();
-  const user = JSON.parse(localStorage.getItem("payman-user")) || {};
-  const email = user.email || "";
+  const user = JSON.parse(localStorage.getItem('payman-user')) || {};
+  const email = user.email || '';
   const uid = user.uid;
 
   const defaultFields = {
-    companyName: "",
-    description: "",
-    industry: "",
-    website: "",
+    companyName: '',
+    description: '',
+    industry: '',
+    website: '',
     email: email,
-    apiKey: "",
+    apiKey: '',
   };
 
   const fetchProfile = async () => {
     try {
-      const ref = doc(db, "businesses", uid);
+      const ref = doc(db, 'businesses', uid);
       const snap = await getDoc(ref);
       if (snap.exists()) {
         const data = snap.data();
@@ -35,7 +35,7 @@ const BusinessProfile = () => {
       }
     } catch (err) {
       console.error(err);
-      toast.error("Failed to fetch profile");
+      toast.error('Failed to fetch profile');
     } finally {
       setLoading(false);
     }
@@ -43,15 +43,15 @@ const BusinessProfile = () => {
 
   const handleSubmit = async (values) => {
     try {
-      await setDoc(doc(db, "businesses", uid), {
+      await setDoc(doc(db, 'businesses', uid), {
         ...defaultFields,
         ...values,
         email,
       });
-      toast.success("Profile updated");
+      toast.success('Profile updated');
     } catch (err) {
       console.error(err);
-      toast.error("Error saving profile");
+      toast.error('Error saving profile');
     }
   };
 
@@ -61,21 +61,21 @@ const BusinessProfile = () => {
   }, []);
 
   return (
-    <Layout style={{ minHeight: "100vh", backgroundColor: "#141414" }}>
+    <Layout style={{ minHeight: '100vh', backgroundColor: '#141414' }}>
       <Content
         style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
           marginTop: 50,
           marginBottom: 50,
         }}
       >
         <Card
-          style={{ width: 500, backgroundColor: "#1f1f1f" }}
+          style={{ width: 500, backgroundColor: '#1f1f1f' }}
           loading={loading}
         >
-          <Title level={3} style={{ color: "#fff", textAlign: "center" }}>
+          <Title level={3} style={{ color: '#fff', textAlign: 'center' }}>
             Business Profile
           </Title>
           <Form form={form} layout="vertical" onFinish={handleSubmit}>
@@ -83,7 +83,7 @@ const BusinessProfile = () => {
               <Input placeholder="Example Inc." />
             </Form.Item>
             <Form.Item name="email" label="Email">
-              <Input value={email} disabled style={{ color: "#ccc" }} />
+              <Input value={email} disabled style={{ color: '#ccc' }} />
             </Form.Item>
             <Form.Item name="description" label="Company Description">
               <Input.TextArea

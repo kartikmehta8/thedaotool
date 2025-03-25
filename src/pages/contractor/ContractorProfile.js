@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { Layout, Typography, Input, Button, Card, Form } from "antd";
-import { db } from "../../firebase";
-import { doc, getDoc, setDoc } from "firebase/firestore";
-import toast from "../../utils/toast";
+import React, { useEffect, useState } from 'react';
+import { Layout, Typography, Input, Button, Card, Form } from 'antd';
+import { db } from '../../firebase';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
+import toast from '../../utils/toast';
 
 const { Content } = Layout;
 const { Title } = Typography;
@@ -10,24 +10,24 @@ const { Title } = Typography;
 const ContractorProfile = () => {
   const [loading, setLoading] = useState(true);
   const [form] = Form.useForm();
-  const user = JSON.parse(localStorage.getItem("payman-user")) || {};
+  const user = JSON.parse(localStorage.getItem('payman-user')) || {};
   const email = user.email;
   const uid = user.uid;
 
   const defaultFields = {
-    name: "",
-    roleTitle: "",
-    skills: "",
-    portfolio: "",
-    linkedin: "",
+    name: '',
+    roleTitle: '',
+    skills: '',
+    portfolio: '',
+    linkedin: '',
     email: email,
-    accountNumber: "",
-    routingNumber: "",
+    accountNumber: '',
+    routingNumber: '',
   };
 
   const fetchProfile = async () => {
     try {
-      const ref = doc(db, "contractors", uid);
+      const ref = doc(db, 'contractors', uid);
       const snap = await getDoc(ref);
       if (snap.exists()) {
         const data = snap.data();
@@ -36,7 +36,7 @@ const ContractorProfile = () => {
         form.setFieldsValue(defaultFields); // initial empty values.
       }
     } catch (err) {
-      toast.error("Failed to fetch profile");
+      toast.error('Failed to fetch profile');
     } finally {
       setLoading(false);
     }
@@ -44,14 +44,14 @@ const ContractorProfile = () => {
 
   const handleSubmit = async (values) => {
     try {
-      await setDoc(doc(db, "contractors", uid), {
+      await setDoc(doc(db, 'contractors', uid), {
         ...defaultFields,
         ...values,
         email,
       });
-      toast.success("Profile updated");
+      toast.success('Profile updated');
     } catch (err) {
-      toast.error("Error saving profile");
+      toast.error('Error saving profile');
     }
   };
 
@@ -61,21 +61,21 @@ const ContractorProfile = () => {
   }, []);
 
   return (
-    <Layout style={{ minHeight: "100vh", backgroundColor: "#141414" }}>
+    <Layout style={{ minHeight: '100vh', backgroundColor: '#141414' }}>
       <Content
         style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
           marginTop: 50,
           marginBottom: 50,
         }}
       >
         <Card
-          style={{ width: 500, backgroundColor: "#1f1f1f" }}
+          style={{ width: 500, backgroundColor: '#1f1f1f' }}
           loading={loading}
         >
-          <Title level={3} style={{ color: "#fff", textAlign: "center" }}>
+          <Title level={3} style={{ color: '#fff', textAlign: 'center' }}>
             Contractor Profile
           </Title>
           <Form form={form} layout="vertical" onFinish={handleSubmit}>
@@ -83,7 +83,7 @@ const ContractorProfile = () => {
               <Input placeholder="John Doe" />
             </Form.Item>
             <Form.Item name="email" label="Email">
-              <Input value={email} disabled style={{ color: "#ccc" }} />
+              <Input value={email} disabled style={{ color: '#ccc' }} />
             </Form.Item>
             <Form.Item name="roleTitle" label="Your Role / Title">
               <Input placeholder="Frontend Engineer, Designer, etc." />

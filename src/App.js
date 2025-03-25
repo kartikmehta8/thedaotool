@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   Navigate,
-} from "react-router-dom";
+} from 'react-router-dom';
 
 import {
   Signup,
@@ -13,16 +13,16 @@ import {
   Landing,
   BusinessProfile,
   ContractorProfile,
-} from "./pages";
+} from './pages';
 
-import { auth, db } from "./firebase";
-import { onAuthStateChanged } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
-import { ConfigProvider, theme } from "antd";
+import { auth, db } from './firebase';
+import { onAuthStateChanged } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
+import { ConfigProvider, theme } from 'antd';
 
 const App = () => {
   const [user, setUser] = useState(() => {
-    const localUser = localStorage.getItem("payman-user");
+    const localUser = localStorage.getItem('payman-user');
     return localUser ? JSON.parse(localUser) : null;
   });
 
@@ -30,7 +30,7 @@ const App = () => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
         try {
-          const ref = doc(db, "users", firebaseUser.uid);
+          const ref = doc(db, 'users', firebaseUser.uid);
           const snap = await getDoc(ref);
           const role = snap.exists() ? snap.data().role : null;
           const fullUser = {
@@ -38,13 +38,13 @@ const App = () => {
             email: firebaseUser.email,
             role,
           };
-          localStorage.setItem("payman-user", JSON.stringify(fullUser));
+          localStorage.setItem('payman-user', JSON.stringify(fullUser));
           setUser(fullUser);
         } catch (err) {
-          console.error("Error fetching user profile:", err);
+          console.error('Error fetching user profile:', err);
         }
       } else {
-        localStorage.removeItem("payman-user");
+        localStorage.removeItem('payman-user');
         setUser(null);
       }
     });
@@ -57,7 +57,7 @@ const App = () => {
       theme={{
         algorithm: theme.darkAlgorithm,
         token: {
-          fontFamily: "Reddit Sans, sans-serif",
+          fontFamily: 'Reddit Sans, sans-serif',
         },
       }}
     >

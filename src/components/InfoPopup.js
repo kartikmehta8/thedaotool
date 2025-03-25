@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { Modal, Button } from "antd";
-import { InfoCircleOutlined } from "@ant-design/icons";
+import React, { useState } from 'react';
+import { Modal, Button } from 'antd';
+import { InfoCircleOutlined } from '@ant-design/icons';
 
 const InfoPopup = () => {
   const [open, setOpen] = useState(false);
@@ -10,23 +10,23 @@ const InfoPopup = () => {
       <Button
         onClick={() => setOpen(true)}
         style={{
-          position: "fixed",
+          position: 'fixed',
           top: 20,
           left: 20,
           zIndex: 9999,
-          backgroundColor: "#1677ff",
-          color: "#fff",
-          borderRadius: "8px",
-          padding: "10px 16px",
-          display: "flex",
-          alignItems: "center",
-          cursor: "pointer",
-          boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
-          fontSize: "16px",
-          fontWeight: "bold",
+          backgroundColor: '#1677ff',
+          color: '#fff',
+          borderRadius: '8px',
+          padding: '10px 16px',
+          display: 'flex',
+          alignItems: 'center',
+          cursor: 'pointer',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+          fontSize: '16px',
+          fontWeight: 'bold',
         }}
       >
-        <InfoCircleOutlined style={{ fontSize: "20px", marginRight: "8px" }} />
+        <InfoCircleOutlined style={{ fontSize: '20px', marginRight: '8px' }} />
         About Bizzy Network
       </Button>
 
@@ -67,19 +67,19 @@ const InfoPopup = () => {
           handled securely via the PaymanAI SDK.
         </p>
 
-        <h4 style={{ marginTop: "2rem" }}>SWOT Analysis</h4>
-        <div style={{ overflowX: "auto" }}>
+        <h4 style={{ marginTop: '2rem' }}>SWOT Analysis</h4>
+        <div style={{ overflowX: 'auto' }}>
           <table
             style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              border: "1px solid #ccc",
-              marginTop: "1rem",
-              color: "#fff",
+              width: '100%',
+              borderCollapse: 'collapse',
+              border: '1px solid #ccc',
+              marginTop: '1rem',
+              color: '#fff',
             }}
           >
             <thead>
-              <tr style={{ backgroundColor: "#333" }}>
+              <tr style={{ backgroundColor: '#333' }}>
                 <th>Strengths</th>
                 <th>Opportunities</th>
               </tr>
@@ -110,7 +110,7 @@ const InfoPopup = () => {
                   </ul>
                 </td>
               </tr>
-              <tr style={{ backgroundColor: "#333" }}>
+              <tr style={{ backgroundColor: '#333' }}>
                 <th>Weaknesses</th>
                 <th>Threats</th>
               </tr>
@@ -121,7 +121,8 @@ const InfoPopup = () => {
                       Payee creation still requires business-side manual input
                     </li>
                     <li>
-                      Lack of deep reporting, summaries, or dashboards (in development)
+                      Lack of deep reporting, summaries, or dashboards (in
+                      development)
                     </li>
                   </ul>
                 </td>

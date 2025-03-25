@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   Button,
   Modal,
@@ -13,8 +13,8 @@ import {
   Divider,
   Select,
   List,
-} from "antd";
-import { PlusOutlined, MessageOutlined } from "@ant-design/icons";
+} from 'antd';
+import { PlusOutlined, MessageOutlined } from '@ant-design/icons';
 import {
   collection,
   addDoc,
@@ -25,20 +25,20 @@ import {
   query,
   where,
   updateDoc,
-} from "firebase/firestore";
-import { ref, onChildAdded, push, off } from "firebase/database";
-import { db, rtdb } from "../../firebase";
-import toast from "../../utils/toast";
-import Paymanai from "paymanai";
+} from 'firebase/firestore';
+import { ref, onChildAdded, push, off } from 'firebase/database';
+import { db, rtdb } from '../../firebase';
+import toast from '../../utils/toast';
+import Paymanai from 'paymanai';
 
 const { Title, Text } = Typography;
 const { Option } = Select;
 
 const statusColors = {
-  open: "green",
-  assigned: "gold",
-  pending_payment: "blue",
-  closed: "red",
+  open: 'green',
+  assigned: 'gold',
+  pending_payment: 'blue',
+  closed: 'red',
 };
 
 const BusinessDashboard = () => {
@@ -49,24 +49,24 @@ const BusinessDashboard = () => {
   const [viewModal, setViewModal] = useState(false);
   const [chatModal, setChatModal] = useState(false);
   const [messages, setMessages] = useState([]);
-  const [newMessage, setNewMessage] = useState("");
+  const [newMessage, setNewMessage] = useState('');
   const [chatContractId, setChatContractId] = useState(null);
   const [selectedContract, setSelectedContract] = useState(null);
   const [form] = Form.useForm();
-  const [apiKey, setApiKey] = useState("");
+  const [apiKey, setApiKey] = useState('');
 
-  const user = JSON.parse(localStorage.getItem("payman-user")) || {};
+  const user = JSON.parse(localStorage.getItem('payman-user')) || {};
   const uid = user.uid;
 
   const fetchContracts = async () => {
     try {
-      const businessSnap = await getDoc(doc(db, "businesses", uid));
+      const businessSnap = await getDoc(doc(db, 'businesses', uid));
       const key = businessSnap.data()?.apiKey;
       setApiKey(key);
 
       const q = query(
-        collection(db, "contracts"),
-        where("businessId", "==", uid)
+        collection(db, 'contracts'),
+        where('businessId', '==', uid)
       );
       const snapshot = await getDocs(q);
       const docs = await Promise.all(
@@ -75,7 +75,7 @@ const BusinessDashboard = () => {
           let contractorInfo = null;
 
           if (data.contractorId) {
-            const contractorRef = doc(db, "contractors", data.contractorId);
+            const contractorRef = doc(db, 'contractors', data.contractorId);
             const contractorSnap = await getDoc(contractorRef);
             if (contractorSnap.exists()) {
               contractorInfo = {
@@ -94,7 +94,7 @@ const BusinessDashboard = () => {
       );
       setContracts(docs);
     } catch (err) {
-      toast.error("Error fetching contracts");
+      toast.error('Error fetching contracts');
     } finally {
       setLoading(false);
     }
@@ -105,51 +105,51 @@ const BusinessDashboard = () => {
       const values = await form.validateFields();
 
       const newContract = {
-        name: values.name || "",
-        description: values.description || "",
-        deadline: values.deadline?.format("YYYY-MM-DD") || "",
+        name: values.name || '',
+        description: values.description || '',
+        deadline: values.deadline?.format('YYYY-MM-DD') || '',
         amount: Number(values.amount || 0),
         businessId: uid,
         contractorId: null,
-        status: "open",
-        submittedLink: "",
+        status: 'open',
+        submittedLink: '',
         createdAt: new Date().toISOString(),
-        tags: values.tags ? values.tags.split(",") : [],
+        tags: values.tags ? values.tags.split(',') : [],
       };
 
-      await addDoc(collection(db, "contracts"), newContract);
-      toast.success("Contract created");
+      await addDoc(collection(db, 'contracts'), newContract);
+      toast.success('Contract created');
       setModalVisible(false);
       form.resetFields();
       fetchContracts();
     } catch (err) {
-      toast.error("Failed to create contract");
+      toast.error('Failed to create contract');
     }
   };
 
   const handleDelete = async (id) => {
     try {
-      await deleteDoc(doc(db, "contracts", id));
-      toast.success("Contract deleted");
+      await deleteDoc(doc(db, 'contracts', id));
+      toast.success('Contract deleted');
       setModalVisible(false);
       setViewModal(false);
       fetchContracts();
     } catch (err) {
-      toast.error("Failed to delete contract");
+      toast.error('Failed to delete contract');
     }
   };
 
   const handleSaveUpdate = async () => {
     try {
       await updateDoc(
-        doc(db, "contracts", selectedContract.id),
+        doc(db, 'contracts', selectedContract.id),
         selectedContract
       );
-      toast.success("Contract updated");
+      toast.success('Contract updated');
       setViewModal(false);
       fetchContracts();
     } catch (err) {
-      toast.error("Error saving changes");
+      toast.error('Error saving changes');
     }
   };
 
@@ -162,7 +162,7 @@ const BusinessDashboard = () => {
 
       const contractorRef = doc(
         db,
-        "contractors",
+        'contractors',
         selectedContract.contractorId
       );
       const contractorSnap = await getDoc(contractorRef);
@@ -171,18 +171,18 @@ const BusinessDashboard = () => {
         const contractorData = contractorSnap.data();
 
         if (contractorData.payeeId) {
-          toast.warning("Payee already exists for this contractor.");
+          toast.warning('Payee already exists for this contractor.');
           return;
         }
 
         const payee = await payman.payments.createPayee({
-          type: "US_ACH",
+          type: 'US_ACH',
           name,
           accountHolderName: name,
-          accountHolderType: "individual",
+          accountHolderType: 'individual',
           accountNumber,
           routingNumber,
-          accountType: "checking",
+          accountType: 'checking',
           contactDetails: { email },
         });
 
@@ -190,7 +190,7 @@ const BusinessDashboard = () => {
         toast.success(`Payee created and saved for ${name}`);
       }
     } catch (err) {
-      toast.error("Failed to create payee");
+      toast.error('Failed to create payee');
     }
   };
 
@@ -198,11 +198,11 @@ const BusinessDashboard = () => {
     if (!selectedContract?.contractorInfo || !apiKey) return;
     try {
       const contractorSnap = await getDoc(
-        doc(db, "contractors", selectedContract.contractorId)
+        doc(db, 'contractors', selectedContract.contractorId)
       );
 
       if (!contractorSnap.exists()) {
-        toast.error("Contractor profile not found");
+        toast.error('Contractor profile not found');
         return;
       }
 
@@ -210,7 +210,7 @@ const BusinessDashboard = () => {
       const payeeId = contractorData.payeeId;
 
       if (!payeeId) {
-        toast.warning("No payee found. Please create payee first.");
+        toast.warning('No payee found. Please create payee first.');
         return;
       }
 
@@ -222,9 +222,9 @@ const BusinessDashboard = () => {
         metadata: { contractId: selectedContract.id },
       });
 
-      toast.success("Payment sent successfully");
+      toast.success('Payment sent successfully');
     } catch (err) {
-      toast.error("Failed to send payment");
+      toast.error('Failed to send payment');
     }
   };
 
@@ -245,11 +245,11 @@ const BusinessDashboard = () => {
     const chatRef = ref(rtdb, `chats/${chatContractId}`);
     await push(chatRef, {
       senderId: uid,
-      senderName: "Business",
+      senderName: 'Business',
       text: newMessage.trim(),
       timestamp: new Date().toISOString(),
     });
-    setNewMessage("");
+    setNewMessage('');
   };
 
   const handleChatClose = () => {
@@ -268,8 +268,8 @@ const BusinessDashboard = () => {
   }, []);
 
   return (
-    <div style={{ padding: "2rem" }}>
-      <Title level={3} style={{ color: "#fff" }}>
+    <div style={{ padding: '2rem' }}>
+      <Title level={3} style={{ color: '#fff' }}>
         My Contracts
       </Title>
       <Button
@@ -286,7 +286,7 @@ const BusinessDashboard = () => {
           <Col xs={24} sm={12} md={8} key={contract.id}>
             <Card
               hoverable
-              style={{ backgroundColor: "#1f1f1f" }}
+              style={{ backgroundColor: '#1f1f1f' }}
               onClick={() => {
                 setSelectedContract({ ...contract });
                 setViewModal(true);
@@ -314,7 +314,7 @@ const BusinessDashboard = () => {
                 }}
               >
                 Delete
-              </Button>{" "}
+              </Button>{' '}
               <Button
                 icon={<MessageOutlined />}
                 onClick={(e) => {
@@ -340,12 +340,12 @@ const BusinessDashboard = () => {
       >
         <div
           style={{
-            maxHeight: "300px",
-            overflowY: "auto",
-            backgroundColor: "#111",
-            padding: "1rem",
-            marginBottom: "1rem",
-            borderRadius: "8px",
+            maxHeight: '300px',
+            overflowY: 'auto',
+            backgroundColor: '#111',
+            padding: '1rem',
+            marginBottom: '1rem',
+            borderRadius: '8px',
           }}
         >
           <List
@@ -393,7 +393,7 @@ const BusinessDashboard = () => {
               onChange={(val) =>
                 setSelectedContract({ ...selectedContract, status: val })
               }
-              style={{ width: "100%" }}
+              style={{ width: '100%' }}
             >
               <Option value="open">Open</Option>
               <Option value="assigned">Assigned</Option>
@@ -404,23 +404,23 @@ const BusinessDashboard = () => {
               <>
                 <Divider />
                 <p>
-                  <strong>Contractor:</strong>{" "}
+                  <strong>Contractor:</strong>{' '}
                   {selectedContract.contractorInfo?.linkedin ? (
                     <a
                       href={selectedContract.contractorInfo.linkedin}
                       target="_blank"
                       rel="noopener noreferrer"
-                      style={{ color: "#69b1ff", fontWeight: "bold" }}
+                      style={{ color: '#69b1ff', fontWeight: 'bold' }}
                     >
-                      {selectedContract.contractorInfo.name || "View Profile"}
+                      {selectedContract.contractorInfo.name || 'View Profile'}
                     </a>
                   ) : (
                     selectedContract.contractorId
                   )}
                 </p>
                 <p>
-                  <strong>Work Link:</strong>{" "}
-                  {selectedContract.submittedLink || "Not submitted yet"}
+                  <strong>Work Link:</strong>{' '}
+                  {selectedContract.submittedLink || 'Not submitted yet'}
                 </p>
                 <Divider />
                 <Button
@@ -445,34 +445,34 @@ const BusinessDashboard = () => {
         open={modalVisible}
         onCancel={() => setModalVisible(false)}
         footer={null}
-        closeIcon={<span style={{ color: "#fff", fontSize: "16px" }}>×</span>}
+        closeIcon={<span style={{ color: '#fff', fontSize: '16px' }}>×</span>}
       >
         <Form layout="vertical" form={form}>
           <Form.Item
             name="name"
             label="Task Name"
-            rules={[{ required: true, message: "Please enter Task Name" }]}
+            rules={[{ required: true, message: 'Please enter Task Name' }]}
           >
             <Input />
           </Form.Item>
           <Form.Item
             name="description"
             label="Description"
-            rules={[{ required: true, message: "Please enter Description" }]}
+            rules={[{ required: true, message: 'Please enter Description' }]}
           >
             <Input.TextArea rows={3} />
           </Form.Item>
           <Form.Item
             name="deadline"
             label="Deadline"
-            rules={[{ required: true, message: "Please enter Deadline" }]}
+            rules={[{ required: true, message: 'Please enter Deadline' }]}
           >
-            <DatePicker style={{ width: "100%" }} />
+            <DatePicker style={{ width: '100%' }} />
           </Form.Item>
           <Form.Item
             name="amount"
             label="Amount ($)"
-            rules={[{ required: true, message: "Please enter Amount ($)" }]}
+            rules={[{ required: true, message: 'Please enter Amount ($)' }]}
           >
             <Input type="number" />
           </Form.Item>

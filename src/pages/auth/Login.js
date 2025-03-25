@@ -1,24 +1,24 @@
-import React, { useState } from "react";
-import { Button, Input, Typography, Card, Layout } from "antd";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
-import { auth, db } from "../../firebase";
-import { useNavigate } from "react-router-dom";
-import toast from "../../utils/toast";
+import React, { useState } from 'react';
+import { Button, Input, Typography, Card, Layout } from 'antd';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
+import { auth, db } from '../../firebase';
+import { useNavigate } from 'react-router-dom';
+import toast from '../../utils/toast';
 
 const { Title } = Typography;
 const { Content } = Layout;
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
   const handleLogin = async () => {
     try {
       const result = await signInWithEmailAndPassword(auth, email, password);
 
-      const userRef = doc(db, "users", result.user.uid);
+      const userRef = doc(db, 'users', result.user.uid);
       const userSnap = await getDoc(userRef);
 
       if (userSnap.exists()) {
@@ -28,37 +28,37 @@ const Login = () => {
           role: userSnap.data().role, // add more fields as needed.
         };
 
-        localStorage.setItem("payman-user", JSON.stringify(userProfile));
+        localStorage.setItem('payman-user', JSON.stringify(userProfile));
 
-        toast.success("Logged in successfully");
-        navigate("/dashboard");
+        toast.success('Logged in successfully');
+        navigate('/dashboard');
       } else {
-        toast.error("User profile not found in database.");
+        toast.error('User profile not found in database.');
       }
     } catch (err) {
-      console.error("Login error:", err);
-      toast.error("Something went wrong during login");
+      console.error('Login error:', err);
+      toast.error('Something went wrong during login');
     }
   };
 
   return (
-    <Layout style={{ minHeight: "100vh", backgroundColor: "#141414" }}>
+    <Layout style={{ minHeight: '100vh', backgroundColor: '#141414' }}>
       <Content
         style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
         }}
       >
         <Card
           style={{
             width: 400,
-            backgroundColor: "#1f1f1f",
-            color: "#fff",
+            backgroundColor: '#1f1f1f',
+            color: '#fff',
             marginTop: 100,
           }}
         >
-          <Title level={3} style={{ color: "#fff", textAlign: "center" }}>
+          <Title level={3} style={{ color: '#fff', textAlign: 'center' }}>
             Login
           </Title>
           <Input
@@ -79,7 +79,7 @@ const Login = () => {
           <Button
             type="link"
             block
-            onClick={() => navigate("/signup")}
+            onClick={() => navigate('/signup')}
             style={{ marginTop: 10 }}
           >
             Don't have an account? Sign up
