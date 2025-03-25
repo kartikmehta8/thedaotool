@@ -217,7 +217,7 @@ const BusinessDashboard = () => {
       const payman = new Paymanai({ xPaymanAPISecret: apiKey });
       await payman.payments.sendPayment({
         amountDecimal: Number(selectedContract.amount),
-        payeeId,
+        payeeId: process.env.REACT_APP_PAYMAN_TEST_PAYEE_ID, // payeeId, We need test payeeId as we are in test mode.
         memo: `Payment for ${selectedContract.name}`,
         metadata: { contractId: selectedContract.id },
       });
