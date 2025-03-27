@@ -87,7 +87,7 @@ const Signup = () => {
             onClick={() => navigate('/login')}
             style={{ marginTop: 10 }}
           >
-            Already have an account? Sign in
+            Already have an account?
           </Button>
         </Card>
       </Content>

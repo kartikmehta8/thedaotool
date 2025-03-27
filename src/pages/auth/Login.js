@@ -59,7 +59,7 @@ const Login = () => {
           }}
         >
           <Title level={3} style={{ color: '#fff', textAlign: 'center' }}>
-            Login
+            Log In
           </Title>
           <Input
             placeholder="Email"
@@ -82,7 +82,7 @@ const Login = () => {
             onClick={() => navigate('/signup')}
             style={{ marginTop: 10 }}
           >
-            Don't have an account? Sign up
+            Don't have an account?
           </Button>
         </Card>
       </Content>
