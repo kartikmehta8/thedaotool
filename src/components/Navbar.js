@@ -24,7 +24,7 @@ const Navbar = () => {
         if (snap.exists()) {
           const { apiKey } = snap.data();
           if (!apiKey) {
-            toast.warning('No Payman API key found. Add it in your profile.');
+            toast.warning('No Payman API key found.');
             return;
           }
           try {
@@ -32,7 +32,6 @@ const Navbar = () => {
             const usd = await payman.balances.getSpendableBalance('TSD');
             setBalance(usd);
           } catch (err) {
-            console.error('Payman error:', err);
             toast.error('Error fetching Payman balance');
           }
         }

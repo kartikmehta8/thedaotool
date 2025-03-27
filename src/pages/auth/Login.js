@@ -36,7 +36,6 @@ const Login = () => {
         toast.error('User profile not found in database.');
       }
     } catch (err) {
-      console.error('Login error:', err);
       toast.error('Something went wrong during login');
     }
   };

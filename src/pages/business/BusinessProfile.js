@@ -34,7 +34,6 @@ const BusinessProfile = () => {
         form.setFieldsValue(defaultFields); // prefill blank form.
       }
     } catch (err) {
-      console.error(err);
       toast.error('Failed to fetch profile');
     } finally {
       setLoading(false);
@@ -50,7 +49,6 @@ const BusinessProfile = () => {
       });
       toast.success('Profile updated');
     } catch (err) {
-      console.error(err);
       toast.error('Error saving profile');
     }
   };

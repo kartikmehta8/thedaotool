@@ -240,7 +240,6 @@ const BusinessDashboard = () => {
   };
 
   const handleSendMessage = async () => {
-    console.log(newMessage);
     if (!newMessage.trim()) return;
     const chatRef = ref(rtdb, `chats/${chatContractId}`);
     await push(chatRef, {
