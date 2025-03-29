@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Layout, Button, Space } from 'antd';
-import { auth, db } from '../firebase';
+import { auth, db } from '../providers/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import Paymanai from 'paymanai';
@@ -72,6 +72,9 @@ const Navbar = () => {
       <Space>
         {role === 'business' && balance !== null && (
           <span style={{ color: '#3fefb4' }}>${balance.toFixed(2)}</span>
+        )}
+        {role === 'business' && balance === null && (
+          <span style={{ color: '#3fefb4' }}>Loading...</span>
         )}
         <Button type="default" onClick={handleProfile}>
           Profile
