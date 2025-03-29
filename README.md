@@ -4,6 +4,8 @@
 
 **Bizzy Network** is a full-stack, payman-based task marketplace built to connect businesses with contractors seamlessly. The platform automates the entire workflow—from contract creation and assignment to real-time collaboration and final payment—by integrating Firebase, React, and the powerful **PaymanAI Payment SDK**.
 
+**Watch Demo Here - [bit.ly/bizzy-network](https://bit.ly/bizzy-network)**
+
 ## Key Features
 
 ![Workflow](./src/assets/workflow.svg)
@@ -90,6 +92,6 @@ README.md
 
 <h3>
   <p align="center">
-    Made with ❤️ by <a href="https://www.mrmehta.in">kartikmehta8</a> for <a href="https://paymanai.com">payman</a> and community
+    Made with ❤️ by <a href="https://www.mrmehta.in">kartikmehta8</a> for Community
   </p>
 </h3>
