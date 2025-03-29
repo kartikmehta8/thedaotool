@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Layout, Typography, Input, Button, Card, Form } from 'antd';
-import { db } from '../../firebase';
+import { db } from '../../providers/firebase';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import toast from '../../utils/toast';
 
