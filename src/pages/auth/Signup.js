@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, Input, Typography, Select, Card, Layout } from 'antd';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
-import { auth, db } from '../../firebase';
+import { auth, db } from '../../providers/firebase';
 import { useNavigate } from 'react-router-dom';
 import toast from '../../utils/toast';
 
