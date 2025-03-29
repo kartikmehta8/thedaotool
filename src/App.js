@@ -15,7 +15,7 @@ import {
   ContractorProfile,
 } from './pages';
 
-import { auth, db } from './firebase';
+import { auth, db } from './providers/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import { ConfigProvider, theme } from 'antd';
