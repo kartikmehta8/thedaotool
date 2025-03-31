@@ -62,6 +62,10 @@
   └── PULL_REQUEST_TEMPLATE.md
 /public
 /src
+  ├── api/
+  │   ├── auth.js
+  │   ├── firebaseBusiness.js / firebaseContractor.js
+  │   ├── payman.js
   ├── assets/
   ├── pages/
   │   ├── auth/
@@ -69,16 +73,24 @@
   │   ├── contractor/
   │   ├── Dashboard.js / Landing.js
   ├── components/
+  │   ├── business/
+  │   ├── contractor/
   │   ├── InfoPopup.js
   │   └── Navbar.js
+  ├── providers/
+  │   └── firebase.js
   ├── utils/
   │   └── toast.js
-  └── App.js / firebase.js / index.js
+  └── App.js / index.js
 .env.sample
 .prettierrc
 .prettierignore
 package.json
+CODE_OF_CONDUCT.md
+CONTRIBUTING.md
+LICENSE
 README.md
+SECURITY.md
 ```
 
 ## Roadmap
