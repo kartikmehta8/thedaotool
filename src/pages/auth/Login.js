@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Input, Typography, Card, Layout } from 'antd';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
-import { auth, db } from '../../providers/firebase';
 import { useNavigate } from 'react-router-dom';
-import toast from '../../utils/toast';
+import { loginUser } from '../../api/auth';
 
 const { Title } = Typography;
 const { Content } = Layout;
@@ -15,29 +12,7 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleLogin = async () => {
-    try {
-      const result = await signInWithEmailAndPassword(auth, email, password);
-
-      const userRef = doc(db, 'users', result.user.uid);
-      const userSnap = await getDoc(userRef);
-
-      if (userSnap.exists()) {
-        const userProfile = {
-          uid: result.user.uid,
-          email: result.user.email,
-          role: userSnap.data().role, // add more fields as needed.
-        };
-
-        localStorage.setItem('payman-user', JSON.stringify(userProfile));
-
-        toast.success('Logged in successfully');
-        navigate('/dashboard');
-      } else {
-        toast.error('User profile not found in database.');
-      }
-    } catch (err) {
-      toast.error('Something went wrong during login');
-    }
+    await loginUser(email, password, navigate);
   };
 
   return (

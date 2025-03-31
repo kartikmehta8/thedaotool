@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Layout, Button, Space } from 'antd';
-import { auth, db } from '../providers/firebase';
-import { doc, getDoc } from 'firebase/firestore';
+import { auth } from '../providers/firebase';
 import { useNavigate } from 'react-router-dom';
-import Paymanai from 'paymanai';
-import toast from '../utils/toast';
+import { getPaymanBalance } from '../api/payman';
 
 const { Header } = Layout;
 
@@ -19,21 +17,9 @@ const Navbar = () => {
   useEffect(() => {
     const fetchBalance = async () => {
       if (role === 'business' && uid) {
-        const ref = doc(db, 'businesses', uid);
-        const snap = await getDoc(ref);
-        if (snap.exists()) {
-          const { apiKey } = snap.data();
-          if (!apiKey) {
-            toast.warning('No Payman API key found.');
-            return;
-          }
-          try {
-            const payman = new Paymanai({ xPaymanAPISecret: apiKey });
-            const usd = await payman.balances.getSpendableBalance('TSD');
-            setBalance(usd);
-          } catch (err) {
-            toast.error('Error fetching Payman balance');
-          }
+        const usd = await getPaymanBalance(uid);
+        if (usd !== null) {
+          setBalance(usd);
         }
       }
     };

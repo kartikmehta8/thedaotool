@@ -1,6 +1,9 @@
 import Paymanai from 'paymanai';
 import toast from '../utils/toast';
 
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '../providers/firebase';
+
 export const createPayee = async (
   contractorInfo,
   apiKey,
@@ -44,5 +47,35 @@ export const sendPayment = async (contract, payeeId, apiKey) => {
   } catch (err) {
     toast.error('Failed to send payment');
     throw err;
+  }
+};
+
+const getApiKey = async (uid) => {
+  try {
+    const ref = doc(db, 'businesses', uid);
+    const snap = await getDoc(ref);
+    if (snap.exists()) {
+      return snap.data().apiKey || null;
+    }
+    return null;
+  } catch (err) {
+    toast.error('Error fetching API key');
+    return null;
+  }
+};
+
+export const getPaymanBalance = async (uid) => {
+  const apiKey = await getApiKey(uid);
+  if (!apiKey) {
+    toast.warning('No Payman API key found.');
+    return null;
+  }
+  try {
+    const payman = new Paymanai({ xPaymanAPISecret: apiKey });
+    const usd = await payman.balances.getSpendableBalance('TSD');
+    return usd;
+  } catch (err) {
+    toast.error('Error fetching Payman balance');
+    return null;
   }
 };

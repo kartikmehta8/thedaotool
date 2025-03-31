@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Input, Typography, Select, Card, Layout } from 'antd';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { doc, setDoc } from 'firebase/firestore';
-import { auth, db } from '../../providers/firebase';
 import { useNavigate } from 'react-router-dom';
-import toast from '../../utils/toast';
+import { signupUser } from '../../api/auth';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -17,24 +14,7 @@ const Signup = () => {
   const navigate = useNavigate();
 
   const handleSignup = async () => {
-    try {
-      const result = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      const userRef = doc(db, 'users', result.user.uid);
-
-      await setDoc(userRef, { email, role });
-      localStorage.setItem(
-        'payman-user',
-        JSON.stringify({ ...result.user, role })
-      );
-      toast.success('Account created');
-      navigate('/dashboard');
-    } catch (err) {
-      toast.error('Something went wrong');
-    }
+    await signupUser(email, password, role, navigate);
   };
 
   return (
