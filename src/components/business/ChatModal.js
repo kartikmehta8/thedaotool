@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Input, List } from 'antd';
-import { ref, onChildAdded, push, off } from 'firebase/database';
-import { rtdb } from '../../providers/firebase';
+import { listenToMessages, sendMessage } from '../../api/firebaseBusiness';
 
 const ChatModal = ({ visible, contractId, userId, onClose }) => {
   const [messages, setMessages] = useState([]);
@@ -9,27 +8,16 @@ const ChatModal = ({ visible, contractId, userId, onClose }) => {
 
   useEffect(() => {
     if (visible && contractId) {
-      const chatRef = ref(rtdb, `chats/${contractId}`);
-      onChildAdded(chatRef, (snapshot) => {
-        const msg = snapshot.val();
-        setMessages((prev) => [...prev, msg]);
-      });
+      const unsubscribe = listenToMessages(contractId, setMessages);
 
       return () => {
-        off(chatRef);
+        unsubscribe(); // Cleanup on modal close.
       };
     }
   }, [visible, contractId]);
 
   const handleSendMessage = async () => {
-    if (!newMessage.trim()) return;
-    const chatRef = ref(rtdb, `chats/${contractId}`);
-    await push(chatRef, {
-      senderId: userId,
-      senderName: 'Business',
-      text: newMessage.trim(),
-      timestamp: new Date().toISOString(),
-    });
+    await sendMessage(contractId, userId, 'Business', newMessage);
     setNewMessage('');
   };
 
@@ -43,7 +31,6 @@ const ChatModal = ({ visible, contractId, userId, onClose }) => {
     <Modal
       open={visible}
       onCancel={handleModalClose}
-      onOk={handleModalClose}
       title={`Chat with Contractor`}
       footer={null}
       width={600}

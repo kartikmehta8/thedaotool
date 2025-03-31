@@ -1,8 +1,6 @@
 import React from 'react';
 import { Modal, Form, Input, DatePicker, Button } from 'antd';
-import { collection, addDoc } from 'firebase/firestore';
-import { db } from '../../providers/firebase';
-import toast from '../../utils/toast';
+import { createContract } from '../../api/firebaseBusiness';
 
 const CreateContractModal = ({
   visible,
@@ -15,27 +13,11 @@ const CreateContractModal = ({
   const handleCreate = async () => {
     try {
       const values = await form.validateFields();
-
-      const newContract = {
-        name: values.name || '',
-        description: values.description || '',
-        deadline: values.deadline?.format('YYYY-MM-DD') || '',
-        amount: Number(values.amount || 0),
-        businessId: userId,
-        contractorId: null,
-        status: 'open',
-        submittedLink: '',
-        createdAt: new Date().toISOString(),
-        tags: values.tags ? values.tags.split(',') : [],
-      };
-
-      await addDoc(collection(db, 'contracts'), newContract);
-      toast.success('Contract created');
-      onCancel();
+      await createContract(values, userId, onCreateSuccess);
+      onCancel(); // Close modal after successful creation.
       form.resetFields();
-      onCreateSuccess();
     } catch (err) {
-      toast.error('Failed to create contract');
+      console.error('Contract creation failed:', err);
     }
   };
 

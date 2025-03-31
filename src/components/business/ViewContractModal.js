@@ -1,9 +1,12 @@
 import React from 'react';
 import { Modal, Divider, Select, Button } from 'antd';
-import { doc, updateDoc, getDoc } from 'firebase/firestore';
-import { db } from '../../providers/firebase';
+import {
+  updateContract,
+  getContractorData,
+  updateContractorData,
+} from '../../api/firebaseBusiness';
+import { createPayee, sendPayment } from '../../api/payman';
 import toast from '../../utils/toast';
-import Paymanai from 'paymanai';
 
 const { Option } = Select;
 
@@ -16,48 +19,23 @@ const ViewContractModal = ({
   setSelectedContract,
 }) => {
   const handleSaveUpdate = async () => {
-    try {
-      await updateDoc(doc(db, 'contracts', contract.id), contract);
-      toast.success('Contract updated');
-      onCancel();
-      onUpdateSuccess();
-    } catch (err) {
-      toast.error('Error saving changes');
-    }
+    await updateContract(contract, onUpdateSuccess, onCancel);
   };
 
   const handlePayeeSetup = async () => {
     if (!contract?.contractorInfo || !apiKey) return;
     try {
-      const payman = new Paymanai({ xPaymanAPISecret: apiKey });
-      const { name, email, accountNumber, routingNumber } =
-        contract.contractorInfo;
-
-      const contractorRef = doc(db, 'contractors', contract.contractorId);
-      const contractorSnap = await getDoc(contractorRef);
-
-      if (contractorSnap.exists()) {
-        const contractorData = contractorSnap.data();
-
-        if (contractorData.payeeId) {
-          toast.warning('Payee already exists for this contractor.');
-          return;
-        }
-
-        const payee = await payman.payments.createPayee({
-          type: 'US_ACH',
-          name,
-          accountHolderName: name,
-          accountHolderType: 'individual',
-          accountNumber,
-          routingNumber,
-          accountType: 'checking',
-          contactDetails: { email },
-        });
-
-        await updateDoc(contractorRef, { payeeId: payee.id });
-        toast.success(`Payee created and saved for ${name}`);
+      const contractorData = await getContractorData(contract.contractorId);
+      if (contractorData.payeeId) {
+        toast.warning('Payee already exists for this contractor.');
+        return;
       }
+      await createPayee(
+        contract.contractorInfo,
+        apiKey,
+        contract.contractorId,
+        updateContractorData
+      );
     } catch (err) {
       toast.error('Failed to create payee');
     }
@@ -66,32 +44,13 @@ const ViewContractModal = ({
   const handleSendPayment = async () => {
     if (!contract?.contractorInfo || !apiKey) return;
     try {
-      const contractorSnap = await getDoc(
-        doc(db, 'contractors', contract.contractorId)
-      );
-
-      if (!contractorSnap.exists()) {
-        toast.error('Contractor profile not found');
-        return;
-      }
-
-      const contractorData = contractorSnap.data();
-      const payeeId = contractorData.payeeId;
-
+      const contractorData = await getContractorData(contract.contractorId);
+      const payeeId = contractorData?.payeeId || '';
       if (!payeeId) {
         toast.warning('No payee found. Please create payee first.');
         return;
       }
-
-      const payman = new Paymanai({ xPaymanAPISecret: apiKey });
-      await payman.payments.sendPayment({
-        amountDecimal: Number(contract.amount),
-        payeeId: process.env.REACT_APP_PAYMAN_TEST_PAYEE_ID, // payeeId, We need test payeeId as we are in test mode.
-        memo: `Payment for ${contract.name}`,
-        metadata: { contractId: contract.id },
-      });
-
-      toast.success('Payment sent successfully');
+      await sendPayment(contract, payeeId, apiKey);
     } catch (err) {
       toast.error('Failed to send payment');
     }

@@ -1,9 +1,7 @@
 import React from 'react';
 import { Card, Typography, Tag, Button, Col } from 'antd';
 import { MessageOutlined } from '@ant-design/icons';
-import { deleteDoc, doc } from 'firebase/firestore';
-import { db } from '../../providers/firebase';
-import toast from '../../utils/toast';
+import { deleteContract } from '../../api/firebaseBusiness';
 
 const { Text } = Typography;
 
@@ -17,13 +15,7 @@ const statusColors = {
 const ContractCard = ({ contract, onView, onChatOpen, onRefetch }) => {
   const handleDelete = async (e) => {
     e.stopPropagation();
-    try {
-      await deleteDoc(doc(db, 'contracts', contract.id));
-      toast.success('Contract deleted');
-      onRefetch();
-    } catch (err) {
-      toast.error('Failed to delete contract');
-    }
+    await deleteContract(contract.id, onRefetch);
   };
 
   return (
