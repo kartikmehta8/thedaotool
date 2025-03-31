@@ -50,7 +50,7 @@ export const sendPayment = async (contract, payeeId, apiKey) => {
   }
 };
 
-const getApiKey = async (uid) => {
+export const getApiKey = async (uid) => {
   try {
     const ref = doc(db, 'businesses', uid);
     const snap = await getDoc(ref);

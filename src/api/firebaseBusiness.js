@@ -7,6 +7,10 @@ import {
   collection,
   updateDoc,
   getDoc,
+  setDoc,
+  query,
+  where,
+  getDocs,
 } from 'firebase/firestore';
 import toast from '../utils/toast';
 
@@ -92,4 +96,73 @@ export const getContractorData = async (contractorId) => {
 export const updateContractorData = async (contractorId, data) => {
   const contractorRef = doc(db, 'contractors', contractorId);
   await updateDoc(contractorRef, data);
+};
+
+export const getContractsForBusiness = async (uid) => {
+  try {
+    const q = query(
+      collection(db, 'contracts'),
+      where('businessId', '==', uid)
+    );
+    const snapshot = await getDocs(q);
+
+    const contracts = await Promise.all(
+      snapshot.docs.map(async (docSnap) => {
+        const data = docSnap.data();
+        let contractorInfo = null;
+
+        if (data.contractorId) {
+          const contractorRef = doc(db, 'contractors', data.contractorId);
+          const contractorSnap = await getDoc(contractorRef);
+          if (contractorSnap.exists()) {
+            contractorInfo = {
+              id: data.contractorId,
+              ...contractorSnap.data(),
+            };
+          }
+        }
+
+        return {
+          id: docSnap.id,
+          ...data,
+          contractorInfo,
+        };
+      })
+    );
+
+    return contracts;
+  } catch (err) {
+    toast.error('Error fetching contracts');
+    return [];
+  }
+};
+
+export const getBusinessProfile = async (uid) => {
+  try {
+    const ref = doc(db, 'businesses', uid);
+    const snap = await getDoc(ref);
+
+    if (snap.exists()) {
+      return snap.data();
+    } else {
+      return null; // Return null if no profile exists.
+    }
+  } catch (err) {
+    toast.error('Failed to fetch profile');
+    return null;
+  }
+};
+
+export const saveBusinessProfile = async (uid, values, email) => {
+  try {
+    const profileData = {
+      ...values,
+      email,
+    };
+
+    await setDoc(doc(db, 'businesses', uid), profileData);
+    toast.success('Profile updated successfully');
+  } catch (err) {
+    toast.error('Error saving profile');
+  }
 };

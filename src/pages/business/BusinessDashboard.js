@@ -1,16 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Typography, Button, Row } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import {
-  collection,
-  getDocs,
-  getDoc,
-  doc,
-  query,
-  where,
-} from 'firebase/firestore';
-import { db } from '../../providers/firebase';
-import toast from '../../utils/toast';
+import { getContractsForBusiness } from '../../api/firebaseBusiness';
+import { getApiKey } from '../../api/payman';
 
 import {
   ChatModal,
@@ -23,8 +15,6 @@ const { Title } = Typography;
 
 const BusinessDashboard = () => {
   const [contracts, setContracts] = useState([]);
-  // eslint-disable-next-line no-unused-vars
-  const [loading, setLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [viewModal, setViewModal] = useState(false);
   const [chatModal, setChatModal] = useState(false);
@@ -36,45 +26,11 @@ const BusinessDashboard = () => {
   const uid = user.uid;
 
   const fetchContracts = async () => {
-    try {
-      const businessSnap = await getDoc(doc(db, 'businesses', uid));
-      const key = businessSnap.data()?.apiKey;
-      setApiKey(key);
+    const key = await getApiKey(uid);
+    setApiKey(key);
 
-      const q = query(
-        collection(db, 'contracts'),
-        where('businessId', '==', uid)
-      );
-      const snapshot = await getDocs(q);
-      const docs = await Promise.all(
-        snapshot.docs.map(async (docSnap) => {
-          const data = docSnap.data();
-          let contractorInfo = null;
-
-          if (data.contractorId) {
-            const contractorRef = doc(db, 'contractors', data.contractorId);
-            const contractorSnap = await getDoc(contractorRef);
-            if (contractorSnap.exists()) {
-              contractorInfo = {
-                id: data.contractorId,
-                ...contractorSnap.data(),
-              };
-            }
-          }
-
-          return {
-            id: docSnap.id,
-            ...data,
-            contractorInfo,
-          };
-        })
-      );
-      setContracts(docs);
-    } catch (err) {
-      toast.error('Error fetching contracts');
-    } finally {
-      setLoading(false);
-    }
+    const fetchedContracts = await getContractsForBusiness(uid);
+    setContracts(fetchedContracts);
   };
 
   const handleChatOpen = (contractId) => {

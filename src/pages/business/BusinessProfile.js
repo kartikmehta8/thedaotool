@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Layout, Typography, Input, Button, Card, Form } from 'antd';
-import { db } from '../../providers/firebase';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
-import toast from '../../utils/toast';
+import {
+  getBusinessProfile,
+  saveBusinessProfile,
+} from '../../api/firebaseBusiness';
 
 const { Content } = Layout;
 const { Title } = Typography;
@@ -24,33 +25,18 @@ const BusinessProfile = () => {
   };
 
   const fetchProfile = async () => {
-    try {
-      const ref = doc(db, 'businesses', uid);
-      const snap = await getDoc(ref);
-      if (snap.exists()) {
-        const data = snap.data();
-        form.setFieldsValue({ ...defaultFields, ...data });
-      } else {
-        form.setFieldsValue(defaultFields); // prefill blank form.
-      }
-    } catch (err) {
-      toast.error('Failed to fetch profile');
-    } finally {
-      setLoading(false);
+    setLoading(true);
+    const profileData = await getBusinessProfile(uid);
+    if (profileData) {
+      form.setFieldsValue({ ...defaultFields, ...profileData });
+    } else {
+      form.setFieldsValue(defaultFields);
     }
+    setLoading(false);
   };
 
   const handleSubmit = async (values) => {
-    try {
-      await setDoc(doc(db, 'businesses', uid), {
-        ...defaultFields,
-        ...values,
-        email,
-      });
-      toast.success('Profile updated');
-    } catch (err) {
-      toast.error('Error saving profile');
-    }
+    await saveBusinessProfile(uid, values, email);
   };
 
   useEffect(() => {
@@ -77,7 +63,13 @@ const BusinessProfile = () => {
             Business Profile
           </Title>
           <Form form={form} layout="vertical" onFinish={handleSubmit}>
-            <Form.Item name="companyName" label="Company Name">
+            <Form.Item
+              name="companyName"
+              label="Company Name"
+              rules={[
+                { required: true, message: 'Please enter your company name' },
+              ]}
+            >
               <Input placeholder="Example Inc." />
             </Form.Item>
             <Form.Item name="email" label="Email">
