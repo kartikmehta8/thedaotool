@@ -1,15 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Typography, Row } from 'antd';
-import {
-  collection,
-  getDocs,
-  getDoc,
-  doc,
-  query,
-  where,
-} from 'firebase/firestore';
-import { db } from '../../providers/firebase';
-import toast from '../../utils/toast';
+import { fetchContractsForContractor } from '../../api/firebaseContractor';
 import {
   ContractCard,
   SubmitWorkModal,
@@ -27,37 +18,13 @@ const ContractorDashboard = () => {
   const user = JSON.parse(localStorage.getItem('payman-user')) || {};
   const uid = user.uid;
 
-  const fetchContracts = async () => {
-    try {
-      const q = query(
-        collection(db, 'contracts'),
-        where('status', '!=', 'closed')
-      );
-      const snap = await getDocs(q);
-      const all = await Promise.all(
-        snap.docs.map(async (docRef) => {
-          const data = docRef.data();
-          const businessSnap = await getDoc(
-            doc(db, 'businesses', data.businessId)
-          );
-          return {
-            id: docRef.id,
-            ...data,
-            businessInfo: businessSnap.exists() ? businessSnap.data() : {},
-          };
-        })
-      );
-      const filtered = all.filter(
-        (c) => c.status === 'open' || c.contractorId === uid
-      );
-      setContracts(filtered);
-    } catch (err) {
-      toast.error('Failed to fetch contracts');
-    }
+  const loadContracts = async () => {
+    const contractsData = await fetchContractsForContractor(uid);
+    setContracts(contractsData);
   };
 
   useEffect(() => {
-    fetchContracts();
+    loadContracts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -72,7 +39,7 @@ const ContractorDashboard = () => {
             key={contract.id}
             contract={contract}
             userId={uid}
-            onRefetch={fetchContracts}
+            onRefetch={loadContracts}
             onOpenSubmitModal={() => {
               setSelected(contract);
               setModalVisible(true);
@@ -91,7 +58,7 @@ const ContractorDashboard = () => {
             visible={modalVisible}
             contractId={selected.id}
             onCancel={() => setModalVisible(false)}
-            onSubmitSuccess={fetchContracts}
+            onSubmitSuccess={loadContracts}
           />
 
           <ChatModal

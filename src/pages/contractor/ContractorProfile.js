@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Layout, Typography, Input, Button, Card, Form } from 'antd';
-import { db } from '../../providers/firebase';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
-import toast from '../../utils/toast';
+import {
+  fetchContractorProfile,
+  saveContractorProfile,
+} from '../../api/firebaseContractor';
 
 const { Content } = Layout;
 const { Title } = Typography;
@@ -25,40 +26,18 @@ const ContractorProfile = () => {
     routingNumber: '',
   };
 
-  const fetchProfile = async () => {
-    try {
-      const ref = doc(db, 'contractors', uid);
-      const snap = await getDoc(ref);
-      if (snap.exists()) {
-        const data = snap.data();
-        form.setFieldsValue({ ...defaultFields, ...data });
-      } else {
-        form.setFieldsValue(defaultFields); // initial empty values.
-      }
-    } catch (err) {
-      toast.error('Failed to fetch profile');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSubmit = async (values) => {
-    try {
-      await setDoc(doc(db, 'contractors', uid), {
-        ...defaultFields,
-        ...values,
-        email,
-      });
-      toast.success('Profile updated');
-    } catch (err) {
-      toast.error('Error saving profile');
-    }
-  };
-
   useEffect(() => {
-    fetchProfile();
+    const loadProfile = async () => {
+      await fetchContractorProfile(uid, form, defaultFields);
+      setLoading(false);
+    };
+    loadProfile();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const handleSubmit = async (values) => {
+    await saveContractorProfile(uid, values, email, defaultFields);
+  };
 
   return (
     <Layout style={{ minHeight: '100vh', backgroundColor: '#141414' }}>
