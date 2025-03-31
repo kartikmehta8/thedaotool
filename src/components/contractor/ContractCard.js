@@ -1,8 +1,6 @@
 import React from 'react';
 import { Card, Typography, Tag, Button, Col } from 'antd';
-import { doc, updateDoc } from 'firebase/firestore';
-import { db } from '../../providers/firebase';
-import toast from '../../utils/toast';
+import { applyToContract } from '../../api/firebaseContractor';
 
 const { Text } = Typography;
 
@@ -20,17 +18,8 @@ const ContractCard = ({
   onOpenSubmitModal,
   onOpenChat,
 }) => {
-  const applyToContract = async () => {
-    try {
-      await updateDoc(doc(db, 'contracts', contract.id), {
-        status: 'assigned',
-        contractorId: userId,
-      });
-      toast.success('Applied to contract');
-      onRefetch();
-    } catch (err) {
-      toast.error('Application failed');
-    }
+  const handleApplyToContract = async () => {
+    await applyToContract(contract.id, userId, onRefetch);
   };
 
   return (
@@ -66,7 +55,7 @@ const ContractCard = ({
         )}
 
         {contract.status === 'open' && (
-          <Button onClick={applyToContract} type="primary" block>
+          <Button onClick={handleApplyToContract} type="primary" block>
             Apply
           </Button>
         )}

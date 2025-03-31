@@ -1,45 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Input, Button, List } from 'antd';
-import { onChildAdded, push, ref } from 'firebase/database';
-import { rtdb } from '../../providers/firebase';
+import { subscribeToChat, sendChatMessage } from '../../api/firebaseContractor';
 
 const ChatModal = ({ visible, contract, userId, onCancel }) => {
   const [chatInput, setChatInput] = useState('');
   const [messages, setMessages] = useState([]);
 
   useEffect(() => {
-    if (visible && contract) {
-      setMessages([]);
-      const chatRef = ref(rtdb, `chats/${contract.id}`);
-      // eslint-disable-next-line no-unused-vars
-      const unsubscribe = onChildAdded(chatRef, (snapshot) => {
-        setMessages((prev) => [...prev, snapshot.val()]);
-      });
+    if (visible && contract?.id) {
+      setMessages([]); // Reset messages on modal open.
+      const unsubscribe = subscribeToChat(contract.id, setMessages);
 
       return () => {
-        // This doesn't actually unsubscribe in Firebase RTDB.
-        // In a real app, you'd want to implement a proper cleanup.
-        // Firebase RTDB requires calling off() to detach listeners.
+        if (unsubscribe) unsubscribe(); // Clean up listener when closing.
       };
     }
   }, [visible, contract]);
 
-  const sendMessage = () => {
-    if (!chatInput.trim()) return;
-    const msgRef = ref(rtdb, `chats/${contract.id}`);
-    push(msgRef, {
-      sender: userId,
-      senderName: 'Contractor',
-      text: chatInput,
-      timestamp: Date.now(),
-    });
+  const handleSendMessage = async () => {
+    await sendChatMessage(contract.id, userId, 'Contractor', chatInput);
     setChatInput('');
   };
 
   return (
     <Modal
       open={visible}
-      title={`Chat with ${contract?.businessInfo?.companyName}`}
+      title={`Chat with ${contract?.businessInfo?.companyName || 'Business'}`}
       onCancel={onCancel}
       footer={null}
     >
@@ -48,7 +34,7 @@ const ChatModal = ({ visible, contract, userId, onCancel }) => {
         dataSource={messages}
         renderItem={(msg) => (
           <List.Item>
-            <strong>{msg.sender === userId ? 'You' : 'Them'}:</strong>{' '}
+            <strong>{msg.sender === userId ? 'You' : msg.senderName}:</strong>{' '}
             {msg.text}
           </List.Item>
         )}
@@ -61,7 +47,7 @@ const ChatModal = ({ visible, contract, userId, onCancel }) => {
         placeholder="Type your message..."
       />
       <Button
-        onClick={sendMessage}
+        onClick={handleSendMessage}
         type="primary"
         block
         style={{ marginTop: 8 }}

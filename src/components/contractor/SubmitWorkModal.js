@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { Modal, Input } from 'antd';
-import { doc, updateDoc } from 'firebase/firestore';
-import { db } from '../../providers/firebase';
-import toast from '../../utils/toast';
+import { submitWork } from '../../api/firebaseContractor';
 
 const SubmitWorkModal = ({
   visible,
@@ -12,19 +10,9 @@ const SubmitWorkModal = ({
 }) => {
   const [submission, setSubmission] = useState('');
 
-  const submitWork = async () => {
-    try {
-      await updateDoc(doc(db, 'contracts', contractId), {
-        status: 'pending_payment',
-        submittedLink: submission,
-      });
-      toast.success('Work submitted');
-      onCancel();
-      setSubmission('');
-      onSubmitSuccess();
-    } catch (err) {
-      toast.error('Failed to submit');
-    }
+  const handleSubmitWork = async () => {
+    await submitWork(contractId, submission, onCancel, onSubmitSuccess);
+    setSubmission(''); // Clear the input after submission.
   };
 
   return (
@@ -32,7 +20,7 @@ const SubmitWorkModal = ({
       open={visible}
       title="Submit Work"
       onCancel={onCancel}
-      onOk={submitWork}
+      onOk={handleSubmitWork}
       okText="Submit"
     >
       <Input
