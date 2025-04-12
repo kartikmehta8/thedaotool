@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Layout, Button, Space } from 'antd';
-import { auth } from '../providers/firebase';
 import { useNavigate } from 'react-router-dom';
 import { getPaymanBalance } from '../api/payman';
 
@@ -27,7 +26,6 @@ const Navbar = () => {
   }, [uid, role]);
 
   const handleLogout = () => {
-    auth.signOut();
     localStorage.removeItem('payman-user');
     navigate('/login');
   };

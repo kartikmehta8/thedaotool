@@ -1,30 +1,48 @@
-import { ref, onChildAdded, push, off } from 'firebase/database';
-import { rtdb } from '../providers/firebase';
-
 import { API_URL } from '../constants/constants';
 import toast from '../utils/toast';
 
+import { io } from 'socket.io-client';
+
+let socket;
+
+const initSocket = () => {
+  if (!socket) {
+    socket = io(process.env.REACT_APP_BACKEND_URL);
+  }
+  return socket;
+};
+
 export const subscribeToChat = (contractId, setMessages) => {
-  if (!contractId) return;
-  const chatRef = ref(rtdb, `chats/${contractId}`);
+  const s = initSocket();
+  s.emit('join-contract', contractId);
 
-  // eslint-disable-next-line no-unused-vars
-  const unsubscribe = onChildAdded(chatRef, (snapshot) => {
-    setMessages((prev) => [...prev, snapshot.val()]);
-  });
+  const handleNew = (msg) => {
+    setMessages((prev) => [...prev, msg]);
+  };
 
-  return () => off(chatRef); // Clean up listener.
+  const handleHistory = (history) => {
+    setMessages(history);
+  };
+
+  socket.on('chat-history', handleHistory);
+  socket.on('new-message', handleNew);
+
+  return () => {
+    socket.off('chat-history', handleHistory);
+    socket.off('new-message', handleNew);
+    // socket.disconnect(); socket = null;
+  };
 };
 
 export const sendChatMessage = async (contractId, userId, senderName, text) => {
   if (!text.trim()) return;
 
-  const msgRef = ref(rtdb, `chats/${contractId}`);
-  await push(msgRef, {
-    sender: userId,
-    senderName: senderName || 'User',
+  const s = initSocket();
+  s.emit('send-message', {
+    contractId,
+    senderId: userId,
+    senderName,
     text: text.trim(),
-    timestamp: Date.now(),
   });
 };
 
