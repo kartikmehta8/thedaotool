@@ -1,4 +1,5 @@
 const express = require('express');
+const http = require('http');
 const compression = require('./middlewares/Compression');
 const clusterMiddleware = require('./middlewares/Clusters');
 const helmet = require('./middlewares/Helmet');
@@ -16,12 +17,14 @@ const contractorRoutes = require('./routes/contractor');
 dotenv.config();
 
 const app = express();
+const server = http.createServer(app);
+const initSocket = require('./sockets/chat');
 
 // Middlewares
 app.use(cors);
 app.use(compression);
 app.use(helmet);
-clusterMiddleware(app);
+clusterMiddleware(server);
 app.use(bodyParser);
 app.use(morgan);
 
@@ -30,6 +33,9 @@ app.use('/api/auth', authRoutes);
 app.use('/api/payman', paymanRoutes);
 app.use('/api/business', businessRoutes);
 app.use('/api/contractor', contractorRoutes);
+
+// Socket
+initSocket(server);
 
 app.get('/', (req, res) => {
   res.send({
