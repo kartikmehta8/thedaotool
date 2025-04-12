@@ -1,15 +1,7 @@
-import { ref, push, onChildAdded, off } from 'firebase/database';
-import { rtdb, db } from '../providers/firebase';
-import {
-  doc,
-  updateDoc,
-  query,
-  collection,
-  getDocs,
-  getDoc,
-  where,
-  setDoc,
-} from 'firebase/firestore';
+import { ref, onChildAdded, push, off } from 'firebase/database';
+import { rtdb } from '../providers/firebase';
+
+import { API_URL } from '../constants/constants';
 import toast from '../utils/toast';
 
 export const subscribeToChat = (contractId, setMessages) => {
@@ -38,13 +30,15 @@ export const sendChatMessage = async (contractId, userId, senderName, text) => {
 
 export const applyToContract = async (contractId, userId, onRefetch) => {
   try {
-    await updateDoc(doc(db, 'contracts', contractId), {
-      status: 'assigned',
-      contractorId: userId,
+    const res = await fetch(`${API_URL}/contractor/apply`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ contractId, userId }),
     });
+    if (!res.ok) throw new Error();
     toast.success('Applied to contract');
     onRefetch();
-  } catch (err) {
+  } catch {
     toast.error('Application failed');
   }
 };
@@ -56,47 +50,27 @@ export const submitWork = async (
   onSubmitSuccess
 ) => {
   try {
-    await updateDoc(doc(db, 'contracts', contractId), {
-      status: 'pending_payment',
-      submittedLink: submission,
+    const res = await fetch(`${API_URL}/contractor/submit`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ contractId, submittedLink: submission }),
     });
+    if (!res.ok) throw new Error();
     toast.success('Work submitted');
     onCancel();
     onSubmitSuccess();
-  } catch (err) {
+  } catch {
     toast.error('Failed to submit');
   }
 };
 
 export const fetchContractsForContractor = async (uid) => {
   try {
-    const q = query(
-      collection(db, 'contracts'),
-      where('status', '!=', 'closed')
-    );
-    const snap = await getDocs(q);
-
-    const allContracts = await Promise.all(
-      snap.docs.map(async (docRef) => {
-        const data = docRef.data();
-        const businessSnap = await getDoc(
-          doc(db, 'businesses', data.businessId)
-        );
-
-        return {
-          id: docRef.id,
-          ...data,
-          businessInfo: businessSnap.exists() ? businessSnap.data() : {},
-        };
-      })
-    );
-
-    // Filter contracts: show if open or assigned to the current contractor.
-    const filteredContracts = allContracts.filter(
-      (c) => c.status === 'open' || c.contractorId === uid
-    );
-    return filteredContracts;
-  } catch (err) {
+    const res = await fetch(`${API_URL}/contractor/contracts/${uid}`);
+    if (!res.ok) throw new Error();
+    const data = await res.json();
+    return data.contracts;
+  } catch {
     toast.error('Failed to fetch contracts');
     return [];
   }
@@ -104,15 +78,12 @@ export const fetchContractsForContractor = async (uid) => {
 
 export const fetchContractorProfile = async (uid, form, defaultFields) => {
   try {
-    const ref = doc(db, 'contractors', uid);
-    const snap = await getDoc(ref);
-    if (snap.exists()) {
-      const data = snap.data();
-      form.setFieldsValue({ ...defaultFields, ...data });
-    } else {
-      form.setFieldsValue(defaultFields); // initial empty values.
-    }
-  } catch (err) {
+    const res = await fetch(`${API_URL}/contractor/profile/${uid}`);
+    if (res.status === 404) return form.setFieldsValue(defaultFields);
+    if (!res.ok) throw new Error();
+    const data = await res.json();
+    form.setFieldsValue({ ...defaultFields, ...data });
+  } catch {
     toast.error('Failed to fetch profile');
   }
 };
@@ -124,13 +95,14 @@ export const saveContractorProfile = async (
   defaultFields
 ) => {
   try {
-    await setDoc(doc(db, 'contractors', uid), {
-      ...defaultFields,
-      ...values,
-      email,
+    const res = await fetch(`${API_URL}/contractor/profile/${uid}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...defaultFields, ...values, email }),
     });
+    if (!res.ok) throw new Error();
     toast.success('Profile updated');
-  } catch (err) {
+  } catch {
     toast.error('Error saving profile');
   }
 };
