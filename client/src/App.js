@@ -15,9 +15,6 @@ import {
   ContractorProfile,
 } from './pages';
 
-import { auth, db } from './providers/firebase';
-import { onAuthStateChanged } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
 import { ConfigProvider, theme } from 'antd';
 
 const App = () => {
@@ -27,29 +24,15 @@ const App = () => {
   });
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      if (firebaseUser) {
-        try {
-          const ref = doc(db, 'users', firebaseUser.uid);
-          const snap = await getDoc(ref);
-          const role = snap.exists() ? snap.data().role : null;
-          const fullUser = {
-            uid: firebaseUser.uid,
-            email: firebaseUser.email,
-            role,
-          };
-          localStorage.setItem('payman-user', JSON.stringify(fullUser));
-          setUser(fullUser);
-        } catch (err) {
-          console.error('Error fetching user profile:', err);
-        }
-      } else {
-        localStorage.removeItem('payman-user');
-        setUser(null);
-      }
-    });
+    const syncUser = () => {
+      const localUser = localStorage.getItem('payman-user');
+      setUser(localUser ? JSON.parse(localUser) : null);
+    };
 
-    return () => unsubscribe();
+    window.addEventListener('storage', syncUser);
+    syncUser();
+
+    return () => window.removeEventListener('storage', syncUser);
   }, []);
 
   return (
