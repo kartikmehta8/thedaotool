@@ -10,7 +10,7 @@ const {
   setDoc,
 } = require('firebase/firestore');
 
-exports.applyToContract = async (req, res) => {
+const applyToContract = async (req, res) => {
   try {
     const { contractId, userId } = req.body;
     await updateDoc(doc(db, 'contracts', contractId), {
@@ -23,7 +23,7 @@ exports.applyToContract = async (req, res) => {
   }
 };
 
-exports.submitWork = async (req, res) => {
+const submitWork = async (req, res) => {
   try {
     const { contractId, submittedLink } = req.body;
     await updateDoc(doc(db, 'contracts', contractId), {
@@ -36,7 +36,7 @@ exports.submitWork = async (req, res) => {
   }
 };
 
-exports.fetchContracts = async (req, res) => {
+const fetchContracts = async (req, res) => {
   try {
     const uid = req.params.uid;
     const q = query(
@@ -69,7 +69,7 @@ exports.fetchContracts = async (req, res) => {
   }
 };
 
-exports.getProfile = async (req, res) => {
+const getProfile = async (req, res) => {
   try {
     const snap = await getDoc(doc(db, 'contractors', req.params.uid));
     if (snap.exists()) return res.json(snap.data());
@@ -79,7 +79,7 @@ exports.getProfile = async (req, res) => {
   }
 };
 
-exports.saveProfile = async (req, res) => {
+const saveProfile = async (req, res) => {
   try {
     const { uid } = req.params;
     await setDoc(doc(db, 'contractors', uid), req.body);
@@ -87,4 +87,12 @@ exports.saveProfile = async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: 'Error saving profile' });
   }
+};
+
+module.exports = {
+  applyToContract,
+  fetchContracts,
+  getProfile,
+  saveProfile,
+  submitWork,
 };

@@ -12,7 +12,7 @@ const {
   setDoc,
 } = require('firebase/firestore');
 
-exports.createContract = async (req, res) => {
+const createContract = async (req, res) => {
   try {
     const { values, userId } = req.body;
     const contract = {
@@ -34,7 +34,7 @@ exports.createContract = async (req, res) => {
   }
 };
 
-exports.deleteContract = async (req, res) => {
+const deleteContract = async (req, res) => {
   try {
     await deleteDoc(doc(db, 'contracts', req.params.id));
     res.status(200).json({ message: 'Deleted' });
@@ -43,7 +43,7 @@ exports.deleteContract = async (req, res) => {
   }
 };
 
-exports.updateContract = async (req, res) => {
+const updateContract = async (req, res) => {
   try {
     await updateDoc(doc(db, 'contracts', req.params.id), req.body);
     res.status(200).json({ message: 'Updated' });
@@ -52,7 +52,7 @@ exports.updateContract = async (req, res) => {
   }
 };
 
-exports.getContracts = async (req, res) => {
+const getContracts = async (req, res) => {
   try {
     const q = query(
       collection(db, 'contracts'),
@@ -86,7 +86,7 @@ exports.getContracts = async (req, res) => {
   }
 };
 
-exports.getContractor = async (req, res) => {
+const getContractor = async (req, res) => {
   try {
     const snap = await getDoc(doc(db, 'contractors', req.params.id));
     if (snap.exists()) return res.json(snap.data());
@@ -96,7 +96,7 @@ exports.getContractor = async (req, res) => {
   }
 };
 
-exports.updateContractor = async (req, res) => {
+const updateContractor = async (req, res) => {
   try {
     await updateDoc(doc(db, 'contractors', req.params.id), req.body);
     res.status(200).json({ message: 'Contractor updated' });
@@ -105,7 +105,7 @@ exports.updateContractor = async (req, res) => {
   }
 };
 
-exports.getProfile = async (req, res) => {
+const getProfile = async (req, res) => {
   try {
     const snap = await getDoc(doc(db, 'businesses', req.params.uid));
     if (snap.exists()) return res.json(snap.data());
@@ -115,11 +115,22 @@ exports.getProfile = async (req, res) => {
   }
 };
 
-exports.saveProfile = async (req, res) => {
+const saveProfile = async (req, res) => {
   try {
     await setDoc(doc(db, 'businesses', req.params.uid), req.body);
     res.status(200).json({ message: 'Profile saved' });
   } catch {
     res.status(500).json({ message: 'Error saving profile' });
   }
+};
+
+module.exports = {
+  createContract,
+  deleteContract,
+  getContractor,
+  getContracts,
+  getProfile,
+  saveProfile,
+  updateContract,
+  updateContractor,
 };

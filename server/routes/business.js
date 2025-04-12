@@ -1,16 +1,25 @@
 const express = require('express');
 const router = express.Router();
-const controller = require('../controllers/businessController');
+const {
+  createContract,
+  deleteContract,
+  getContractor,
+  getContracts,
+  getProfile,
+  saveProfile,
+  updateContract,
+  updateContractor,
+} = require('../controllers/businessController');
 
-router.post('/contract', controller.createContract);
-router.delete('/contract/:id', controller.deleteContract);
-router.put('/contract/:id', controller.updateContract);
-router.get('/contracts/:uid', controller.getContracts);
+router.post('/contract', createContract);
+router.delete('/contract/:id', deleteContract);
+router.put('/contract/:id', updateContract);
+router.get('/contracts/:uid', getContracts);
 
-router.get('/contractor/:id', controller.getContractor);
-router.put('/contractor/:id', controller.updateContractor);
+router.get('/contractor/:id', getContractor);
+router.put('/contractor/:id', updateContractor);
 
-router.get('/profile/:uid', controller.getProfile);
-router.put('/profile/:uid', controller.saveProfile);
+router.get('/profile/:uid', getProfile);
+router.put('/profile/:uid', saveProfile);
 
 module.exports = router;
