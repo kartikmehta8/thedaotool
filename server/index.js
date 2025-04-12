@@ -10,6 +10,7 @@ const cors = require('./middlewares/Cors');
 // Routes Import
 const authRoutes = require('./routes/auth');
 const paymanRoutes = require('./routes/payman');
+const businessRoutes = require('./routes/business');
 
 dotenv.config();
 
@@ -26,6 +27,7 @@ app.use(morgan);
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/payman', paymanRoutes);
+app.use('/api/business', businessRoutes);
 
 app.get('/', (req, res) => {
   res.send({
