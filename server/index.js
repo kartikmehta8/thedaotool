@@ -11,6 +11,7 @@ const cors = require('./middlewares/Cors');
 const authRoutes = require('./routes/auth');
 const paymanRoutes = require('./routes/payman');
 const businessRoutes = require('./routes/business');
+const contractorRoutes = require('./routes/contractor');
 
 dotenv.config();
 
@@ -28,6 +29,7 @@ app.use(morgan);
 app.use('/api/auth', authRoutes);
 app.use('/api/payman', paymanRoutes);
 app.use('/api/business', businessRoutes);
+app.use('/api/contractor', contractorRoutes);
 
 app.get('/', (req, res) => {
   res.send({
