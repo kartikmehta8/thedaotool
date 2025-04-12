@@ -5,15 +5,17 @@ const helmet = require('./middlewares/Helmet');
 const dotenv = require('dotenv');
 const bodyParser = require('./middlewares/bodyParser');
 const morgan = require('./middlewares/Morgan');
+const cors = require('./middlewares/Cors');
 
 // Routes Import
-const sampleRoutes = require('./routes/sample');
+const authRoutes = require('./routes/auth');
 
 dotenv.config();
 
 const app = express();
 
 // Middlewares
+app.use(cors);
 app.use(compression);
 app.use(helmet);
 clusterMiddleware(app);
@@ -21,7 +23,7 @@ app.use(bodyParser);
 app.use(morgan);
 
 // Routes
-app.use('/sample', sampleRoutes);
+app.use('/api/auth', authRoutes);
 
 app.get('/', (req, res) => {
   res.send({
