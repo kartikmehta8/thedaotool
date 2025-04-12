@@ -12,7 +12,7 @@ module.exports = function clusterMiddleware(app) {
       cluster.fork();
     });
   } else {
-    app.listen(process.env.PORT || 3000, () => {
+    app.listen(process.env.PORT, () => {
       console.log(`🚀 {${process.pid}}:${process.env.PORT}`);
     });
   }

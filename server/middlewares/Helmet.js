@@ -7,7 +7,7 @@ module.exports = helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      styleSrc: ["'self'", 'maxcdn.bootstrapcdn.com'],
+      styleSrc: ["'self'"],
     },
   },
   dnsPrefetchControl: false,
