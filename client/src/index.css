@@ -1,0 +1,12 @@
+* {
+  left: 0;
+  top: 0;
+  box-sizing: border-box;
+}
+
+body,
+html {
+  background-color: #141414;
+  color: #fff;
+  margin: 0;
+}
