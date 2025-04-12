@@ -1,8 +1,16 @@
-import Paymanai from 'paymanai';
 import toast from '../utils/toast';
+import { API_URL } from '../constants/constants';
 
-import { doc, getDoc } from 'firebase/firestore';
-import { db } from '../providers/firebase';
+export const getApiKey = async (uid) => {
+  try {
+    const res = await fetch(`${API_URL}/payman/key/${uid}`);
+    const data = await res.json();
+    return data.apiKey || null;
+  } catch (err) {
+    toast.error('Error fetching API key');
+    return null;
+  }
+};
 
 export const createPayee = async (
   contractorInfo,
@@ -11,23 +19,25 @@ export const createPayee = async (
   updateContractorData
 ) => {
   try {
-    const payman = new Paymanai({ xPaymanAPISecret: apiKey });
-    const { name, email, accountNumber, routingNumber } = contractorInfo;
-
-    const payee = await payman.payments.createPayee({
-      type: 'US_ACH',
-      name,
-      accountHolderName: name,
-      accountHolderType: 'individual',
-      accountNumber,
-      routingNumber,
-      accountType: 'checking',
-      contactDetails: { email },
+    const res = await fetch(`${API_URL}/payman/payee`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ contractorInfo, contractorId, apiKey }),
     });
 
-    await updateContractorData(contractorId, { payeeId: payee.id });
-    toast.success(`Payee created and saved for ${name}`);
-    return payee.id;
+    const data = await res.json();
+
+    if (!res.ok) {
+      console.error(data.message);
+      throw new Error(data.message || 'Failed to create payee');
+    }
+
+    await updateContractorData(contractorId, { payeeId: data.payeeId });
+
+    toast.success(`Payee created and saved for ${contractorInfo.name}`);
+    return data.payeeId;
   } catch (err) {
     toast.error('Failed to create payee');
     throw err;
@@ -36,31 +46,22 @@ export const createPayee = async (
 
 export const sendPayment = async (contract, payeeId, apiKey) => {
   try {
-    const payman = new Paymanai({ xPaymanAPISecret: apiKey });
-    await payman.payments.sendPayment({
-      amountDecimal: Number(contract.amount),
-      payeeId: process.env.REACT_APP_PAYMAN_TEST_PAYEE_ID, // Test Payee ID.
-      memo: `Payment for ${contract.name}`,
-      metadata: { contractId: contract.id },
+    const res = await fetch(`${API_URL}/payman/send`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ contract, payeeId, apiKey }),
     });
+
+    const data = await res.json();
+
+    if (!res.ok) throw new Error(data.message || 'Failed to send payment');
+
     toast.success('Payment sent successfully');
   } catch (err) {
     toast.error('Failed to send payment');
     throw err;
-  }
-};
-
-export const getApiKey = async (uid) => {
-  try {
-    const ref = doc(db, 'businesses', uid);
-    const snap = await getDoc(ref);
-    if (snap.exists()) {
-      return snap.data().apiKey || null;
-    }
-    return null;
-  } catch (err) {
-    toast.error('Error fetching API key');
-    return null;
   }
 };
 
@@ -71,9 +72,12 @@ export const getPaymanBalance = async (uid) => {
     return null;
   }
   try {
-    const payman = new Paymanai({ xPaymanAPISecret: apiKey });
-    const usd = await payman.balances.getSpendableBalance('TSD');
-    return usd;
+    const res = await fetch(`${API_URL}/payman/balance/${uid}`);
+    const data = await res.json();
+
+    if (!res.ok) throw new Error(data.message || 'Failed to fetch balance');
+
+    return data.balance;
   } catch (err) {
     toast.error('Error fetching Payman balance');
     return null;
