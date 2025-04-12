@@ -9,6 +9,7 @@ const {
   where,
   setDoc,
 } = require('firebase/firestore');
+const triggerEmail = require('../utils/triggerEmail');
 
 const applyToContract = async (req, res) => {
   try {
@@ -17,6 +18,11 @@ const applyToContract = async (req, res) => {
       status: 'assigned',
       contractorId: userId,
     });
+
+    await triggerEmail('contractAssignedToBusiness', contractId, {
+      contractorId: userId,
+    });
+
     res.status(200).json({ message: 'Applied successfully' });
   } catch (err) {
     res.status(500).json({ message: 'Application failed' });
@@ -30,6 +36,11 @@ const submitWork = async (req, res) => {
       status: 'pending_payment',
       submittedLink,
     });
+
+    await triggerEmail('submissionNotificationToBusiness', contractId, {
+      submittedLink,
+    });
+
     res.status(200).json({ message: 'Work submitted' });
   } catch (err) {
     res.status(500).json({ message: 'Submission failed' });

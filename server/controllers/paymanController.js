@@ -1,6 +1,7 @@
 const Paymanai = require('paymanai');
 const { doc, getDoc, updateDoc } = require('firebase/firestore');
 const { db } = require('../utils/firebase');
+const triggerEmail = require('../utils/triggerEmail');
 
 const getApiKey = async (req, res) => {
   try {
@@ -64,6 +65,10 @@ const sendPayment = async (req, res) => {
       payeeId: process.env.PAYMAN_TEST_PAYEE_ID, // for testing.
       memo: `Payment for ${contract.name}`,
       metadata: { contractId: contract.id },
+    });
+
+    await triggerEmail('paymentSentToContractor', contract.id, {
+      amount: contract.amount,
     });
 
     res.status(200).json({ message: 'Payment sent successfully' });
