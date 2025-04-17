@@ -106,6 +106,17 @@ export const fetchContractorProfile = async (uid, form, defaultFields) => {
   }
 };
 
+export const getContractorProfile = async (uid) => {
+  try {
+    const res = await fetch(`${API_URL}/contractor/profile/${uid}`);
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    toast.error('Failed to fetch profile');
+    return null;
+  }
+};
+
 export const saveContractorProfile = async (
   uid,
   values,
