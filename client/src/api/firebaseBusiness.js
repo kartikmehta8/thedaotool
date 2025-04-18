@@ -149,3 +149,50 @@ export const saveBusinessProfile = async (uid, values, email) => {
     toast.error('Error saving profile');
   }
 };
+
+export const disconnectGitHub = async (uid, profile, setProfile) => {
+  try {
+    await saveBusinessProfile(
+      uid,
+      {
+        ...profile,
+        githubToken: '',
+        repo: '',
+      },
+      profile.email
+    );
+
+    setProfile((prev) => ({ ...prev, githubToken: '', repo: '' }));
+    toast.success('GitHub disconnected successfully.');
+  } catch {
+    toast.error('Failed to disconnect GitHub.');
+  }
+};
+
+export const fetchGitHubRepos = async (uid) => {
+  try {
+    const res = await fetch(`${API_URL}/github/repos/${uid}`);
+    if (!res.ok) throw new Error('Failed to fetch repos');
+    const data = await res.json();
+    return data.repos || [];
+  } catch (err) {
+    toast.error('Could not fetch GitHub repos');
+    return [];
+  }
+};
+
+export const saveGitHubRepo = async (uid, repo) => {
+  try {
+    const res = await fetch(`${API_URL}/github/repo/${uid}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ repo }),
+    });
+    if (!res.ok) throw new Error('Failed to save repo');
+    toast.success('Repo linked successfully');
+    return true;
+  } catch (err) {
+    toast.error('Could not save repo');
+    return false;
+  }
+};
