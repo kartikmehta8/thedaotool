@@ -36,12 +36,34 @@ const ContractCard = ({
           <Tag color="cyan">Company</Tag>{' '}
           {contract.businessInfo?.companyName || 'Unknown'}
         </p>
-        <p>
-          <Tag color="blue">Deadline</Tag> {contract.deadline}
-        </p>
-        <p>
-          <Tag color="purple">Amount</Tag> ${contract.amount}
-        </p>
+
+        {contract.github ? (
+          <Tag color="geekblue" style={{ marginBottom: '10px' }}>
+            GitHub Issue
+          </Tag>
+        ) : (
+          <>
+            <p>
+              <Tag color="blue">Deadline</Tag> {contract.deadline}
+            </p>
+            <p>
+              <Tag color="purple">Amount</Tag> ${contract.amount}
+            </p>
+          </>
+        )}
+        {contract.issueLink && (
+          <p>
+            <Tag color="orange">Issue Link</Tag>{' '}
+            <a
+              href={contract.issueLink}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              View Issue
+            </a>
+          </p>
+        )}
+
         <p>{contract.description}</p>
 
         {Array.isArray(contract.tags) && contract.tags.length > 0 && (

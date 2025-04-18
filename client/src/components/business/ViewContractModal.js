@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Divider, Select, Button } from 'antd';
+import { Modal, Divider, Select, Button, InputNumber, Row, Col } from 'antd';
 import {
   updateContract,
   getContractorData,
@@ -63,30 +63,61 @@ const ViewContractModal = ({
       onCancel={onCancel}
       onOk={handleSaveUpdate}
       okText="Save Changes"
+      width={600}
     >
       <p>
         <strong>Description:</strong> {contract.description}
       </p>
+
+      {contract.github && contract.issueLink && (
+        <p>
+          <a
+            href={contract.issueLink}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <strong>Issue Link</strong>
+          </a>
+        </p>
+      )}
+
       <p>
-        <strong>Deadline:</strong> {contract.deadline}
+        <strong>Deadline:</strong> {contract.deadline || '—'}
       </p>
-      <p>
-        <strong>Amount:</strong> ${contract.amount}
-      </p>
+
       <Divider />
       <p>
-        <strong>Status:</strong>
+        <strong>Amount & Status:</strong>
       </p>
-      <Select
-        value={contract.status}
-        onChange={(val) => setSelectedContract({ ...contract, status: val })}
-        style={{ width: '100%' }}
-      >
-        <Option value="open">Open</Option>
-        <Option value="assigned">Assigned</Option>
-        <Option value="pending_payment">Pending Payment</Option>
-        <Option value="closed">Closed</Option>
-      </Select>
+      <Row gutter={12}>
+        <Col xs={24} sm={12}>
+          <InputNumber
+            min={0}
+            value={contract.amount}
+            onChange={(val) =>
+              setSelectedContract({ ...contract, amount: Number(val) })
+            }
+            style={{ width: '100%' }}
+            prefix="$"
+            placeholder="Amount"
+          />
+        </Col>
+        <Col xs={24} sm={12}>
+          <Select
+            value={contract.status}
+            onChange={(val) =>
+              setSelectedContract({ ...contract, status: val })
+            }
+            style={{ width: '100%' }}
+          >
+            <Option value="open">Open</Option>
+            <Option value="assigned">Assigned</Option>
+            <Option value="pending_payment">Pending Payment</Option>
+            <Option value="closed">Closed</Option>
+          </Select>
+        </Col>
+      </Row>
+
       {contract.contractorId && (
         <>
           <Divider />

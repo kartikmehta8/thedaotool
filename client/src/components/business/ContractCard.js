@@ -29,12 +29,32 @@ const ContractCard = ({ contract, onView, onChatOpen, onRefetch }) => {
           <Tag color={statusColors[contract.status]}>{contract.status}</Tag>
         }
       >
-        <p>
-          <Tag color="blue">Deadline</Tag> {contract.deadline}
-        </p>
-        <p>
-          <Tag color="purple">Amount</Tag> ${contract.amount}
-        </p>
+        {contract.github ? (
+          <Tag color="geekblue" style={{ marginBottom: '10px' }}>
+            GitHub Issue
+          </Tag>
+        ) : (
+          <>
+            <p>
+              <Tag color="blue">Deadline</Tag> {contract.deadline || 'N/A'}
+            </p>
+            <p>
+              <Tag color="purple">Amount</Tag> ${contract.amount || 0}
+            </p>
+          </>
+        )}
+        {contract.issueLink && (
+          <p>
+            <Tag color="orange">Issue Link</Tag>{' '}
+            <a
+              href={contract.issueLink}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              View Issue
+            </a>
+          </p>
+        )}
         <p>{contract.description}</p>
         <Button key="delete" danger onClick={handleDelete}>
           Delete

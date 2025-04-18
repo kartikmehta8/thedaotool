@@ -5,6 +5,8 @@ import {
   saveBusinessProfile,
 } from '../../api/firebaseBusiness';
 
+import { GitHubIntegration } from '../../components/business';
+
 const { Content } = Layout;
 const { Title } = Typography;
 
@@ -51,12 +53,13 @@ const BusinessProfile = () => {
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
+          flexDirection: 'column',
           marginTop: 50,
           marginBottom: 50,
         }}
       >
         <Card
-          style={{ width: 500, backgroundColor: '#1f1f1f' }}
+          style={{ width: 500, backgroundColor: '#1f1f1f', marginBottom: 20 }}
           loading={loading}
         >
           <Title level={3} style={{ color: '#fff', textAlign: 'center' }}>
@@ -94,6 +97,12 @@ const BusinessProfile = () => {
               Save
             </Button>
           </Form>
+        </Card>
+        <Card
+          style={{ width: 500, backgroundColor: '#1f1f1f' }}
+          loading={loading}
+        >
+          <GitHubIntegration user={user} />
         </Card>
       </Content>
     </Layout>
