@@ -31,6 +31,7 @@
     "prettier": "^3.5.3"
   },
   "dependencies": {
+    "axios": "^1.8.4",
     "body-parser": "^2.2.0",
     "compression": "^1.8.0",
     "cors": "^2.8.5",
@@ -39,6 +40,7 @@
     "firebase": "^11.6.0",
     "helmet": "^8.1.0",
     "morgan": "^1.10.0",
+    "node-cron": "^3.0.3",
     "nodemailer": "^6.10.0",
     "paymanai": "^2.7.0",
     "socket.io": "^4.8.1"
