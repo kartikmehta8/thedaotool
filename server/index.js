@@ -1,5 +1,7 @@
 const express = require('express');
 const http = require('http');
+const cron = require('node-cron');
+
 const compression = require('./middlewares/Compression');
 const clusterMiddleware = require('./middlewares/Clusters');
 const helmet = require('./middlewares/Helmet');
@@ -10,9 +12,13 @@ const cors = require('./middlewares/Cors');
 
 // Routes Import
 const authRoutes = require('./routes/auth');
+const githubRoutes = require('./routes/github');
 const paymanRoutes = require('./routes/payman');
 const businessRoutes = require('./routes/business');
 const contractorRoutes = require('./routes/contractor');
+
+// Jobs
+const syncGitHubIssues = require('./jobs/syncGitHubIssues');
 
 dotenv.config();
 
@@ -31,6 +37,7 @@ app.use(morgan);
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/payman', paymanRoutes);
+app.use('/api/github', githubRoutes);
 app.use('/api/business', businessRoutes);
 app.use('/api/contractor', contractorRoutes);
 
@@ -42,4 +49,9 @@ app.get('/', (req, res) => {
     server: 'Express',
     status: 'OK',
   });
+});
+
+cron.schedule('*/20 * * * * *', async () => {
+  console.log('Running GitHub issue sync...');
+  await syncGitHubIssues();
 });
