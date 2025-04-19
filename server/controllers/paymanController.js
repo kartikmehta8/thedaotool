@@ -67,6 +67,17 @@ const sendPayment = async (req, res) => {
       metadata: { contractId: contract.id },
     });
 
+    // Update the contract to mark it as paid.
+    const contractRef = doc(db, 'contracts', contract.id);
+    await updateDoc(contractRef, { paid: true });
+
+    // Update the contractor & increase their balance.
+    const contractorRef = doc(db, 'contractors', contract.contractorId);
+    const contractorSnap = await getDoc(contractorRef);
+    const contractorData = contractorSnap.data();
+    const newBalance = (contractorData.balance || 0) + Number(contract.amount);
+    await updateDoc(contractorRef, { balance: newBalance });
+
     await triggerEmail('paymentSentToContractor', contract.id, {
       amount: contract.amount,
     });

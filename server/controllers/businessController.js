@@ -148,6 +148,42 @@ const unassignContractor = async (req, res) => {
   }
 };
 
+const getBusinessPayments = async (req, res) => {
+  const { uid } = req.params;
+
+  try {
+    const q = query(
+      collection(db, 'contracts'),
+      where('businessId', '==', uid)
+    );
+    const snapshot = await getDocs(q);
+
+    const payments = snapshot.docs
+      .filter((docSnap) => {
+        const d = docSnap.data();
+        return d.status === 'closed' || d.status === 'pending_payment';
+      })
+      .map((docSnap) => {
+        const data = docSnap.data();
+        return {
+          id: docSnap.id,
+          contractor:
+            data.contractorInfo?.name || data.contractorInfo?.email || 'N/A',
+          contractTitle: data.name || 'Untitled',
+          amount: data.amount || 0,
+          date: data.updatedAt || data.createdAt || '',
+          status: data.status === 'closed' ? 'Success' : 'Pending',
+        };
+      })
+      .sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    res.json({ payments });
+  } catch (err) {
+    console.error('Error reading payments from contracts:', err.message);
+    res.status(500).json({ error: 'Failed to read contract-based payments' });
+  }
+};
+
 module.exports = {
   createContract,
   deleteContract,
@@ -158,4 +194,5 @@ module.exports = {
   updateContract,
   updateContractor,
   unassignContractor,
+  getBusinessPayments,
 };

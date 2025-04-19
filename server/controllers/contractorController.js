@@ -127,6 +127,64 @@ const unassignSelf = async (req, res) => {
   }
 };
 
+const getContractorPayments = async (req, res) => {
+  const { uid } = req.params;
+
+  try {
+    const contractsRef = query(
+      collection(db, 'contracts'),
+      where('contractorId', '==', uid)
+    );
+    const contractSnapshots = await getDocs(contractsRef);
+
+    const filteredContracts = contractSnapshots.docs.filter((docSnap) => {
+      const data = docSnap.data();
+      return ['closed', 'pending_payment'].includes(data.status);
+    });
+
+    const payments = await Promise.all(
+      filteredContracts.map(async (docSnap) => {
+        const data = docSnap.data();
+        const businessId = data.businessId;
+
+        let businessName = 'Unknown Business';
+
+        if (businessId) {
+          try {
+            const businessSnap = await getDoc(
+              doc(db, 'businesses', businessId)
+            );
+            if (businessSnap.exists()) {
+              businessName = businessSnap.data().companyName || businessName;
+            }
+          } catch (err) {
+            console.warn(
+              `Failed to fetch business (${businessId})`,
+              err.message
+            );
+          }
+        }
+
+        return {
+          id: docSnap.id,
+          businessName,
+          contractTitle: data.name || 'Untitled',
+          amount: data.amount || 0,
+          date: data.updatedAt || data.createdAt || '',
+          status: data.status === 'closed' ? 'Success' : 'Pending',
+        };
+      })
+    );
+
+    payments.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    res.json({ payments });
+  } catch (err) {
+    console.error('Error fetching contractor payments:', err.message);
+    res.status(500).json({ error: 'Failed to fetch payments' });
+  }
+};
+
 module.exports = {
   applyToContract,
   fetchContracts,
@@ -134,4 +192,5 @@ module.exports = {
   saveProfile,
   submitWork,
   unassignSelf,
+  getContractorPayments,
 };
