@@ -14,6 +14,7 @@ const cors = require('./middlewares/Cors');
 const authRoutes = require('./routes/auth');
 const githubRoutes = require('./routes/github');
 const paymanRoutes = require('./routes/payman');
+const discordRoutes = require('./routes/discord');
 const businessRoutes = require('./routes/business');
 const contractorRoutes = require('./routes/contractor');
 
@@ -38,6 +39,7 @@ app.use(morgan);
 app.use('/api/auth', authRoutes);
 app.use('/api/payman', paymanRoutes);
 app.use('/api/github', githubRoutes);
+app.use('/api/discord', discordRoutes);
 app.use('/api/business', businessRoutes);
 app.use('/api/contractor', contractorRoutes);
 

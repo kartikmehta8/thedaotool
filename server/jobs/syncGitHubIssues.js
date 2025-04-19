@@ -1,6 +1,7 @@
 const axios = require('axios');
 const { db } = require('../utils/firebase');
-const { collection, getDocs, doc, addDoc } = require('firebase/firestore');
+const { collection, getDocs, addDoc } = require('firebase/firestore');
+const postToDiscord = require('../utils/postToDiscord');
 
 const syncGitHubIssues = async () => {
   const businesses = await getDocs(collection(db, 'businesses'));
@@ -59,6 +60,13 @@ const syncGitHubIssues = async () => {
             },
           }
         );
+
+        await postToDiscord({
+          businessId,
+          name: issue.title,
+          description: issue.body,
+          amount: ' TBD',
+        });
 
         console.log(`Synced issue #${issue.number} from ${repo}`);
       }
