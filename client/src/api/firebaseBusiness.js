@@ -196,3 +196,19 @@ export const saveGitHubRepo = async (uid, repo) => {
     return false;
   }
 };
+
+export const unassignContractor = async (contractId, onUpdateSuccess) => {
+  try {
+    const res = await fetch(
+      `${API_URL}/business/contracts/${contractId}/unassign`,
+      {
+        method: 'PUT',
+      }
+    );
+    if (!res.ok) throw new Error();
+    onUpdateSuccess();
+  } catch {
+    toast.error('Failed to unassign contractor');
+    throw new Error();
+  }
+};

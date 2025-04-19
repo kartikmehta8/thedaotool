@@ -135,3 +135,17 @@ export const saveContractorProfile = async (
     toast.error('Error saving profile');
   }
 };
+
+export const unassignSelf = async (contractId, onRefetch) => {
+  try {
+    const res = await fetch(`${API_URL}/contractor/unassign`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ contractId }),
+    });
+    if (!res.ok) throw new Error();
+    onRefetch();
+  } catch {
+    toast.error('Failed to unassign yourself');
+  }
+};
