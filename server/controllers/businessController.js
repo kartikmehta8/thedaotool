@@ -1,4 +1,4 @@
-const { db } = require('../utils/firebase');
+const { db, rtdb } = require('../utils/firebase');
 const {
   collection,
   addDoc,
@@ -11,6 +11,8 @@ const {
   where,
   setDoc,
 } = require('firebase/firestore');
+
+const { ref, remove } = require('firebase/database');
 
 const createContract = async (req, res) => {
   try {
@@ -124,6 +126,28 @@ const saveProfile = async (req, res) => {
   }
 };
 
+const unassignContractor = async (req, res) => {
+  const { contractId } = req.params;
+
+  try {
+    const contractRef = doc(db, 'contracts', contractId);
+
+    await updateDoc(contractRef, {
+      contractorId: null,
+      status: 'open',
+      submittedLink: '',
+    });
+
+    const chatRef = ref(rtdb, `chats/${contractId}`);
+    await remove(chatRef);
+
+    return res.status(200).json({ success: true });
+  } catch (err) {
+    console.error('Unassign error:', err.message);
+    return res.status(500).json({ error: 'Failed to unassign contractor' });
+  }
+};
+
 module.exports = {
   createContract,
   deleteContract,
@@ -133,4 +157,5 @@ module.exports = {
   saveProfile,
   updateContract,
   updateContractor,
+  unassignContractor,
 };

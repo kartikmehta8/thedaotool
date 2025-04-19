@@ -9,6 +9,7 @@ const {
   saveProfile,
   updateContract,
   updateContractor,
+  unassignContractor,
 } = require('../controllers/businessController');
 
 router.post('/contract', createContract);
@@ -18,6 +19,7 @@ router.get('/contracts/:uid', getContracts);
 
 router.get('/contractor/:id', getContractor);
 router.put('/contractor/:id', updateContractor);
+router.put('/contracts/:contractId/unassign', unassignContractor);
 
 router.get('/profile/:uid', getProfile);
 router.put('/profile/:uid', saveProfile);
