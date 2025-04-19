@@ -4,6 +4,7 @@ import {
   updateContract,
   getContractorData,
   updateContractorData,
+  unassignContractor,
 } from '../../api/firebaseBusiness';
 import { createPayee, sendPayment } from '../../api/payman';
 import toast from '../../utils/toast';
@@ -53,6 +54,15 @@ const ViewContractModal = ({
       await sendPayment(contract, payeeId, apiKey);
     } catch (err) {
       toast.error('Failed to send payment');
+    }
+  };
+
+  const handleUnassign = async () => {
+    try {
+      await unassignContractor(contract.id, onUpdateSuccess);
+      toast.success('Contractor unassigned and chat cleared.');
+    } catch {
+      toast.error('Failed to unassign contractor.');
     }
   };
 
@@ -149,8 +159,16 @@ const ViewContractModal = ({
           >
             Create Payee
           </Button>
-          <Button type="primary" onClick={handleSendPayment} block>
+          <Button
+            type="primary"
+            onClick={handleSendPayment}
+            block
+            style={{ marginBottom: 10 }}
+          >
             Send Payment
+          </Button>
+          <Button danger onClick={handleUnassign} block>
+            Unassign Contractor
           </Button>
         </>
       )}

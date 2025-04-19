@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, Typography, Tag, Button, Col } from 'antd';
-import { applyToContract } from '../../api/firebaseContractor';
+import { applyToContract, unassignSelf } from '../../api/firebaseContractor';
 
 const { Text } = Typography;
 
@@ -20,6 +20,10 @@ const ContractCard = ({
 }) => {
   const handleApplyToContract = async () => {
     await applyToContract(contract.id, userId, onRefetch);
+  };
+
+  const handleUnassign = async () => {
+    await unassignSelf(contract.id, onRefetch);
   };
 
   return (
@@ -97,6 +101,15 @@ const ContractCard = ({
 
             <Button type="default" block onClick={onOpenChat}>
               Open Chat
+            </Button>
+
+            <Button
+              danger
+              onClick={handleUnassign}
+              block
+              style={{ marginTop: 8 }}
+            >
+              Unassign Myself
             </Button>
           </>
         )}
