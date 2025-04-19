@@ -6,6 +6,8 @@ import BusinessDashboard from './business/BusinessDashboard';
 import ContractorDashboard from './contractor/ContractorDashboard';
 import BusinessProfile from './business/BusinessProfile';
 import ContractorProfile from './contractor/ContractorProfile';
+import BusinessPaymentHistory from './business/PaymentHistory';
+import ContractorPaymentHistory from './contractor/PaymentHistory';
 
 export {
   Login,
@@ -16,4 +18,6 @@ export {
   ContractorDashboard,
   BusinessProfile,
   ContractorProfile,
+  BusinessPaymentHistory,
+  ContractorPaymentHistory,
 };
