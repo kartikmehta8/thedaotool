@@ -1,4 +1,4 @@
-const { db } = require('../utils/firebase');
+const { db, rtdb } = require('../utils/firebase');
 const {
   doc,
   updateDoc,
@@ -10,6 +10,8 @@ const {
   setDoc,
 } = require('firebase/firestore');
 const triggerEmail = require('../utils/triggerEmail');
+
+const { ref, remove } = require('firebase/database');
 
 const applyToContract = async (req, res) => {
   try {
@@ -100,10 +102,36 @@ const saveProfile = async (req, res) => {
   }
 };
 
+const unassignSelf = async (req, res) => {
+  const { contractId } = req.body;
+
+  if (!contractId) {
+    return res.status(400).json({ error: 'Contract ID is required' });
+  }
+
+  try {
+    const contractRef = doc(db, 'contracts', contractId);
+    await updateDoc(contractRef, {
+      contractorId: null,
+      status: 'open',
+      submittedLink: '',
+    });
+
+    const chatRef = ref(rtdb, `chats/${contractId}`);
+    await remove(chatRef);
+
+    return res.status(200).json({ success: true });
+  } catch (err) {
+    console.error('Unassign self failed:', err.message);
+    return res.status(500).json({ error: 'Failed to unassign contractor' });
+  }
+};
+
 module.exports = {
   applyToContract,
   fetchContracts,
   getProfile,
   saveProfile,
   submitWork,
+  unassignSelf,
 };
