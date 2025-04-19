@@ -5,7 +5,10 @@ import {
   saveBusinessProfile,
 } from '../../api/firebaseBusiness';
 
-import { GitHubIntegration } from '../../components/business';
+import {
+  GitHubIntegration,
+  DiscordIntegration,
+} from '../../components/business';
 
 const { Content } = Layout;
 const { Title } = Typography;
@@ -99,10 +102,16 @@ const BusinessProfile = () => {
           </Form>
         </Card>
         <Card
-          style={{ width: 500, backgroundColor: '#1f1f1f' }}
+          style={{ width: 500, backgroundColor: '#1f1f1f', marginBottom: 20 }}
           loading={loading}
         >
           <GitHubIntegration user={user} />
+        </Card>
+        <Card
+          style={{ width: 500, backgroundColor: '#1f1f1f' }}
+          loading={loading}
+        >
+          <DiscordIntegration user={user} />
         </Card>
       </Content>
     </Layout>

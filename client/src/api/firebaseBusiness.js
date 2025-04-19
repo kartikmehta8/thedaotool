@@ -224,3 +224,70 @@ export const getBusinessPayments = async (uid) => {
     return [];
   }
 };
+
+export const fetchDiscordProfile = async (uid, setProfile) => {
+  try {
+    const res = await fetch(`${API_URL}/business/profile/${uid}`);
+    const data = await res.json();
+    setProfile(data);
+  } catch {
+    toast.error('Failed to load Discord profile');
+  }
+};
+
+export const updateDiscordSettings = async (
+  uid,
+  profile,
+  setProfile,
+  changes
+) => {
+  const updated = { ...profile, ...changes };
+  try {
+    const res = await fetch(`${API_URL}/business/profile/${uid}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updated),
+    });
+    if (res.ok) setProfile(updated);
+    else throw new Error();
+  } catch {
+    toast.error('Failed to update Discord settings');
+  }
+};
+
+export const disconnectDiscord = async (uid, profile, setProfile) => {
+  updateDiscordSettings(uid, profile, setProfile, {
+    discordAccessToken: '',
+    discordChannel: '',
+    discordGuild: '',
+    discordEnabled: false,
+    discordSendMode: '',
+  });
+};
+
+export const fetchDiscordChannels = async (uid) => {
+  try {
+    const res = await fetch(`${API_URL}/discord/channels/${uid}`);
+    if (!res.ok) throw new Error();
+    const data = await res.json();
+    return data.channels || [];
+  } catch {
+    toast.error('Failed to fetch Discord channels');
+    return [];
+  }
+};
+
+export const saveDiscordChannel = async (uid, channelId, setProfile) => {
+  try {
+    const res = await fetch(`${API_URL}/discord/channel/${uid}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ channelId }),
+    });
+    if (!res.ok) throw new Error();
+    setProfile((prev) => ({ ...prev, discordChannel: channelId }));
+    toast.success('Channel saved');
+  } catch {
+    toast.error('Failed to save channel');
+  }
+};
