@@ -212,3 +212,15 @@ export const unassignContractor = async (contractId, onUpdateSuccess) => {
     throw new Error();
   }
 };
+
+export const getBusinessPayments = async (uid) => {
+  try {
+    const res = await fetch(`${API_URL}/business/payments/${uid}`);
+    if (!res.ok) throw new Error();
+    const data = await res.json();
+    return data.payments;
+  } catch (err) {
+    toast.error('Failed to load payment history');
+    return [];
+  }
+};

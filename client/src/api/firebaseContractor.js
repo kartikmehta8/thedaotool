@@ -149,3 +149,16 @@ export const unassignSelf = async (contractId, onRefetch) => {
     toast.error('Failed to unassign yourself');
   }
 };
+
+export const getContractorPayments = async (uid) => {
+  try {
+    const res = await fetch(`${API_URL}/contractor/payments/${uid}`);
+    if (!res.ok) throw new Error();
+    const data = await res.json();
+    console.log(data);
+    return data.payments;
+  } catch (err) {
+    toast.error('Failed to load contractor payments');
+    return [];
+  }
+};

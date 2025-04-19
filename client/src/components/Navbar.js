@@ -60,6 +60,9 @@ const Navbar = () => {
         {role === 'business' && balance === null && (
           <span style={{ color: '#3fefb4' }}>Loading...</span>
         )}
+        <Button type="default" onClick={() => navigate('/payment-history')}>
+          Payments
+        </Button>
         <Button type="default" onClick={handleProfile}>
           Profile
         </Button>
