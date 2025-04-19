@@ -10,6 +10,7 @@ const {
   updateContract,
   updateContractor,
   unassignContractor,
+  getBusinessPayments,
 } = require('../controllers/businessController');
 
 router.post('/contract', createContract);
@@ -23,5 +24,7 @@ router.put('/contracts/:contractId/unassign', unassignContractor);
 
 router.get('/profile/:uid', getProfile);
 router.put('/profile/:uid', saveProfile);
+
+router.get('/payments/:uid', getBusinessPayments);
 
 module.exports = router;

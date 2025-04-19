@@ -7,6 +7,7 @@ const {
   saveProfile,
   submitWork,
   unassignSelf,
+  getContractorPayments,
 } = require('../controllers/contractorController');
 
 router.post('/apply', applyToContract);
@@ -15,5 +16,7 @@ router.get('/contracts/:uid', fetchContracts);
 router.get('/profile/:uid', getProfile);
 router.put('/profile/:uid', saveProfile);
 router.put('/unassign', unassignSelf);
+
+router.get('/payments/:uid', getContractorPayments);
 
 module.exports = router;
