@@ -13,6 +13,8 @@ import {
   Landing,
   BusinessProfile,
   ContractorProfile,
+  BusinessPaymentHistory,
+  ContractorPaymentHistory,
 } from './pages';
 
 import { ConfigProvider, theme } from 'antd';
@@ -57,6 +59,16 @@ const App = () => {
           />
           <Route path="/profile/business" element={<BusinessProfile />} />
           <Route path="/profile/contractor" element={<ContractorProfile />} />
+          <Route
+            path="/payment-history"
+            element={
+              user && user.role === 'business' ? (
+                <BusinessPaymentHistory user={user} />
+              ) : (
+                <ContractorPaymentHistory user={user} />
+              )
+            }
+          />
         </Routes>
       </Router>
     </ConfigProvider>
