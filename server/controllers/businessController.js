@@ -11,6 +11,7 @@ const {
   where,
   setDoc,
 } = require('firebase/firestore');
+const postToDiscord = require('../utils/postToDiscord');
 
 const { ref, remove } = require('firebase/database');
 
@@ -30,6 +31,7 @@ const createContract = async (req, res) => {
       tags: values.tags ? values.tags.split(',') : [],
     };
     await addDoc(collection(db, 'contracts'), contract);
+    await postToDiscord(contract);
     res.status(200).json({ message: 'Contract created' });
   } catch (err) {
     res.status(500).json({ message: 'Creation failed' });
