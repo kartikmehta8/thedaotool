@@ -4,4 +4,5 @@ cd /root/SERVERS/bizzy-network/server || exit
 
 git pull origin main
 
-docker compose restart
+docker compose build
+docker compose up
