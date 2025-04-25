@@ -2,7 +2,8 @@
 
 cd /root/SERVERS/bizzy-network/server || exit
 
-git pull origin main
+git fetch origin
+git reset --hard origin/main
 
 docker compose build
 docker compose up
