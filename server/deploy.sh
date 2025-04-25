@@ -6,4 +6,4 @@ git fetch origin
 git reset --hard origin/main
 
 docker compose build
-docker compose up
+docker compose up -d
