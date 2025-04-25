@@ -48,7 +48,7 @@ initSocket(server);
 
 app.get('/', (req, res) => {
   res.send({
-    server: 'Express',
+    server: 'Express from Node.js',
     status: 'OK',
   });
 });
