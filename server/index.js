@@ -48,7 +48,7 @@ initSocket(server);
 
 app.get('/', (req, res) => {
   res.send({
-    server: 'Express Server',
+    server: 'Express Server is running',
     status: 'OK',
   });
 });
