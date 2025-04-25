@@ -2,8 +2,6 @@ services:
   bizzynetwork:
     build: .
     container_name: bizzy-backend
-    ports:
-      - "5050:5050"
     environment:
       - PORT=5050 
       - FB_API_KEY=${FB_API_KEY}
