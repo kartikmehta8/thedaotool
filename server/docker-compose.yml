@@ -1,0 +1,32 @@
+services:
+  bizzynetwork:
+    build: .
+    container_name: bizzy-backend
+    ports:
+      - "5050:5050"
+    environment:
+      - PORT=5050 
+      - FB_API_KEY=${FB_API_KEY}
+      - FB_AUTH_DOMAIN=${FB_AUTH_DOMAIN}
+      - FB_PROJECT_ID=${FB_PROJECT_ID}
+      - FB_STORAGE_BUCKET=${FB_STORAGE_BUCKET}
+      - FB_MESSAGING_SENDER_ID=${FB_MESSAGING_SENDER_ID}
+      - FB_APP_ID=${FB_APP_ID}
+      - FB_REALTIME_DATABASE=${FB_REALTIME_DATABASE}
+      - FRONTEND_URL=${FRONTEND_URL}
+      - PAYMAN_TEST_PAYEE_ID=${PAYMAN_TEST_PAYEE_ID}
+      - GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID}
+      - GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
+      - SERVER_URL=${SERVER_URL}
+      - SMTP_USER=${SMTP_USER}
+      - SMTP_PASS=${SMTP_PASS}
+      - DISCORD_CLIENT_ID=${DISCORD_CLIENT_ID}
+      - DISCORD_CLIENT_SECRET=${DISCORD_CLIENT_SECRET}
+      - DISCORD_BOT_TOKEN=${DISCORD_BOT_TOKEN}
+    restart: unless-stopped
+    networks:
+      - nginx_proxy_net
+
+networks:
+  nginx_proxy_net:
+    external: true
