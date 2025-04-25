@@ -1,0 +1,48 @@
+{
+  "name": "bizzy-server",
+  "version": "1.0.0",
+  "description": "Server for Bizzy Network",
+  "keywords": [
+    "server",
+    "node",
+    "firebase",
+    "rest-api"
+  ],
+  "homepage": "https://github.com/kartikmehta8/bizzy-network#readme",
+  "bugs": {
+    "url": "https://github.com/kartikmehta8/bizzy-network/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kartikmehta8/bizzy-network.git"
+  },
+  "license": "MIT",
+  "author": "kartikmehta8",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9",
+    "prettier": "^3.5.3"
+  },
+  "dependencies": {
+    "axios": "^1.8.4",
+    "body-parser": "^2.2.0",
+    "compression": "^1.8.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^5.1.0",
+    "firebase": "^11.6.0",
+    "helmet": "^8.1.0",
+    "morgan": "^1.10.0",
+    "node-cron": "^3.0.3",
+    "nodemailer": "^6.10.0",
+    "paymanai": "^2.7.0",
+    "socket.io": "^4.8.1"
+  }
+}
