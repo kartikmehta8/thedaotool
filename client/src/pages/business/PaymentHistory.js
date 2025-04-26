@@ -1,4 +1,3 @@
-// === COMPONENT: BusinessPaymentHistory.jsx ===
 import React, { useEffect, useState } from 'react';
 import { Table, Card, Typography, Tag } from 'antd';
 import { getBusinessPayments } from '../../api/firebaseBusiness';

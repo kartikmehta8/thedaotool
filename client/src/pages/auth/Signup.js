@@ -2,19 +2,40 @@ import React, { useState } from 'react';
 import { Button, Input, Typography, Select, Card, Layout } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { signupUser } from '../../api/auth';
+import { saveUserToStorage } from '../../utils/localStorage';
+import toast from '../../utils/toast';
 
 const { Title } = Typography;
-const { Option } = Select;
 const { Content } = Layout;
+
+const roles = [
+  { label: 'Business', value: 'business' },
+  { label: 'Contractor', value: 'contractor' },
+];
 
 const Signup = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('business');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSignup = async () => {
-    await signupUser(email, password, role, navigate);
+    setLoading(true);
+    try {
+      const user = await signupUser(email, password, role);
+      if (!user) {
+        throw new Error('Invalid user data');
+      }
+      saveUserToStorage(user);
+      toast.success('Account created successfully!');
+      navigate('/dashboard', { replace: true });
+    } catch (err) {
+      console.error('Signup error:', err);
+      toast.error(err.message || 'Signup failed');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -54,10 +75,19 @@ const Signup = () => {
             onChange={(val) => setRole(val)}
             style={{ width: '100%', marginBottom: 10 }}
           >
-            <Option value="business">Business</Option>
-            <Option value="contractor">Contractor</Option>
+            {roles.map((r) => (
+              <Select.Option key={r.value} value={r.value}>
+                {r.label}
+              </Select.Option>
+            ))}
           </Select>
-          <Button type="primary" block onClick={handleSignup}>
+          <Button
+            type="primary"
+            block
+            onClick={handleSignup}
+            loading={loading}
+            disabled={!email || !password}
+          >
             Sign Up
           </Button>
 
@@ -74,4 +104,5 @@ const Signup = () => {
     </Layout>
   );
 };
+
 export default Signup;

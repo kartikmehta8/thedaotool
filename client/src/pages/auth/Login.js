@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Button, Input, Typography, Card, Layout } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { loginUser } from '../../api/auth';
+import { saveUserToStorage } from '../../utils/localStorage';
+import toast from '../../utils/toast';
 
 const { Title } = Typography;
 const { Content } = Layout;
@@ -9,10 +11,21 @@ const { Content } = Layout;
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async () => {
-    await loginUser(email, password, navigate);
+    setLoading(true);
+    try {
+      const user = await loginUser(email, password);
+      await saveUserToStorage(user);
+      toast.success('Logged in successfully!');
+      navigate('/dashboard', { replace: true });
+    } catch (err) {
+      toast.error(err.message || 'Login failed');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -47,7 +60,13 @@ const Login = () => {
             onChange={(e) => setPassword(e.target.value)}
             style={{ marginBottom: 10 }}
           />
-          <Button type="primary" block onClick={handleLogin}>
+          <Button
+            type="primary"
+            block
+            onClick={handleLogin}
+            loading={loading}
+            disabled={!email || !password}
+          >
             Log In
           </Button>
           <Button
