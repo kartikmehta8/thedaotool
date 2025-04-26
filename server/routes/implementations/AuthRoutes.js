@@ -1,13 +1,13 @@
 const express = require('express');
-const { loginUser, signupUser } = require('../../controllers/authController');
+const AuthController = require('../../controllers/authController');
 const IRoute = require('../IRoute');
 
 class AuthRoutes extends IRoute {
   register(app) {
     const router = express.Router();
 
-    router.post('/login', loginUser);
-    router.post('/signup', signupUser);
+    router.post('/login', AuthController.loginUser);
+    router.post('/signup', AuthController.signupUser);
 
     app.use('/api/auth', router);
   }

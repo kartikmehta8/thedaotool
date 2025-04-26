@@ -1,20 +1,15 @@
 const express = require('express');
-const {
-  getApiKey,
-  createPayee,
-  sendPayment,
-  getPaymanBalance,
-} = require('../../controllers/paymanController');
+const PaymanController = require('../../controllers/paymanController');
 const IRoute = require('../IRoute');
 
 class PaymanRoutes extends IRoute {
   register(app) {
     const router = express.Router();
 
-    router.get('/key/:uid', getApiKey);
-    router.post('/payee', createPayee);
-    router.post('/send', sendPayment);
-    router.get('/balance/:uid', getPaymanBalance);
+    router.get('/key/:uid', PaymanController.getApiKey);
+    router.post('/payee', PaymanController.createPayee);
+    router.post('/send', PaymanController.sendPayment);
+    router.get('/balance/:uid', PaymanController.getPaymanBalance);
 
     app.use('/api/payman', router);
   }
