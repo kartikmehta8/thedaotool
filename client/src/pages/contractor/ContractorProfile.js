@@ -4,6 +4,8 @@ import {
   fetchContractorProfile,
   saveContractorProfile,
 } from '../../api/contractor/profile';
+import { useAuth } from '../../context/AuthContext';
+import toast from '../../utils/toast';
 
 const { Content } = Layout;
 const { Title } = Typography;
@@ -11,7 +13,7 @@ const { Title } = Typography;
 const ContractorProfile = () => {
   const [loading, setLoading] = useState(true);
   const [form] = Form.useForm();
-  const user = JSON.parse(localStorage.getItem('payman-user')) || {};
+  const { user } = useAuth();
   const email = user.email;
   const uid = user.uid;
 
@@ -29,9 +31,15 @@ const ContractorProfile = () => {
   useEffect(() => {
     const loadProfile = async () => {
       try {
-        await fetchContractorProfile(uid, form, defaultFields);
+        const profile = await fetchContractorProfile(uid);
+        if (profile) {
+          form.setFieldsValue({ ...defaultFields, ...profile });
+        } else {
+          form.setFieldsValue(defaultFields);
+        }
       } catch (err) {
         console.error('Failed to fetch contractor profile', err);
+        form.setFieldsValue(defaultFields);
       } finally {
         setLoading(false);
       }
@@ -43,6 +51,7 @@ const ContractorProfile = () => {
   const handleSubmit = async (values) => {
     try {
       await saveContractorProfile(uid, values, email, defaultFields);
+      toast.success('Profile loaded successfully');
     } catch (err) {
       console.error('Failed to save contractor profile', err);
     }
