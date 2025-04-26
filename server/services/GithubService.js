@@ -63,6 +63,41 @@ class GithubService {
       repo: repoName,
     });
   }
+
+  async fetchOpenIssues(repo, token) {
+    const response = await axios.get(
+      `https://api.github.com/repos/${repo}/issues`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+        params: { labels: 'bizzy', state: 'open' },
+      }
+    );
+    return response.data;
+  }
+
+  prepareUpdatedLabels(labels) {
+    return Array.from(
+      new Set(
+        labels
+          .filter((l) => l.name.toLowerCase() !== 'bizzy')
+          .map((l) => l.name)
+          .concat('bizzy-platform')
+      )
+    ).filter((l) => typeof l === 'string' && l.trim() !== '');
+  }
+
+  async updateIssueLabels(repo, issueNumber, labels, token) {
+    await axios.patch(
+      `https://api.github.com/repos/${repo}/issues/${issueNumber}`,
+      { labels },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: 'application/vnd.github+json',
+        },
+      }
+    );
+  }
 }
 
 module.exports = new GithubService();

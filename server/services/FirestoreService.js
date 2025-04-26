@@ -63,6 +63,14 @@ class FirestoreService {
       ...docSnap.data(),
     }));
   }
+
+  async getCollection(collectionName) {
+    const snap = await getDocs(collection(db, collectionName));
+    return snap.docs.map((docSnap) => ({
+      id: docSnap.id,
+      data: docSnap.data(),
+    }));
+  }
 }
 
 module.exports = new FirestoreService();
