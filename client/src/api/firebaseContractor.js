@@ -99,8 +99,8 @@ export const fetchContractorProfile = async (uid, form, defaultFields) => {
     const res = await fetch(`${API_URL}/contractor/profile/${uid}`);
     if (res.status === 404) return form.setFieldsValue(defaultFields);
     if (!res.ok) throw new Error();
-    const data = await res.json();
-    form.setFieldsValue({ ...defaultFields, ...data });
+    const { profile } = await res.json();
+    form.setFieldsValue({ ...defaultFields, ...profile });
   } catch {
     toast.error('Failed to fetch profile');
   }

@@ -129,7 +129,8 @@ export const getBusinessProfile = async (uid) => {
   try {
     const res = await fetch(`${API_URL}/business/profile/${uid}`);
     if (!res.ok) return null;
-    return res.json();
+    const { profile } = await res.json();
+    return profile;
   } catch {
     toast.error('Failed to fetch profile');
     return null;
@@ -228,8 +229,8 @@ export const getBusinessPayments = async (uid) => {
 export const fetchDiscordProfile = async (uid, setProfile) => {
   try {
     const res = await fetch(`${API_URL}/business/profile/${uid}`);
-    const data = await res.json();
-    setProfile(data);
+    const { profile } = await res.json();
+    setProfile(profile);
   } catch {
     toast.error('Failed to load Discord profile');
   }
