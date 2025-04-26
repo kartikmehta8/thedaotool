@@ -1,7 +1,7 @@
 const axios = require('axios');
-const { db } = require('../utils/firebase');
+const { db } = require('../../utils/firebase');
 const { collection, getDocs, addDoc } = require('firebase/firestore');
-const postToDiscord = require('../utils/postToDiscord');
+const postToDiscord = require('../../utils/postToDiscord');
 
 const syncGitHubIssues = async () => {
   const businesses = await getDocs(collection(db, 'businesses'));
