@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Card, Typography, Tag } from 'antd';
-import { getBusinessPayments } from '../../api/firebaseBusiness';
+import { getBusinessPayments } from '../../api/business/payments';
 import formatDate from '../../utils/formatDate';
 
 const { Title } = Typography;

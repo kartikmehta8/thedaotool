@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Typography, Space, Select, Spin } from 'antd';
-
+import { getBusinessProfile } from '../../api/business/profile';
 import {
-  getBusinessProfile,
   disconnectGitHub,
   fetchGitHubRepos,
   saveGitHubRepo,
-} from '../../api/firebaseBusiness';
+} from '../../api/business/github';
 import { API_URL } from '../../constants/constants';
 
 const { Paragraph, Text } = Typography;
@@ -49,8 +48,9 @@ const GitHubIntegration = ({ user }) => {
   };
 
   const handleDisconnect = async () => {
-    await disconnectGitHub(uid, profile, setProfile);
+    await disconnectGitHub(uid, profile);
     setRepos([]);
+    setProfile((prev) => ({ ...prev, githubToken: '', repo: '' }));
   };
 
   if (loading) return <Spin />;
@@ -71,20 +71,18 @@ const GitHubIntegration = ({ user }) => {
           {selectingRepo ? (
             <Spin size="small" />
           ) : (
-            <>
-              <Select
-                style={{ width: '100%' }}
-                placeholder="Select repository"
-                defaultValue={profile.repo || undefined}
-                onChange={handleRepoSelect}
-              >
-                {repos.map((repo) => (
-                  <Option key={repo} value={repo}>
-                    {repo}
-                  </Option>
-                ))}
-              </Select>
-            </>
+            <Select
+              style={{ width: '100%' }}
+              placeholder="Select repository"
+              value={profile.repo || undefined}
+              onChange={handleRepoSelect}
+            >
+              {repos.map((repo) => (
+                <Option key={repo} value={repo}>
+                  {repo}
+                </Option>
+              ))}
+            </Select>
           )}
 
           <Button danger onClick={handleDisconnect} block>

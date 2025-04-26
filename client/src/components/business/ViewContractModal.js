@@ -2,10 +2,13 @@ import React from 'react';
 import { Modal, Divider, Select, Button, InputNumber, Row, Col } from 'antd';
 import {
   updateContract,
+  unassignContractor,
+} from '../../api/business/contracts';
+import {
   getContractorData,
   updateContractorData,
-  unassignContractor,
-} from '../../api/firebaseBusiness';
+} from '../../api/business/profile';
+
 import { createPayee, sendPayment } from '../../api/payman';
 import toast from '../../utils/toast';
 import formatDate from '../../utils/formatDate';
@@ -21,7 +24,14 @@ const ViewContractModal = ({
   setSelectedContract,
 }) => {
   const handleSaveUpdate = async () => {
-    await updateContract(contract, onUpdateSuccess, onCancel);
+    try {
+      await updateContract(contract);
+      toast.success('Contract updated successfully.');
+      onUpdateSuccess();
+      onCancel();
+    } catch (err) {
+      toast.error('Failed to update contract.');
+    }
   };
 
   const handlePayeeSetup = async () => {
@@ -32,12 +42,10 @@ const ViewContractModal = ({
         toast.warning('Payee already exists for this contractor.');
         return;
       }
-      await createPayee(
-        contract.contractorInfo,
-        apiKey,
-        contract.contractorId,
-        updateContractorData
-      );
+      await createPayee(contract.contractorInfo, apiKey, contract.contractorId);
+      await updateContractorData(contract.contractorId, {
+        payeeId: contractorData.payeeId,
+      });
     } catch (err) {
       toast.error('Failed to create payee');
     }
@@ -53,6 +61,7 @@ const ViewContractModal = ({
         return;
       }
       await sendPayment(contract, payeeId, apiKey);
+      toast.success('Payment sent successfully.');
     } catch (err) {
       toast.error('Failed to send payment');
     }
@@ -60,8 +69,9 @@ const ViewContractModal = ({
 
   const handleUnassign = async () => {
     try {
-      await unassignContractor(contract.id, onUpdateSuccess);
+      await unassignContractor(contract.id);
       toast.success('Contractor unassigned and chat cleared.');
+      onUpdateSuccess();
     } catch {
       toast.error('Failed to unassign contractor.');
     }

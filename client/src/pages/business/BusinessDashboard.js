@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Typography, Button, Row } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import { getContractsForBusiness } from '../../api/firebaseBusiness';
+import { getContractsForBusiness } from '../../api/business/contracts';
 import { getApiKey } from '../../api/payman';
 
 import {
