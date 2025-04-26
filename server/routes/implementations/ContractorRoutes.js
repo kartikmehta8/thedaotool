@@ -13,7 +13,7 @@ class ContractorRoutes extends IRoute {
     router.put('/profile/:uid', ContractorController.saveProfile);
     router.put('/unassign', ContractorController.unassignSelf);
 
-    router.get('/payments/:uid', getContractorPayments);
+    router.get('/payments/:uid', ContractorController.getContractorPayments);
 
     app.use('/api/contractor', router);
   }
