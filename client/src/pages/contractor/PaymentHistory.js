@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Card, Typography, Tag } from 'antd';
-import { getContractorPayments } from '../../api/firebaseContractor';
+import { getContractorPayments } from '../../api/contractor/payments';
 import formatDate from '../../utils/formatDate';
 
 const { Title } = Typography;
@@ -49,9 +49,14 @@ const ContractorPaymentHistory = ({ user }) => {
 
   useEffect(() => {
     const fetchPayments = async () => {
-      const res = await getContractorPayments(user.uid);
-      setData(res);
-      setLoading(false);
+      try {
+        const res = await getContractorPayments(user.uid);
+        setData(res);
+      } catch (err) {
+        console.error('Failed to fetch payments', err);
+      } finally {
+        setLoading(false);
+      }
     };
     fetchPayments();
   }, [user.uid]);

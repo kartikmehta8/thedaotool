@@ -3,7 +3,7 @@ import { Layout, Typography, Input, Button, Card, Form } from 'antd';
 import {
   getBusinessProfile,
   saveBusinessProfile,
-} from '../../api/firebaseBusiness';
+} from '../../api/business/profile';
 
 import {
   GitHubIntegration,

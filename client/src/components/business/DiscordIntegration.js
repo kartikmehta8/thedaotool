@@ -6,7 +6,7 @@ import {
   updateDiscordSettings,
   fetchDiscordChannels,
   saveDiscordChannel,
-} from '../../api/firebaseBusiness';
+} from '../../api/business/discord';
 
 const { Paragraph, Text } = Typography;
 const { Option } = Select;
@@ -17,21 +17,56 @@ const DiscordIntegration = ({ user }) => {
   const uid = user.uid;
 
   useEffect(() => {
-    fetchDiscordProfile(uid, setProfile);
+    const loadProfile = async () => {
+      try {
+        const data = await fetchDiscordProfile(uid);
+        setProfile(data || {});
+      } catch (err) {
+        console.error('Failed to fetch Discord profile', err);
+      }
+    };
+    loadProfile();
   }, [uid]);
 
   useEffect(() => {
-    if (profile.discordAccessToken) {
-      fetchDiscordChannels(uid).then(setChannels);
-    }
+    const loadChannels = async () => {
+      if (profile.discordAccessToken) {
+        const ch = await fetchDiscordChannels(uid);
+        setChannels(ch);
+      }
+    };
+    loadChannels();
   }, [profile.discordAccessToken, uid]);
 
   const handleIntegration = () => {
     window.location.href = `${process.env.REACT_APP_BACKEND_URL}/api/discord/oauth?userId=${uid}`;
   };
 
-  const handleChannelSelect = (value) => {
-    saveDiscordChannel(uid, value, setProfile);
+  const handleChannelSelect = async (value) => {
+    try {
+      await saveDiscordChannel(uid, value);
+      setProfile((prev) => ({ ...prev, discordChannel: value }));
+    } catch (err) {
+      console.error('Failed to save Discord channel', err);
+    }
+  };
+
+  const handleSwitchChange = async (checked) => {
+    try {
+      await updateDiscordSettings(uid, { ...profile, discordEnabled: checked });
+      setProfile((prev) => ({ ...prev, discordEnabled: checked }));
+    } catch (err) {
+      console.error('Failed to update Discord settings', err);
+    }
+  };
+
+  const handleSendModeChange = async (val) => {
+    try {
+      await updateDiscordSettings(uid, { ...profile, discordSendMode: val });
+      setProfile((prev) => ({ ...prev, discordSendMode: val }));
+    } catch (err) {
+      console.error('Failed to update send mode', err);
+    }
   };
 
   return (
@@ -48,11 +83,7 @@ const DiscordIntegration = ({ user }) => {
             <Text style={{ color: '#fff' }}>Enable Posting:</Text>
             <Switch
               checked={profile.discordEnabled}
-              onChange={(checked) =>
-                updateDiscordSettings(uid, profile, setProfile, {
-                  discordEnabled: checked,
-                })
-              }
+              onChange={handleSwitchChange}
             />
           </Space>
 
@@ -60,11 +91,7 @@ const DiscordIntegration = ({ user }) => {
             <Text style={{ color: '#fff' }}>Send:</Text>
             <Select
               value={profile.discordSendMode || 'own'}
-              onChange={(val) =>
-                updateDiscordSettings(uid, profile, setProfile, {
-                  discordSendMode: val,
-                })
-              }
+              onChange={handleSendModeChange}
               style={{ width: 180 }}
             >
               <Option value="own">Only my contracts</Option>
@@ -90,7 +117,10 @@ const DiscordIntegration = ({ user }) => {
 
           <Button
             danger
-            onClick={() => disconnectDiscord(uid, profile, setProfile)}
+            onClick={async () => {
+              await disconnectDiscord(uid, profile);
+              setProfile({});
+            }}
             block
           >
             Disconnect Discord

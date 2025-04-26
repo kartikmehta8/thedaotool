@@ -3,7 +3,9 @@ import { Layout, Typography, Input, Button, Card, Form } from 'antd';
 import {
   fetchContractorProfile,
   saveContractorProfile,
-} from '../../api/firebaseContractor';
+} from '../../api/contractor/profile';
+import { useAuth } from '../../context/AuthContext';
+import toast from '../../utils/toast';
 
 const { Content } = Layout;
 const { Title } = Typography;
@@ -11,7 +13,7 @@ const { Title } = Typography;
 const ContractorProfile = () => {
   const [loading, setLoading] = useState(true);
   const [form] = Form.useForm();
-  const user = JSON.parse(localStorage.getItem('payman-user')) || {};
+  const { user } = useAuth();
   const email = user.email;
   const uid = user.uid;
 
@@ -28,15 +30,31 @@ const ContractorProfile = () => {
 
   useEffect(() => {
     const loadProfile = async () => {
-      await fetchContractorProfile(uid, form, defaultFields);
-      setLoading(false);
+      try {
+        const profile = await fetchContractorProfile(uid);
+        if (profile) {
+          form.setFieldsValue({ ...defaultFields, ...profile });
+        } else {
+          form.setFieldsValue(defaultFields);
+        }
+      } catch (err) {
+        console.error('Failed to fetch contractor profile', err);
+        form.setFieldsValue(defaultFields);
+      } finally {
+        setLoading(false);
+      }
     };
     loadProfile();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSubmit = async (values) => {
-    await saveContractorProfile(uid, values, email, defaultFields);
+    try {
+      await saveContractorProfile(uid, values, email, defaultFields);
+      toast.success('Profile loaded successfully');
+    } catch (err) {
+      console.error('Failed to save contractor profile', err);
+    }
   };
 
   return (

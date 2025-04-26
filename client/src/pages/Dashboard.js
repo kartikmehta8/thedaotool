@@ -3,11 +3,13 @@ import { Navbar } from '../components';
 import { Layout } from 'antd';
 import BusinessDashboard from './business/BusinessDashboard';
 import ContractorDashboard from './contractor/ContractorDashboard';
+import { useAuth } from '../context/AuthContext';
 
 const { Content } = Layout;
 
-const Dashboard = ({ user }) => {
-  const role = user?.role;
+const Dashboard = () => {
+  const { user } = useAuth();
+  const role = user.role;
 
   return (
     <Layout style={{ minHeight: '100vh', backgroundColor: '#141414' }}>

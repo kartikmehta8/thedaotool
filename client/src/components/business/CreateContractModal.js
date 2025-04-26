@@ -1,6 +1,6 @@
 import React from 'react';
 import { Modal, Form, Input, DatePicker, Button } from 'antd';
-import { createContract } from '../../api/firebaseBusiness';
+import { createContract } from '../../api/business/contracts';
 
 const CreateContractModal = ({
   visible,
@@ -13,8 +13,9 @@ const CreateContractModal = ({
   const handleCreate = async () => {
     try {
       const values = await form.validateFields();
-      await createContract(values, userId, onCreateSuccess);
-      onCancel(); // Close modal after successful creation.
+      await createContract(values, userId);
+      onCreateSuccess();
+      onCancel();
       form.resetFields();
     } catch (err) {
       console.error('Contract creation failed:', err);

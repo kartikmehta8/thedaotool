@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Input, List } from 'antd';
-import { listenToMessages, sendMessage } from '../../api/firebaseBusiness';
+import { listenToMessages, sendMessage } from '../../realtime/chat';
 
 const ChatModal = ({ visible, contractId, userId, onClose }) => {
   const [messages, setMessages] = useState([]);
@@ -8,10 +8,14 @@ const ChatModal = ({ visible, contractId, userId, onClose }) => {
 
   useEffect(() => {
     if (visible && contractId) {
-      const unsubscribe = listenToMessages(contractId, setMessages);
+      const unsubscribe = listenToMessages(
+        contractId,
+        (msg) => setMessages((prev) => [...prev, msg]),
+        (history) => setMessages(history)
+      );
 
       return () => {
-        unsubscribe(); // Cleanup on modal close.
+        unsubscribe();
       };
     }
   }, [visible, contractId]);
@@ -31,7 +35,7 @@ const ChatModal = ({ visible, contractId, userId, onClose }) => {
     <Modal
       open={visible}
       onCancel={handleModalClose}
-      title={`Chat with Contractor`}
+      title="Chat with Contractor"
       footer={null}
       width={600}
     >

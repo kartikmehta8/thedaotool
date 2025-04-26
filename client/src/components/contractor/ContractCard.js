@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, Typography, Tag, Button, Col } from 'antd';
-import { applyToContract, unassignSelf } from '../../api/firebaseContractor';
+import { applyToContract, unassignSelf } from '../../api/contractor/contracts';
 
 const { Text } = Typography;
 
@@ -19,11 +19,21 @@ const ContractCard = ({
   onOpenChat,
 }) => {
   const handleApplyToContract = async () => {
-    await applyToContract(contract.id, userId, onRefetch);
+    try {
+      await applyToContract(contract.id, userId);
+      onRefetch();
+    } catch (err) {
+      console.error('Failed to apply to contract', err);
+    }
   };
 
   const handleUnassign = async () => {
-    await unassignSelf(contract.id, onRefetch);
+    try {
+      await unassignSelf(contract.id);
+      onRefetch();
+    } catch (err) {
+      console.error('Failed to unassign from contract', err);
+    }
   };
 
   return (
