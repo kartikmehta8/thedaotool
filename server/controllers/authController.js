@@ -1,65 +1,32 @@
-const {
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-} = require('firebase/auth');
-const { doc, getDoc, setDoc } = require('firebase/firestore');
-const { auth, db } = require('../utils/firebase');
+const UserService = require('../services/UserService');
+const ResponseHelper = require('../utils/ResponseHelper');
 
-const loginUser = async (req, res) => {
-  const { email, password } = req.body;
+class AuthController {
+  async loginUser(req, res) {
+    const { email, password } = req.body;
 
-  try {
-    const result = await signInWithEmailAndPassword(auth, email, password);
-
-    const userRef = doc(db, 'users', result.user.uid);
-    const userSnap = await getDoc(userRef);
-
-    if (!userSnap.exists()) {
-      return res
-        .status(404)
-        .json({ message: 'User profile not found in database.' });
+    try {
+      const userProfile = await UserService.login(email, password);
+      return ResponseHelper.success(res, 'Login successful', {
+        user: userProfile,
+      });
+    } catch (error) {
+      return ResponseHelper.error(res, error.message, 401);
     }
-
-    const userProfile = {
-      uid: result.user.uid,
-      email: result.user.email,
-      role: userSnap.data().role,
-    };
-
-    return res
-      .status(200)
-      .json({ message: 'Login successful', user: userProfile });
-  } catch (error) {
-    console.error(error);
-    return res.status(401).json({ message: 'Invalid credentials' });
   }
-};
 
-const signupUser = async (req, res) => {
-  const { email, password, role } = req.body;
+  async signupUser(req, res) {
+    const { email, password, role } = req.body;
 
-  try {
-    const result = await createUserWithEmailAndPassword(auth, email, password);
-    const userRef = doc(db, 'users', result.user.uid);
-
-    await setDoc(userRef, { email, role });
-
-    const userProfile = {
-      uid: result.user.uid,
-      email,
-      role,
-    };
-
-    return res
-      .status(201)
-      .json({ message: 'Signup successful', user: userProfile });
-  } catch (error) {
-    console.error(error);
-    return res.status(400).json({ message: 'Signup failed' });
+    try {
+      const userProfile = await UserService.signup(email, password, role);
+      return ResponseHelper.created(res, 'Signup successful', {
+        user: userProfile,
+      });
+    } catch (error) {
+      return ResponseHelper.error(res, error.message, 400);
+    }
   }
-};
+}
 
-module.exports = {
-  loginUser,
-  signupUser,
-};
+module.exports = new AuthController();

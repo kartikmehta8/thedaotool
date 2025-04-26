@@ -1,116 +1,77 @@
-const Paymanai = require('paymanai');
-const { doc, getDoc, updateDoc } = require('firebase/firestore');
-const { db } = require('../utils/firebase');
-const triggerEmail = require('../utils/triggerEmail');
+const PaymanService = require('../services/PaymanService');
+const ResponseHelper = require('../utils/ResponseHelper');
+const FirestoreService = require('../services/FirestoreService');
 
-const getApiKey = async (req, res) => {
-  try {
-    const uid = req.params.uid;
-    const ref = doc(db, 'businesses', uid);
-    const snap = await getDoc(ref);
-    if (snap.exists()) {
-      const apiKey = snap.data().apiKey;
-      return res.status(200).json({ apiKey: apiKey || null });
+class PaymanController {
+  async getApiKey(req, res) {
+    try {
+      const apiKey = await PaymanService.getApiKey(req.params.uid);
+
+      if (!apiKey) {
+        return ResponseHelper.error(res, 'Business not found', 404);
+      }
+
+      return ResponseHelper.success(res, 'API Key fetched', { apiKey });
+    } catch (err) {
+      console.error('Get API Key Error:', err.message);
+      return ResponseHelper.error(res, 'Error fetching API key');
     }
-    res.status(404).json({ message: 'Business not found' });
-  } catch (err) {
-    res.status(500).json({ message: 'Error fetching API key' });
   }
-};
 
-// Currently only works for test payeeId.
-const createPayee = async (req, res) => {
-  const { contractorInfo, contractorId, apiKey } = req.body;
+  async createPayee(req, res) {
+    try {
+      const { contractorInfo, contractorId, apiKey } = req.body;
 
-  try {
-    const ref = doc(db, 'contractors', contractorId);
+      if (!contractorId || !contractorInfo) {
+        return ResponseHelper.error(res, 'Invalid contractor info', 400);
+      }
 
-    if (!ref || !contractorInfo) {
-      return res.status(400).json({ message: 'Invalid information' });
+      const payee = await PaymanService.createPayee(contractorInfo, apiKey);
+
+      await FirestoreService.updateDocument('contractors', contractorId, {
+        payeeId: payee.id,
+      });
+
+      return ResponseHelper.success(res, 'Payee created successfully', {
+        payeeId: payee.id,
+      });
+    } catch (err) {
+      console.error('Create Payee Error:', err.message);
+      return ResponseHelper.error(res, 'Failed to create payee');
     }
-
-    const payman = new Paymanai({ xPaymanAPISecret: apiKey });
-    const { name, email, accountNumber, routingNumber } = contractorInfo;
-
-    const payee = await payman.payments.createPayee({
-      type: 'US_ACH',
-      name,
-      accountHolderName: name,
-      accountHolderType: 'individual',
-      accountNumber,
-      routingNumber,
-      accountType: 'checking',
-      contactDetails: { email },
-    });
-
-    await updateDoc(ref, { payeeId: payee.id });
-
-    res
-      .status(200)
-      .json({ payeeId: payee.id, message: 'Payee created successfully' });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Failed to create payee' });
   }
-};
 
-const sendPayment = async (req, res) => {
-  const { contract, payeeId, apiKey } = req.body;
+  async sendPayment(req, res) {
+    try {
+      const { contract, apiKey } = req.body;
 
-  try {
-    const payman = new Paymanai({ xPaymanAPISecret: apiKey });
-    await payman.payments.sendPayment({
-      amountDecimal: Number(contract.amount),
-      // payeeId: payeeId,
-      payeeId: process.env.PAYMAN_TEST_PAYEE_ID, // for testing.
-      memo: `Payment for ${contract.name}`,
-      metadata: { contractId: contract.id },
-    });
+      await PaymanService.sendPayment(contract, apiKey);
 
-    // Update the contract to mark it as paid.
-    const contractRef = doc(db, 'contracts', contract.id);
-    await updateDoc(contractRef, { paid: true });
-
-    // Update the contractor & increase their balance.
-    const contractorRef = doc(db, 'contractors', contract.contractorId);
-    const contractorSnap = await getDoc(contractorRef);
-    const contractorData = contractorSnap.data();
-    const newBalance = (contractorData.balance || 0) + Number(contract.amount);
-    await updateDoc(contractorRef, { balance: newBalance });
-
-    await triggerEmail('paymentSentToContractor', contract.id, {
-      amount: contract.amount,
-    });
-
-    res.status(200).json({ message: 'Payment sent successfully' });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Failed to send payment' });
+      return ResponseHelper.success(res, 'Payment sent successfully');
+    } catch (err) {
+      console.error('Send Payment Error:', err.message);
+      return ResponseHelper.error(res, 'Failed to send payment');
+    }
   }
-};
 
-const getPaymanBalance = async (req, res) => {
-  try {
-    const uid = req.params.uid;
-    const ref = doc(db, 'businesses', uid);
-    const snap = await getDoc(ref);
-    const apiKey = snap.exists() ? snap.data().apiKey : null;
+  async getPaymanBalance(req, res) {
+    try {
+      const apiKey = await PaymanService.getApiKey(req.params.uid);
 
-    if (!apiKey) return res.status(400).json({ message: 'API key not found' });
+      if (!apiKey) {
+        return ResponseHelper.error(res, 'API key not found', 400);
+      }
 
-    const payman = new Paymanai({ xPaymanAPISecret: apiKey });
-    const usd = await payman.balances.getSpendableBalance('TSD');
+      const balance = await PaymanService.getBalance(apiKey);
 
-    res.status(200).json({ balance: usd });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Failed to fetch balance' });
+      return ResponseHelper.success(res, 'Balance fetched successfully', {
+        balance,
+      });
+    } catch (err) {
+      console.error('Get Payman Balance Error:', err.message);
+      return ResponseHelper.error(res, 'Failed to fetch balance');
+    }
   }
-};
+}
 
-module.exports = {
-  getApiKey,
-  createPayee,
-  sendPayment,
-  getPaymanBalance,
-};
+module.exports = new PaymanController();

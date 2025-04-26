@@ -1,200 +1,119 @@
-const { db, rtdb } = require('../utils/firebase');
-const {
-  collection,
-  addDoc,
-  deleteDoc,
-  doc,
-  updateDoc,
-  getDoc,
-  getDocs,
-  query,
-  where,
-  setDoc,
-} = require('firebase/firestore');
-const postToDiscord = require('../utils/postToDiscord');
+const BusinessService = require('../services/BusinessService');
+const ResponseHelper = require('../utils/ResponseHelper');
 
-const { ref, remove } = require('firebase/database');
-
-const createContract = async (req, res) => {
-  try {
-    const { values, userId } = req.body;
-    const contract = {
-      name: values.name || '',
-      description: values.description || '',
-      deadline: values.deadline || '',
-      amount: Number(values.amount || 0),
-      businessId: userId,
-      contractorId: null,
-      status: 'open',
-      submittedLink: '',
-      createdAt: new Date().toISOString(),
-      tags: values.tags ? values.tags.split(',') : [],
-    };
-    await addDoc(collection(db, 'contracts'), contract);
-    await postToDiscord(contract);
-    res.status(200).json({ message: 'Contract created' });
-  } catch (err) {
-    res.status(500).json({ message: 'Creation failed' });
-  }
-};
-
-const deleteContract = async (req, res) => {
-  try {
-    await deleteDoc(doc(db, 'contracts', req.params.id));
-    res.status(200).json({ message: 'Deleted' });
-  } catch {
-    res.status(500).json({ message: 'Delete failed' });
-  }
-};
-
-const updateContract = async (req, res) => {
-  try {
-    await updateDoc(doc(db, 'contracts', req.params.id), req.body);
-    res.status(200).json({ message: 'Updated' });
-  } catch {
-    res.status(500).json({ message: 'Update failed' });
-  }
-};
-
-const getContracts = async (req, res) => {
-  try {
-    const q = query(
-      collection(db, 'contracts'),
-      where('businessId', '==', req.params.uid)
-    );
-    const snapshot = await getDocs(q);
-    const contracts = [];
-
-    for (const docSnap of snapshot.docs) {
-      const data = docSnap.data();
-      let contractorInfo = null;
-
-      if (data.contractorId) {
-        const contractorSnap = await getDoc(
-          doc(db, 'contractors', data.contractorId)
-        );
-        if (contractorSnap.exists()) {
-          contractorInfo = {
-            id: data.contractorId,
-            ...contractorSnap.data(),
-          };
-        }
-      }
-
-      contracts.push({ id: docSnap.id, ...data, contractorInfo });
+class BusinessController {
+  async createContract(req, res) {
+    try {
+      const { values, userId } = req.body;
+      await BusinessService.createContract(values, userId);
+      return ResponseHelper.success(res, 'Contract created');
+    } catch (err) {
+      console.error('Create Contract Error:', err.message);
+      return ResponseHelper.error(res, 'Creation failed');
     }
-
-    res.status(200).json({ contracts });
-  } catch {
-    res.status(500).json({ message: 'Failed to fetch contracts' });
   }
-};
 
-const getContractor = async (req, res) => {
-  try {
-    const snap = await getDoc(doc(db, 'contractors', req.params.id));
-    if (snap.exists()) return res.json(snap.data());
-    res.status(404).json({ message: 'Not found' });
-  } catch {
-    res.status(500).json({ message: 'Error fetching contractor' });
+  async deleteContract(req, res) {
+    try {
+      await BusinessService.deleteContract(req.params.id);
+      return ResponseHelper.success(res, 'Deleted');
+    } catch (err) {
+      console.error('Delete Contract Error:', err.message);
+      return ResponseHelper.error(res, 'Delete failed');
+    }
   }
-};
 
-const updateContractor = async (req, res) => {
-  try {
-    await updateDoc(doc(db, 'contractors', req.params.id), req.body);
-    res.status(200).json({ message: 'Contractor updated' });
-  } catch {
-    res.status(500).json({ message: 'Error updating contractor' });
+  async updateContract(req, res) {
+    try {
+      await BusinessService.updateContract(req.params.id, req.body);
+      return ResponseHelper.success(res, 'Updated');
+    } catch (err) {
+      console.error('Update Contract Error:', err.message);
+      return ResponseHelper.error(res, 'Update failed');
+    }
   }
-};
 
-const getProfile = async (req, res) => {
-  try {
-    const snap = await getDoc(doc(db, 'businesses', req.params.uid));
-    if (snap.exists()) return res.json(snap.data());
-    res.status(404).json({ message: 'Profile not found' });
-  } catch {
-    res.status(500).json({ message: 'Error fetching profile' });
+  async getContracts(req, res) {
+    try {
+      const contracts = await BusinessService.getContracts(req.params.uid);
+      return ResponseHelper.success(res, 'Contracts fetched', { contracts });
+    } catch (err) {
+      console.error('Get Contracts Error:', err.message);
+      return ResponseHelper.error(res, 'Failed to fetch contracts');
+    }
   }
-};
 
-const saveProfile = async (req, res) => {
-  try {
-    await setDoc(doc(db, 'businesses', req.params.uid), req.body);
-    res.status(200).json({ message: 'Profile saved' });
-  } catch {
-    res.status(500).json({ message: 'Error saving profile' });
+  async getContractor(req, res) {
+    try {
+      const contractor = await BusinessService.getContractor(req.params.id);
+
+      if (contractor) {
+        return ResponseHelper.success(res, 'Contractor fetched', {
+          contractor,
+        });
+      }
+      return ResponseHelper.error(res, 'Contractor not found', 404);
+    } catch (err) {
+      console.error('Get Contractor Error:', err.message);
+      return ResponseHelper.error(res, 'Error fetching contractor');
+    }
   }
-};
 
-const unassignContractor = async (req, res) => {
-  const { contractId } = req.params;
-
-  try {
-    const contractRef = doc(db, 'contracts', contractId);
-
-    await updateDoc(contractRef, {
-      contractorId: null,
-      status: 'open',
-      submittedLink: '',
-    });
-
-    const chatRef = ref(rtdb, `chats/${contractId}`);
-    await remove(chatRef);
-
-    return res.status(200).json({ success: true });
-  } catch (err) {
-    console.error('Unassign error:', err.message);
-    return res.status(500).json({ error: 'Failed to unassign contractor' });
+  async updateContractor(req, res) {
+    try {
+      await BusinessService.updateContractor(req.params.id, req.body);
+      return ResponseHelper.success(res, 'Contractor updated');
+    } catch (err) {
+      console.error('Update Contractor Error:', err.message);
+      return ResponseHelper.error(res, 'Error updating contractor');
+    }
   }
-};
 
-const getBusinessPayments = async (req, res) => {
-  const { uid } = req.params;
+  async getProfile(req, res) {
+    try {
+      const profile = await BusinessService.getProfile(req.params.uid);
 
-  try {
-    const q = query(
-      collection(db, 'contracts'),
-      where('businessId', '==', uid)
-    );
-    const snapshot = await getDocs(q);
-
-    const payments = snapshot.docs
-      .filter((docSnap) => {
-        const d = docSnap.data();
-        return d.status === 'closed' || d.status === 'pending_payment';
-      })
-      .map((docSnap) => {
-        const data = docSnap.data();
-        return {
-          id: docSnap.id,
-          contractor:
-            data.contractorInfo?.name || data.contractorInfo?.email || 'N/A',
-          contractTitle: data.name || 'Untitled',
-          amount: data.amount || 0,
-          date: data.updatedAt || data.createdAt || '',
-          status: data.status === 'closed' ? 'Success' : 'Pending',
-        };
-      })
-      .sort((a, b) => new Date(b.date) - new Date(a.date));
-
-    res.json({ payments });
-  } catch (err) {
-    console.error('Error reading payments from contracts:', err.message);
-    res.status(500).json({ error: 'Failed to read contract-based payments' });
+      if (profile) {
+        return ResponseHelper.success(res, 'Profile fetched', { profile });
+      }
+      return ResponseHelper.error(res, 'Profile not found', 404);
+    } catch (err) {
+      console.error('Get Profile Error:', err.message);
+      return ResponseHelper.error(res, 'Error fetching profile');
+    }
   }
-};
 
-module.exports = {
-  createContract,
-  deleteContract,
-  getContractor,
-  getContracts,
-  getProfile,
-  saveProfile,
-  updateContract,
-  updateContractor,
-  unassignContractor,
-  getBusinessPayments,
-};
+  async saveProfile(req, res) {
+    try {
+      await BusinessService.saveProfile(req.params.uid, req.body);
+      return ResponseHelper.success(res, 'Profile saved');
+    } catch (err) {
+      console.error('Save Profile Error:', err.message);
+      return ResponseHelper.error(res, 'Error saving profile');
+    }
+  }
+
+  async unassignContractor(req, res) {
+    try {
+      await BusinessService.unassignContractor(req.params.contractId);
+      return ResponseHelper.success(res, 'Contractor unassigned');
+    } catch (err) {
+      console.error('Unassign Contractor Error:', err.message);
+      return ResponseHelper.error(res, 'Failed to unassign contractor');
+    }
+  }
+
+  async getBusinessPayments(req, res) {
+    try {
+      const payments = await BusinessService.getBusinessPayments(
+        req.params.uid
+      );
+      return ResponseHelper.success(res, 'Payments fetched', { payments });
+    } catch (err) {
+      console.error('Get Payments Error:', err.message);
+      return ResponseHelper.error(res, 'Failed to fetch payments');
+    }
+  }
+}
+
+module.exports = new BusinessController();

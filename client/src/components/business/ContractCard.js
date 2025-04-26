@@ -37,7 +37,8 @@ const ContractCard = ({ contract, onView, onChatOpen, onRefetch }) => {
         ) : (
           <>
             <p>
-              <Tag color="blue">Deadline</Tag> {formatDate(contract.deadline) || 'N/A'}
+              <Tag color="blue">Deadline</Tag>{' '}
+              {formatDate(contract.deadline) || 'N/A'}
             </p>
             <p>
               <Tag color="purple">Amount</Tag> ${contract.amount || 0}
