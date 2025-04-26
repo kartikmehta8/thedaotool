@@ -1,21 +1,17 @@
-const {
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-} = require('firebase/auth');
-const { doc, getDoc, setDoc } = require('firebase/firestore');
-const { auth, db } = require('../utils/firebase');
+const FirestoreService = require('../services/FirestoreService');
 
 class AuthController {
   async loginUser(req, res) {
     const { email, password } = req.body;
 
     try {
-      const result = await signInWithEmailAndPassword(auth, email, password);
+      const result = await FirestoreService.login(email, password);
+      const userData = await FirestoreService.getDocument(
+        'users',
+        result.user.uid
+      );
 
-      const userRef = doc(db, 'users', result.user.uid);
-      const userSnap = await getDoc(userRef);
-
-      if (!userSnap.exists()) {
+      if (!userData) {
         return res
           .status(404)
           .json({ message: 'User profile not found in database.' });
@@ -24,7 +20,7 @@ class AuthController {
       const userProfile = {
         uid: result.user.uid,
         email: result.user.email,
-        role: userSnap.data().role,
+        role: userData.role,
       };
 
       return res
@@ -40,14 +36,11 @@ class AuthController {
     const { email, password, role } = req.body;
 
     try {
-      const result = await createUserWithEmailAndPassword(
-        auth,
+      const result = await FirestoreService.signup(email, password);
+      await FirestoreService.setDocument('users', result.user.uid, {
         email,
-        password
-      );
-      const userRef = doc(db, 'users', result.user.uid);
-
-      await setDoc(userRef, { email, role });
+        role,
+      });
 
       const userProfile = {
         uid: result.user.uid,

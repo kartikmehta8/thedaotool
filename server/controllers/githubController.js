@@ -1,6 +1,5 @@
 const axios = require('axios');
-const { db } = require('../utils/firebase');
-const { doc, updateDoc, getDoc } = require('firebase/firestore');
+const FirestoreService = require('../services/FirestoreService');
 
 const CLIENT_ID = process.env.GITHUB_CLIENT_ID;
 const CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
@@ -32,14 +31,14 @@ class GithubController {
       const { access_token } = response.data;
 
       if (state && access_token) {
-        await updateDoc(doc(db, 'businesses', state), {
+        await FirestoreService.updateDocument('businesses', state, {
           githubToken: access_token,
         });
       }
 
       return res.redirect(`${process.env.FRONTEND_URL}/profile/business`);
     } catch (err) {
-      console.error('GitHub OAuth error:', err);
+      console.error('GitHub OAuth error:', err.message);
       res.status(500).send('GitHub auth failed');
     }
   }
@@ -48,10 +47,15 @@ class GithubController {
     const { uid } = req.params;
 
     try {
-      const businessSnap = await getDoc(doc(db, 'businesses', uid));
-      const { githubToken } = businessSnap.data();
-      if (!githubToken)
+      const businessData = await FirestoreService.getDocument(
+        'businesses',
+        uid
+      );
+
+      const { githubToken } = businessData || {};
+      if (!githubToken) {
         return res.status(401).json({ error: 'GitHub not authorized' });
+      }
 
       const response = await axios.get('https://api.github.com/user/repos', {
         headers: { Authorization: `Bearer ${githubToken}` },
@@ -70,16 +74,22 @@ class GithubController {
     const { repo } = req.body;
 
     try {
-      const businessSnap = await getDoc(doc(db, 'businesses', uid));
-      const { githubToken } = businessSnap.data();
-      if (!githubToken)
+      const businessData = await FirestoreService.getDocument(
+        'businesses',
+        uid
+      );
+
+      const { githubToken } = businessData || {};
+      if (!githubToken) {
         return res.status(401).json({ error: 'GitHub not authorized' });
+      }
 
       await axios.get(`https://api.github.com/repos/${repo}`, {
         headers: { Authorization: `Bearer ${githubToken}` },
       });
 
-      await updateDoc(doc(db, 'businesses', uid), { repo });
+      await FirestoreService.updateDocument('businesses', uid, { repo });
+
       res.json({ success: true });
     } catch (err) {
       console.error('Repo validation failed:', err.message);

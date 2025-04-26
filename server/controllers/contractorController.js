@@ -1,22 +1,13 @@
-const { db, rtdb } = require('../utils/firebase');
-const {
-  doc,
-  updateDoc,
-  query,
-  collection,
-  getDocs,
-  getDoc,
-  where,
-  setDoc,
-} = require('firebase/firestore');
-const { ref, remove } = require('firebase/database');
+const FirestoreService = require('../services/FirestoreService');
+const RealtimeDatabaseService = require('../services/RealtimeDatabaseService');
 const triggerEmail = require('../utils/triggerEmail');
 
 class ContractorController {
   async applyToContract(req, res) {
     try {
       const { contractId, userId } = req.body;
-      await updateDoc(doc(db, 'contracts', contractId), {
+
+      await FirestoreService.updateDocument('contracts', contractId, {
         status: 'assigned',
         contractorId: userId,
       });
@@ -27,6 +18,7 @@ class ContractorController {
 
       res.status(200).json({ message: 'Applied successfully' });
     } catch (err) {
+      console.error(err);
       res.status(500).json({ message: 'Application failed' });
     }
   }
@@ -34,7 +26,8 @@ class ContractorController {
   async submitWork(req, res) {
     try {
       const { contractId, submittedLink } = req.body;
-      await updateDoc(doc(db, 'contracts', contractId), {
+
+      await FirestoreService.updateDocument('contracts', contractId, {
         status: 'pending_payment',
         submittedLink,
       });
@@ -45,6 +38,7 @@ class ContractorController {
 
       res.status(200).json({ message: 'Work submitted' });
     } catch (err) {
+      console.error(err);
       res.status(500).json({ message: 'Submission failed' });
     }
   }
@@ -52,22 +46,24 @@ class ContractorController {
   async fetchContracts(req, res) {
     try {
       const uid = req.params.uid;
-      const q = query(
-        collection(db, 'contracts'),
-        where('status', '!=', 'closed')
+      const contractList = await FirestoreService.queryDocuments(
+        'contracts',
+        'status',
+        '!=',
+        'closed'
       );
-      const snap = await getDocs(q);
 
       const allContracts = await Promise.all(
-        snap.docs.map(async (docRef) => {
-          const data = docRef.data();
-          const businessSnap = await getDoc(
-            doc(db, 'businesses', data.businessId)
+        contractList.map(async (contract) => {
+          const businessInfo = await FirestoreService.getDocument(
+            'businesses',
+            contract.businessId
           );
+
           return {
-            id: docRef.id,
-            ...data,
-            businessInfo: businessSnap.exists() ? businessSnap.data() : {},
+            id: contract.id,
+            ...contract,
+            businessInfo: businessInfo || {},
           };
         })
       );
@@ -78,16 +74,22 @@ class ContractorController {
 
       res.status(200).json({ contracts: filtered });
     } catch (err) {
+      console.error(err);
       res.status(500).json({ message: 'Fetch failed' });
     }
   }
 
   async getProfile(req, res) {
     try {
-      const snap = await getDoc(doc(db, 'contractors', req.params.uid));
-      if (snap.exists()) return res.json(snap.data());
+      const contractorProfile = await FirestoreService.getDocument(
+        'contractors',
+        req.params.uid
+      );
+
+      if (contractorProfile) return res.json(contractorProfile);
       res.status(404).json({ message: 'Profile not found' });
     } catch (err) {
+      console.error(err);
       res.status(500).json({ message: 'Failed to fetch profile' });
     }
   }
@@ -95,9 +97,10 @@ class ContractorController {
   async saveProfile(req, res) {
     try {
       const { uid } = req.params;
-      await setDoc(doc(db, 'contractors', uid), req.body);
+      await FirestoreService.setDocument('contractors', uid, req.body);
       res.status(200).json({ message: 'Profile saved' });
     } catch (err) {
+      console.error(err);
       res.status(500).json({ message: 'Error saving profile' });
     }
   }
@@ -110,15 +113,13 @@ class ContractorController {
     }
 
     try {
-      const contractRef = doc(db, 'contracts', contractId);
-      await updateDoc(contractRef, {
+      await FirestoreService.updateDocument('contracts', contractId, {
         contractorId: null,
         status: 'open',
         submittedLink: '',
       });
 
-      const chatRef = ref(rtdb, `chats/${contractId}`);
-      await remove(chatRef);
+      await RealtimeDatabaseService.removeData(`chats/${contractId}`);
 
       return res.status(200).json({ success: true });
     } catch (err) {
@@ -131,47 +132,45 @@ class ContractorController {
     const { uid } = req.params;
 
     try {
-      const contractsRef = query(
-        collection(db, 'contracts'),
-        where('contractorId', '==', uid)
+      const contractList = await FirestoreService.queryDocuments(
+        'contracts',
+        'contractorId',
+        '==',
+        uid
       );
-      const contractSnapshots = await getDocs(contractsRef);
 
-      const filteredContracts = contractSnapshots.docs.filter((docSnap) => {
-        const data = docSnap.data();
-        return ['closed', 'pending_payment'].includes(data.status);
-      });
+      const filteredContracts = contractList.filter((contract) =>
+        ['closed', 'pending_payment'].includes(contract.status)
+      );
 
       const payments = await Promise.all(
-        filteredContracts.map(async (docSnap) => {
-          const data = docSnap.data();
-          const businessId = data.businessId;
-
+        filteredContracts.map(async (contract) => {
           let businessName = 'Unknown Business';
 
-          if (businessId) {
+          if (contract.businessId) {
             try {
-              const businessSnap = await getDoc(
-                doc(db, 'businesses', businessId)
+              const businessInfo = await FirestoreService.getDocument(
+                'businesses',
+                contract.businessId
               );
-              if (businessSnap.exists()) {
-                businessName = businessSnap.data().companyName || businessName;
+              if (businessInfo) {
+                businessName = businessInfo.companyName || businessName;
               }
             } catch (err) {
               console.warn(
-                `Failed to fetch business (${businessId})`,
+                `Failed to fetch business (${contract.businessId})`,
                 err.message
               );
             }
           }
 
           return {
-            id: docSnap.id,
+            id: contract.id,
             businessName,
-            contractTitle: data.name || 'Untitled',
-            amount: data.amount || 0,
-            date: data.updatedAt || data.createdAt || '',
-            status: data.status === 'closed' ? 'Success' : 'Pending',
+            contractTitle: contract.name || 'Untitled',
+            amount: contract.amount || 0,
+            date: contract.updatedAt || contract.createdAt || '',
+            status: contract.status === 'closed' ? 'Success' : 'Pending',
           };
         })
       );

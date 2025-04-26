@@ -1,19 +1,21 @@
 const Paymanai = require('paymanai');
-const { doc, getDoc, updateDoc } = require('firebase/firestore');
-const { db } = require('../utils/firebase');
+const FirestoreService = require('../services/FirestoreService');
 const triggerEmail = require('../utils/triggerEmail');
 
 class PaymanController {
   async getApiKey(req, res) {
     try {
       const uid = req.params.uid;
-      const ref = doc(db, 'businesses', uid);
-      const snap = await getDoc(ref);
+      const businessData = await FirestoreService.getDocument(
+        'businesses',
+        uid
+      );
 
-      if (snap.exists()) {
-        const apiKey = snap.data().apiKey;
-        return res.status(200).json({ apiKey: apiKey || null });
+      if (businessData) {
+        const apiKey = businessData.apiKey || null;
+        return res.status(200).json({ apiKey });
       }
+
       res.status(404).json({ message: 'Business not found' });
     } catch (err) {
       console.error(err);
@@ -25,9 +27,7 @@ class PaymanController {
     const { contractorInfo, contractorId, apiKey } = req.body;
 
     try {
-      const ref = doc(db, 'contractors', contractorId);
-
-      if (!ref || !contractorInfo) {
+      if (!contractorId || !contractorInfo) {
         return res.status(400).json({ message: 'Invalid information' });
       }
 
@@ -45,7 +45,9 @@ class PaymanController {
         contactDetails: { email },
       });
 
-      await updateDoc(ref, { payeeId: payee.id });
+      await FirestoreService.updateDocument('contractors', contractorId, {
+        payeeId: payee.id,
+      });
 
       res
         .status(200)
@@ -61,24 +63,37 @@ class PaymanController {
 
     try {
       const payman = new Paymanai({ xPaymanAPISecret: apiKey });
+
       await payman.payments.sendPayment({
         amountDecimal: Number(contract.amount),
-        payeeId: process.env.PAYMAN_TEST_PAYEE_ID, // for testing.
+        payeeId: process.env.PAYMAN_TEST_PAYEE_ID, // For testing.
         memo: `Payment for ${contract.name}`,
         metadata: { contractId: contract.id },
       });
 
       // Update the contract to mark it as paid.
-      const contractRef = doc(db, 'contracts', contract.id);
-      await updateDoc(contractRef, { paid: true });
+      await FirestoreService.updateDocument('contracts', contract.id, {
+        paid: true,
+      });
 
       // Update the contractor's balance.
-      const contractorRef = doc(db, 'contractors', contract.contractorId);
-      const contractorSnap = await getDoc(contractorRef);
-      const contractorData = contractorSnap.data();
+      const contractorData = await FirestoreService.getDocument(
+        'contractors',
+        contract.contractorId
+      );
+
+      if (!contractorData) {
+        return res.status(404).json({ message: 'Contractor not found' });
+      }
+
       const newBalance =
         (contractorData.balance || 0) + Number(contract.amount);
-      await updateDoc(contractorRef, { balance: newBalance });
+
+      await FirestoreService.updateDocument(
+        'contractors',
+        contract.contractorId,
+        { balance: newBalance }
+      );
 
       await triggerEmail('paymentSentToContractor', contract.id, {
         amount: contract.amount,
@@ -86,7 +101,7 @@ class PaymanController {
 
       res.status(200).json({ message: 'Payment sent successfully' });
     } catch (err) {
-      console.error(err);
+      console.error('Send Payment Error:', err.message);
       res.status(500).json({ message: 'Failed to send payment' });
     }
   }
@@ -94,20 +109,21 @@ class PaymanController {
   async getPaymanBalance(req, res) {
     try {
       const uid = req.params.uid;
-      const ref = doc(db, 'businesses', uid);
-      const snap = await getDoc(ref);
-      const apiKey = snap.exists() ? snap.data().apiKey : null;
+      const businessData = await FirestoreService.getDocument(
+        'businesses',
+        uid
+      );
 
-      if (!apiKey) {
+      if (!businessData || !businessData.apiKey) {
         return res.status(400).json({ message: 'API key not found' });
       }
 
-      const payman = new Paymanai({ xPaymanAPISecret: apiKey });
+      const payman = new Paymanai({ xPaymanAPISecret: businessData.apiKey });
       const usd = await payman.balances.getSpendableBalance('TSD');
 
       res.status(200).json({ balance: usd });
     } catch (err) {
-      console.error(err);
+      console.error('Fetch Payman Balance Error:', err.message);
       res.status(500).json({ message: 'Failed to fetch balance' });
     }
   }

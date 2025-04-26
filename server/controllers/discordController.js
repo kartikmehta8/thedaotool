@@ -1,6 +1,5 @@
 const axios = require('axios');
-const { db } = require('../utils/firebase');
-const { doc, updateDoc, getDoc } = require('firebase/firestore');
+const FirestoreService = require('../services/FirestoreService');
 
 const CLIENT_ID = process.env.DISCORD_CLIENT_ID;
 const CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET;
@@ -34,7 +33,7 @@ class DiscordController {
 
       const { access_token } = tokenRes.data;
 
-      await updateDoc(doc(db, 'businesses', state), {
+      await FirestoreService.updateDocument('businesses', state, {
         discordAccessToken: access_token,
         discordEnabled: true,
       });
@@ -50,10 +49,16 @@ class DiscordController {
     const { uid } = req.params;
 
     try {
-      const businessSnap = await getDoc(doc(db, 'businesses', uid));
-      const { discordAccessToken } = businessSnap.data();
-      if (!discordAccessToken)
+      const businessData = await FirestoreService.getDocument(
+        'businesses',
+        uid
+      );
+
+      if (!businessData?.discordAccessToken) {
         return res.status(401).json({ error: 'Unauthorized' });
+      }
+
+      const { discordAccessToken } = businessData;
 
       const guildsRes = await axios.get(
         'https://discord.com/api/users/@me/guilds',
@@ -75,6 +80,7 @@ class DiscordController {
       );
 
       const channels = [];
+
       for (const guild of mutualGuilds) {
         try {
           const chRes = await axios.get(
@@ -105,7 +111,7 @@ class DiscordController {
     const { channelId } = req.body;
 
     try {
-      await updateDoc(doc(db, 'businesses', uid), {
+      await FirestoreService.updateDocument('businesses', uid, {
         discordChannel: channelId,
       });
       res.json({ success: true });

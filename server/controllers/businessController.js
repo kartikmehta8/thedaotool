@@ -1,17 +1,5 @@
-const { db, rtdb } = require('../utils/firebase');
-const {
-  collection,
-  addDoc,
-  deleteDoc,
-  doc,
-  updateDoc,
-  getDoc,
-  getDocs,
-  query,
-  where,
-  setDoc,
-} = require('firebase/firestore');
-const { ref, remove } = require('firebase/database');
+const FirestoreService = require('../services/FirestoreService');
+const RealtimeDatabaseService = require('../services/RealtimeDatabaseService');
 const postToDiscord = require('../utils/postToDiscord');
 
 class BusinessController {
@@ -30,100 +18,131 @@ class BusinessController {
         createdAt: new Date().toISOString(),
         tags: values.tags ? values.tags.split(',') : [],
       };
-      await addDoc(collection(db, 'contracts'), contract);
+
+      await FirestoreService.addDocument('contracts', contract);
       await postToDiscord(contract);
+
       res.status(200).json({ message: 'Contract created' });
     } catch (err) {
+      console.error(err);
       res.status(500).json({ message: 'Creation failed' });
     }
   }
 
   async deleteContract(req, res) {
     try {
-      await deleteDoc(doc(db, 'contracts', req.params.id));
+      await FirestoreService.deleteDocument('contracts', req.params.id);
       res.status(200).json({ message: 'Deleted' });
-    } catch {
+    } catch (err) {
+      console.error(err);
       res.status(500).json({ message: 'Delete failed' });
     }
   }
 
   async updateContract(req, res) {
     try {
-      await updateDoc(doc(db, 'contracts', req.params.id), req.body);
+      await FirestoreService.updateDocument(
+        'contracts',
+        req.params.id,
+        req.body
+      );
       res.status(200).json({ message: 'Updated' });
-    } catch {
+    } catch (err) {
+      console.error(err);
       res.status(500).json({ message: 'Update failed' });
     }
   }
 
   async getContracts(req, res) {
     try {
-      const q = query(
-        collection(db, 'contracts'),
-        where('businessId', '==', req.params.uid)
-      );
-      const snapshot = await getDocs(q);
       const contracts = [];
+      const contractList = await FirestoreService.queryDocuments(
+        'contracts',
+        'businessId',
+        '==',
+        req.params.uid
+      );
 
-      for (const docSnap of snapshot.docs) {
-        const data = docSnap.data();
+      for (const contract of contractList) {
         let contractorInfo = null;
 
-        if (data.contractorId) {
-          const contractorSnap = await getDoc(
-            doc(db, 'contractors', data.contractorId)
+        if (contract.contractorId) {
+          const contractor = await FirestoreService.getDocument(
+            'contractors',
+            contract.contractorId
           );
-          if (contractorSnap.exists()) {
+          if (contractor) {
             contractorInfo = {
-              id: data.contractorId,
-              ...contractorSnap.data(),
+              id: contract.contractorId,
+              ...contractor,
             };
           }
         }
 
-        contracts.push({ id: docSnap.id, ...data, contractorInfo });
+        contracts.push({ ...contract, contractorInfo });
       }
 
       res.status(200).json({ contracts });
-    } catch {
+    } catch (err) {
+      console.error(err);
       res.status(500).json({ message: 'Failed to fetch contracts' });
     }
   }
 
   async getContractor(req, res) {
     try {
-      const snap = await getDoc(doc(db, 'contractors', req.params.id));
-      if (snap.exists()) return res.json(snap.data());
+      const contractor = await FirestoreService.getDocument(
+        'contractors',
+        req.params.id
+      );
+
+      if (contractor) return res.json(contractor);
       res.status(404).json({ message: 'Not found' });
-    } catch {
+    } catch (err) {
+      console.error(err);
       res.status(500).json({ message: 'Error fetching contractor' });
     }
   }
 
   async updateContractor(req, res) {
     try {
-      await updateDoc(doc(db, 'contractors', req.params.id), req.body);
+      await FirestoreService.updateDocument(
+        'contractors',
+        req.params.id,
+        req.body
+      );
       res.status(200).json({ message: 'Contractor updated' });
-    } catch {
+    } catch (err) {
+      console.error(err);
       res.status(500).json({ message: 'Error updating contractor' });
     }
   }
 
   async getProfile(req, res) {
     try {
-      const snap = await getDoc(doc(db, 'businesses', req.params.uid));
-      if (snap.exists()) return res.json(snap.data());
+      const profile = await FirestoreService.getDocument(
+        'businesses',
+        req.params.uid
+      );
+
+      if (profile) return res.json(profile);
       res.status(404).json({ message: 'Profile not found' });
-    } catch {
+    } catch (err) {
+      console.error(err);
       res.status(500).json({ message: 'Error fetching profile' });
     }
   }
 
   async saveProfile(req, res) {
     try {
-      await setDoc(doc(db, 'businesses', req.params.uid), req.body);
+      await FirestoreService.setDocument(
+        'businesses',
+        req.params.uid,
+        req.body
+      );
       res.status(200).json({ message: 'Profile saved' });
-    } catch {
+    } catch (err) {
+      console.error(err);
       res.status(500).json({ message: 'Error saving profile' });
     }
   }
@@ -132,16 +151,13 @@ class BusinessController {
     const { contractId } = req.params;
 
     try {
-      const contractRef = doc(db, 'contracts', contractId);
-
-      await updateDoc(contractRef, {
+      await FirestoreService.updateDocument('contracts', contractId, {
         contractorId: null,
         status: 'open',
         submittedLink: '',
       });
 
-      const chatRef = ref(rtdb, `chats/${contractId}`);
-      await remove(chatRef);
+      await RealtimeDatabaseService.removeData(`chats/${contractId}`);
 
       return res.status(200).json({ success: true });
     } catch (err) {
@@ -151,32 +167,27 @@ class BusinessController {
   }
 
   async getBusinessPayments(req, res) {
-    const { uid } = req.params;
-
     try {
-      const q = query(
-        collection(db, 'contracts'),
-        where('businessId', '==', uid)
+      const contractList = await FirestoreService.queryDocuments(
+        'contracts',
+        'businessId',
+        '==',
+        req.params.uid
       );
-      const snapshot = await getDocs(q);
 
-      const payments = snapshot.docs
-        .filter((docSnap) => {
-          const d = docSnap.data();
-          return d.status === 'closed' || d.status === 'pending_payment';
-        })
-        .map((docSnap) => {
-          const data = docSnap.data();
-          return {
-            id: docSnap.id,
-            contractor:
-              data.contractorInfo?.name || data.contractorInfo?.email || 'N/A',
-            contractTitle: data.name || 'Untitled',
-            amount: data.amount || 0,
-            date: data.updatedAt || data.createdAt || '',
-            status: data.status === 'closed' ? 'Success' : 'Pending',
-          };
-        })
+      const payments = contractList
+        .filter(
+          (doc) => doc.status === 'closed' || doc.status === 'pending_payment'
+        )
+        .map((data) => ({
+          id: data.id,
+          contractor:
+            data.contractorInfo?.name || data.contractorInfo?.email || 'N/A',
+          contractTitle: data.name || 'Untitled',
+          amount: data.amount || 0,
+          date: data.updatedAt || data.createdAt || '',
+          status: data.status === 'closed' ? 'Success' : 'Pending',
+        }))
         .sort((a, b) => new Date(b.date) - new Date(a.date));
 
       res.json({ payments });
