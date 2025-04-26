@@ -1,5 +1,5 @@
 const express = require('express');
-const BusinessController = require('../../controllers/BusinessController');
+const BusinessController = require('../../controllers/businessController');
 const IRoute = require('../IRoute');
 
 class BusinessRoutes extends IRoute {

@@ -21,10 +21,6 @@ cronManager.scheduleJobs();
 
 initSocket(server);
 
-app.get('/', (req, res) => {
-  res.send('Hello from Bizzy!');
-});
-
 server.listen(process.env.PORT, () => {
   console.log(`server: ${process.env.PORT}`);
 });
