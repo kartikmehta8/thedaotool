@@ -1,85 +1,41 @@
-import toast from '../utils/toast';
 import { API_URL } from '../constants/constants';
 
 export const getApiKey = async (uid) => {
-  try {
-    const res = await fetch(`${API_URL}/payman/key/${uid}`);
-    const data = await res.json();
-    return data.apiKey || null;
-  } catch (err) {
-    toast.error('Error fetching API key');
-    return null;
-  }
+  const res = await fetch(`${API_URL}/payman/key/${uid}`);
+  if (!res.ok) return null;
+  const data = await res.json();
+  return data.apiKey || null;
 };
 
-export const createPayee = async (
-  contractorInfo,
-  apiKey,
-  contractorId,
-  updateContractorData
-) => {
-  try {
-    const res = await fetch(`${API_URL}/payman/payee`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ contractorInfo, contractorId, apiKey }),
-    });
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      console.error(data.message);
-      throw new Error(data.message || 'Failed to create payee');
-    }
-
-    await updateContractorData(contractorId, { payeeId: data.payeeId });
-
-    toast.success(`Payee created and saved for ${contractorInfo.name}`);
-    return data.payeeId;
-  } catch (err) {
-    toast.error('Failed to create payee');
-    throw err;
-  }
+export const createPayee = async (contractorInfo, apiKey, contractorId) => {
+  const res = await fetch(`${API_URL}/payman/payee`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ contractorInfo, contractorId, apiKey }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || 'Failed to create payee');
+  return data.payeeId;
 };
 
 export const sendPayment = async (contract, payeeId, apiKey) => {
-  try {
-    const res = await fetch(`${API_URL}/payman/send`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ contract, payeeId, apiKey }),
-    });
-
-    const data = await res.json();
-
-    if (!res.ok) throw new Error(data.message || 'Failed to send payment');
-
-    toast.success('Payment sent successfully');
-  } catch (err) {
-    toast.error('Failed to send payment');
-    throw err;
-  }
+  const res = await fetch(`${API_URL}/payman/send`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ contract, payeeId, apiKey }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || 'Failed to send payment');
+  return true;
 };
 
 export const getPaymanBalance = async (uid) => {
   const apiKey = await getApiKey(uid);
-  if (!apiKey) {
-    toast.warning('No Payman API key found.');
-    return null;
-  }
-  try {
-    const res = await fetch(`${API_URL}/payman/balance/${uid}`);
-    const data = await res.json();
+  if (!apiKey) return null;
 
-    if (!res.ok) throw new Error(data.message || 'Failed to fetch balance');
+  const res = await fetch(`${API_URL}/payman/balance/${uid}`);
+  if (!res.ok) return null;
 
-    return data.balance;
-  } catch (err) {
-    toast.error('Error fetching Payman balance');
-    return null;
-  }
+  const data = await res.json();
+  return data.balance || null;
 };
