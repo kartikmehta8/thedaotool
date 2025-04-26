@@ -1,42 +1,19 @@
-const axios = require('axios');
-const FirestoreService = require('../services/FirestoreService');
-
-const CLIENT_ID = process.env.DISCORD_CLIENT_ID;
-const CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET;
-const REDIRECT_URI = `${process.env.SERVER_URL}/api/discord/callback`;
-const BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
+const DiscordService = require('../services/DiscordService');
+const ResponseHelper = require('../utils/ResponseHelper');
 
 class DiscordController {
   initiateOAuth(req, res) {
     const { userId } = req.query;
-    const redirect = `https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(
-      REDIRECT_URI
-    )}&response_type=code&scope=identify+guilds+bot&permissions=3072&state=${userId}`;
-    res.redirect(redirect);
+    const redirectURL = DiscordService.generateOAuthURL(userId);
+    res.redirect(redirectURL);
   }
 
   async handleCallback(req, res) {
     const { code, state } = req.query;
 
     try {
-      const tokenRes = await axios.post(
-        'https://discord.com/api/oauth2/token',
-        new URLSearchParams({
-          client_id: CLIENT_ID,
-          client_secret: CLIENT_SECRET,
-          code,
-          grant_type: 'authorization_code',
-          redirect_uri: REDIRECT_URI,
-        }),
-        { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
-      );
-
-      const { access_token } = tokenRes.data;
-
-      await FirestoreService.updateDocument('businesses', state, {
-        discordAccessToken: access_token,
-        discordEnabled: true,
-      });
+      const accessToken = await DiscordService.exchangeCodeForToken(code);
+      await DiscordService.saveAccessTokenToBusiness(state, accessToken);
 
       res.redirect(`${process.env.FRONTEND_URL}/profile/business`);
     } catch (err) {
@@ -46,63 +23,17 @@ class DiscordController {
   }
 
   async getDiscordChannels(req, res) {
-    const { uid } = req.params;
-
     try {
-      const businessData = await FirestoreService.getDocument(
-        'businesses',
-        uid
+      const channels = await DiscordService.fetchMutualGuildChannels(
+        req.params.uid
       );
-
-      if (!businessData?.discordAccessToken) {
-        return res.status(401).json({ error: 'Unauthorized' });
-      }
-
-      const { discordAccessToken } = businessData;
-
-      const guildsRes = await axios.get(
-        'https://discord.com/api/users/@me/guilds',
-        {
-          headers: { Authorization: `Bearer ${discordAccessToken}` },
-        }
-      );
-
-      const botGuildsRes = await axios.get(
-        'https://discord.com/api/users/@me/guilds',
-        {
-          headers: { Authorization: `Bot ${BOT_TOKEN}` },
-        }
-      );
-
-      const userGuildIds = new Set(guildsRes.data.map((g) => g.id));
-      const mutualGuilds = botGuildsRes.data.filter((g) =>
-        userGuildIds.has(g.id)
-      );
-
-      const channels = [];
-
-      for (const guild of mutualGuilds) {
-        try {
-          const chRes = await axios.get(
-            `https://discord.com/api/guilds/${guild.id}/channels`,
-            {
-              headers: { Authorization: `Bot ${BOT_TOKEN}` },
-            }
-          );
-
-          const textChannels = chRes.data.filter((ch) => ch.type === 0);
-          textChannels.forEach((ch) =>
-            channels.push({ id: ch.id, name: ch.name })
-          );
-        } catch (err) {
-          console.warn(`Could not fetch channels for guild ${guild.id}`);
-        }
-      }
-
-      res.json({ channels });
+      return ResponseHelper.success(res, 'Channels fetched', { channels });
     } catch (err) {
-      console.error('Failed to fetch Discord channels:', err.message);
-      res.status(500).json({ error: 'Failed to fetch channels' });
+      console.error('Fetch Discord Channels Error:', err.message);
+      if (err.message === 'Unauthorized') {
+        return ResponseHelper.error(res, 'Unauthorized', 401);
+      }
+      return ResponseHelper.error(res, 'Failed to fetch channels');
     }
   }
 
@@ -111,13 +42,11 @@ class DiscordController {
     const { channelId } = req.body;
 
     try {
-      await FirestoreService.updateDocument('businesses', uid, {
-        discordChannel: channelId,
-      });
-      res.json({ success: true });
+      await DiscordService.saveDiscordChannel(uid, channelId);
+      return ResponseHelper.success(res, 'Channel saved');
     } catch (err) {
-      console.error('Failed to save Discord channel:', err.message);
-      res.status(500).json({ error: 'Failed to save channel' });
+      console.error('Save Discord Channel Error:', err.message);
+      return ResponseHelper.error(res, 'Failed to save channel');
     }
   }
 }

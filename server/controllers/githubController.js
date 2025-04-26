@@ -1,99 +1,60 @@
-const axios = require('axios');
-const FirestoreService = require('../services/FirestoreService');
-
-const CLIENT_ID = process.env.GITHUB_CLIENT_ID;
-const CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
-const REDIRECT_URI = `${process.env.SERVER_URL}/api/github/callback`;
+const GithubService = require('../services/GithubService');
+const ResponseHelper = require('../utils/ResponseHelper');
 
 class GithubController {
   initiateOAuth(req, res) {
-    const { userId } = req.query;
-    const redirect = `https://github.com/login/oauth/authorize?client_id=${CLIENT_ID}&scope=repo&redirect_uri=${REDIRECT_URI}&state=${userId || ''}`;
-    res.redirect(redirect);
+    try {
+      const { userId } = req.query;
+      const redirectUrl = GithubService.generateOAuthUrl(userId);
+      res.redirect(redirectUrl);
+    } catch (err) {
+      console.error('Initiate OAuth Error:', err.message);
+      return ResponseHelper.error(res, 'OAuth initiation failed');
+    }
   }
 
   async handleCallback(req, res) {
     const { code, state } = req.query;
-
     try {
-      const response = await axios.post(
-        'https://github.com/login/oauth/access_token',
-        {
-          client_id: CLIENT_ID,
-          client_secret: CLIENT_SECRET,
-          code,
-        },
-        {
-          headers: { accept: 'application/json' },
-        }
-      );
-
-      const { access_token } = response.data;
-
-      if (state && access_token) {
-        await FirestoreService.updateDocument('businesses', state, {
-          githubToken: access_token,
-        });
-      }
-
-      return res.redirect(`${process.env.FRONTEND_URL}/profile/business`);
+      const accessToken = await GithubService.exchangeCodeForAccessToken(code);
+      await GithubService.saveAccessToken(state, accessToken);
+      res.redirect(`${process.env.FRONTEND_URL}/profile/business`);
     } catch (err) {
-      console.error('GitHub OAuth error:', err.message);
-      res.status(500).send('GitHub auth failed');
+      console.error('GitHub OAuth Callback Error:', err.message);
+      res.status(500).send('GitHub authorization failed.');
     }
   }
 
   async listRepos(req, res) {
-    const { uid } = req.params;
-
     try {
-      const businessData = await FirestoreService.getDocument(
-        'businesses',
-        uid
-      );
-
-      const { githubToken } = businessData || {};
-      if (!githubToken) {
-        return res.status(401).json({ error: 'GitHub not authorized' });
-      }
-
-      const response = await axios.get('https://api.github.com/user/repos', {
-        headers: { Authorization: `Bearer ${githubToken}` },
-      });
-
-      const repos = response.data.map((repo) => repo.full_name);
-      res.json({ repos });
+      const { uid } = req.params;
+      const repos = await GithubService.listRepos(uid);
+      return ResponseHelper.success(res, 'Repositories fetched', { repos });
     } catch (err) {
-      console.error('Error fetching repos:', err.message);
-      res.status(500).json({ error: 'Failed to fetch repos' });
+      if (err.message === 'GitHub not authorized') {
+        return ResponseHelper.error(res, err.message, 401);
+      }
+      console.error('List Repos Error:', err.message);
+      return ResponseHelper.error(res, 'Failed to fetch repositories');
     }
   }
 
   async saveSelectedRepo(req, res) {
-    const { uid } = req.params;
-    const { repo } = req.body;
-
     try {
-      const businessData = await FirestoreService.getDocument(
-        'businesses',
-        uid
-      );
-
-      const { githubToken } = businessData || {};
-      if (!githubToken) {
-        return res.status(401).json({ error: 'GitHub not authorized' });
-      }
-
-      await axios.get(`https://api.github.com/repos/${repo}`, {
-        headers: { Authorization: `Bearer ${githubToken}` },
-      });
-
-      await FirestoreService.updateDocument('businesses', uid, { repo });
-
-      res.json({ success: true });
+      const { uid } = req.params;
+      const { repo } = req.body;
+      await GithubService.validateAndSaveRepo(uid, repo);
+      return ResponseHelper.success(res, 'Repository saved');
     } catch (err) {
-      console.error('Repo validation failed:', err.message);
-      res.status(400).json({ error: 'Invalid repo or access denied' });
+      if (err.message === 'GitHub not authorized') {
+        return ResponseHelper.error(res, err.message, 401);
+      }
+      console.error('Save Repo Error:', err.message);
+      return ResponseHelper.error(
+        res,
+        'Invalid repository or access denied',
+        400
+      );
     }
   }
 }

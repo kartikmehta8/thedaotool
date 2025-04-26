@@ -1,130 +1,75 @@
-const Paymanai = require('paymanai');
+const PaymanService = require('../services/PaymanService');
+const ResponseHelper = require('../utils/ResponseHelper');
 const FirestoreService = require('../services/FirestoreService');
-const triggerEmail = require('../utils/triggerEmail');
 
 class PaymanController {
   async getApiKey(req, res) {
     try {
-      const uid = req.params.uid;
-      const businessData = await FirestoreService.getDocument(
-        'businesses',
-        uid
-      );
+      const apiKey = await PaymanService.getApiKey(req.params.uid);
 
-      if (businessData) {
-        const apiKey = businessData.apiKey || null;
-        return res.status(200).json({ apiKey });
+      if (!apiKey) {
+        return ResponseHelper.error(res, 'Business not found', 404);
       }
 
-      res.status(404).json({ message: 'Business not found' });
+      return ResponseHelper.success(res, 'API Key fetched', { apiKey });
     } catch (err) {
-      console.error(err);
-      res.status(500).json({ message: 'Error fetching API key' });
+      console.error('Get API Key Error:', err.message);
+      return ResponseHelper.error(res, 'Error fetching API key');
     }
   }
 
   async createPayee(req, res) {
-    const { contractorInfo, contractorId, apiKey } = req.body;
-
     try {
+      const { contractorInfo, contractorId, apiKey } = req.body;
+
       if (!contractorId || !contractorInfo) {
-        return res.status(400).json({ message: 'Invalid information' });
+        return ResponseHelper.error(res, 'Invalid contractor info', 400);
       }
 
-      const payman = new Paymanai({ xPaymanAPISecret: apiKey });
-      const { name, email, accountNumber, routingNumber } = contractorInfo;
-
-      const payee = await payman.payments.createPayee({
-        type: 'US_ACH',
-        name,
-        accountHolderName: name,
-        accountHolderType: 'individual',
-        accountNumber,
-        routingNumber,
-        accountType: 'checking',
-        contactDetails: { email },
-      });
+      const payee = await PaymanService.createPayee(contractorInfo, apiKey);
 
       await FirestoreService.updateDocument('contractors', contractorId, {
         payeeId: payee.id,
       });
 
-      res
-        .status(200)
-        .json({ payeeId: payee.id, message: 'Payee created successfully' });
+      return ResponseHelper.success(res, 'Payee created successfully', {
+        payeeId: payee.id,
+      });
     } catch (err) {
-      console.error(err);
-      res.status(500).json({ message: 'Failed to create payee' });
+      console.error('Create Payee Error:', err.message);
+      return ResponseHelper.error(res, 'Failed to create payee');
     }
   }
 
   async sendPayment(req, res) {
-    const { contract, payeeId, apiKey } = req.body;
-
     try {
-      const payman = new Paymanai({ xPaymanAPISecret: apiKey });
+      const { contract, apiKey } = req.body;
 
-      await payman.payments.sendPayment({
-        amountDecimal: Number(contract.amount),
-        payeeId: process.env.PAYMAN_TEST_PAYEE_ID, // For testing.
-        memo: `Payment for ${contract.name}`,
-        metadata: { contractId: contract.id },
-      });
+      await PaymanService.sendPayment(contract, apiKey);
 
-      // Update the contract to mark it as paid.
-      await FirestoreService.updateDocument('contracts', contract.id, {
-        paid: true,
-      });
-
-      // Update the contractor's balance.
-      const contractorData = await FirestoreService.getDocument(
-        'contractors',
-        contract.contractorId
-      );
-
-      if (!contractorData) {
-        return res.status(404).json({ message: 'Contractor not found' });
-      }
-
-      const newBalance =
-        (contractorData.balance || 0) + Number(contract.amount);
-
-      await FirestoreService.updateDocument(
-        'contractors',
-        contract.contractorId,
-        { balance: newBalance }
-      );
-
-      await triggerEmail('paymentSentToContractor', contract.id, {
-        amount: contract.amount,
-      });
-
-      res.status(200).json({ message: 'Payment sent successfully' });
+      return ResponseHelper.success(res, 'Payment sent successfully');
     } catch (err) {
       console.error('Send Payment Error:', err.message);
-      res.status(500).json({ message: 'Failed to send payment' });
+      return ResponseHelper.error(res, 'Failed to send payment');
     }
   }
 
   async getPaymanBalance(req, res) {
     try {
-      const uid = req.params.uid;
-      const businessData = await FirestoreService.getDocument(
-        'businesses',
-        uid
-      );
+      const apiKey = await PaymanService.getApiKey(req.params.uid);
 
-      if (!businessData || !businessData.apiKey) {
-        return res.status(400).json({ message: 'API key not found' });
+      if (!apiKey) {
+        return ResponseHelper.error(res, 'API key not found', 400);
       }
 
-      const payman = new Paymanai({ xPaymanAPISecret: businessData.apiKey });
-      const usd = await payman.balances.getSpendableBalance('TSD');
+      const balance = await PaymanService.getBalance(apiKey);
 
-      res.status(200).json({ balance: usd });
+      return ResponseHelper.success(res, 'Balance fetched successfully', {
+        balance,
+      });
     } catch (err) {
-      console.error('Fetch Payman Balance Error:', err.message);
-      res.status(500).json({ message: 'Failed to fetch balance' });
+      console.error('Get Payman Balance Error:', err.message);
+      return ResponseHelper.error(res, 'Failed to fetch balance');
     }
   }
 }

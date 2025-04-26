@@ -1,34 +1,17 @@
-const FirestoreService = require('../services/FirestoreService');
+const UserService = require('../services/UserService');
+const ResponseHelper = require('../utils/ResponseHelper');
 
 class AuthController {
   async loginUser(req, res) {
     const { email, password } = req.body;
 
     try {
-      const result = await FirestoreService.login(email, password);
-      const userData = await FirestoreService.getDocument(
-        'users',
-        result.user.uid
-      );
-
-      if (!userData) {
-        return res
-          .status(404)
-          .json({ message: 'User profile not found in database.' });
-      }
-
-      const userProfile = {
-        uid: result.user.uid,
-        email: result.user.email,
-        role: userData.role,
-      };
-
-      return res
-        .status(200)
-        .json({ message: 'Login successful', user: userProfile });
+      const userProfile = await UserService.login(email, password);
+      return ResponseHelper.success(res, 'Login successful', {
+        user: userProfile,
+      });
     } catch (error) {
-      console.error(error);
-      return res.status(401).json({ message: 'Invalid credentials' });
+      return ResponseHelper.error(res, error.message, 401);
     }
   }
 
@@ -36,24 +19,12 @@ class AuthController {
     const { email, password, role } = req.body;
 
     try {
-      const result = await FirestoreService.signup(email, password);
-      await FirestoreService.setDocument('users', result.user.uid, {
-        email,
-        role,
+      const userProfile = await UserService.signup(email, password, role);
+      return ResponseHelper.created(res, 'Signup successful', {
+        user: userProfile,
       });
-
-      const userProfile = {
-        uid: result.user.uid,
-        email,
-        role,
-      };
-
-      return res
-        .status(201)
-        .json({ message: 'Signup successful', user: userProfile });
     } catch (error) {
-      console.error(error);
-      return res.status(400).json({ message: 'Signup failed' });
+      return ResponseHelper.error(res, error.message, 400);
     }
   }
 }
