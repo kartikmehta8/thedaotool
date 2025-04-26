@@ -1,14 +1,9 @@
 const express = require('express');
 const http = require('http');
 const cron = require('node-cron');
-
-const compression = require('./middlewares/Compression');
-const clusterMiddleware = require('./middlewares/Clusters');
-const helmet = require('./middlewares/Helmet');
 const dotenv = require('dotenv');
-const bodyParser = require('./middlewares/bodyParser');
-const morgan = require('./middlewares/Morgan');
-const cors = require('./middlewares/Cors');
+
+const MiddlewareManager = require('./middlewares/MiddlewareManager');
 
 // Routes Import
 const authRoutes = require('./routes/auth');
@@ -28,12 +23,8 @@ const server = http.createServer(app);
 const initSocket = require('./sockets/chat');
 
 // Middlewares
-app.use(cors);
-app.use(compression);
-app.use(helmet);
-clusterMiddleware(server);
-app.use(bodyParser);
-app.use(morgan);
+const middlewareManager = new MiddlewareManager();
+middlewareManager.applyMiddlewares(app);
 
 // Routes
 app.use('/api/auth', authRoutes);
@@ -48,7 +39,7 @@ initSocket(server);
 
 app.get('/', (req, res) => {
   res.send({
-    server: 'Express Server is running',
+    server: 'Express',
     status: 'OK',
   });
 });
@@ -56,4 +47,8 @@ app.get('/', (req, res) => {
 cron.schedule('*/20 * * * * *', async () => {
   console.log('Running GitHub issue sync...');
   await syncGitHubIssues();
+});
+
+server.listen(process.env.PORT, () => {
+  console.log(`server: ${process.env.PORT}`);
 });
