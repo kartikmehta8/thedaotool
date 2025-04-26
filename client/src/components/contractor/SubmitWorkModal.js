@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Modal, Input } from 'antd';
-import { submitWork } from '../../api/firebaseContractor';
+import { submitWork } from '../../api/contractor/contracts';
 
 const SubmitWorkModal = ({
   visible,
@@ -11,8 +11,14 @@ const SubmitWorkModal = ({
   const [submission, setSubmission] = useState('');
 
   const handleSubmitWork = async () => {
-    await submitWork(contractId, submission, onCancel, onSubmitSuccess);
-    setSubmission(''); // Clear the input after submission.
+    try {
+      await submitWork(contractId, submission);
+      onSubmitSuccess();
+      onCancel();
+      setSubmission('');
+    } catch (err) {
+      console.error('Failed to submit work', err);
+    }
   };
 
   return (

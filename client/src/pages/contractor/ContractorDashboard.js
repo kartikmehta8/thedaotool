@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Typography, Row, Switch } from 'antd';
-import {
-  fetchContractsForContractor,
-  getContractorProfile,
-} from '../../api/firebaseContractor';
+import { fetchContractsForContractor } from '../../api/contractor/contracts';
+import { getContractorProfile } from '../../api/contractor/profile';
+
 import {
   ContractCard,
   SubmitWorkModal,

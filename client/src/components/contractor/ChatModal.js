@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Input, Button, List } from 'antd';
-import { subscribeToChat, sendChatMessage } from '../../api/firebaseContractor';
+import { listenToMessages, sendMessage } from '../../realtime/chat';
 
 const ChatModal = ({ visible, contract, userId, onCancel }) => {
   const [chatInput, setChatInput] = useState('');
@@ -9,7 +9,11 @@ const ChatModal = ({ visible, contract, userId, onCancel }) => {
   useEffect(() => {
     if (visible && contract?.id) {
       setMessages([]); // Reset messages on modal open.
-      const unsubscribe = subscribeToChat(contract.id, setMessages);
+      const unsubscribe = listenToMessages(
+        contract.id,
+        (msg) => setMessages((prev) => [...prev, msg]),
+        (history) => setMessages(history)
+      );
 
       return () => {
         if (unsubscribe) unsubscribe(); // Clean up listener when closing.
@@ -18,7 +22,7 @@ const ChatModal = ({ visible, contract, userId, onCancel }) => {
   }, [visible, contract]);
 
   const handleSendMessage = async () => {
-    await sendChatMessage(contract.id, userId, 'Contractor', chatInput);
+    await sendMessage(contract.id, userId, 'Contractor', chatInput);
     setChatInput('');
   };
 
