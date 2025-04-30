@@ -1,10 +1,13 @@
 const express = require('express');
 const ContractorController = require('../../controllers/contractorController');
+const AuthMiddleware = require('../../middlewares/implementations/AuthMiddleware');
 const IRoute = require('../IRoute');
 
 class ContractorRoutes extends IRoute {
   register(app) {
     const router = express.Router();
+
+    router.use(AuthMiddleware.authenticate(['contractor', 'business']));
 
     router.post('/apply', ContractorController.applyToContract);
     router.post('/submit', ContractorController.submitWork);

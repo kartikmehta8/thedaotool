@@ -9,6 +9,7 @@ class AuthController {
       const userProfile = await UserService.login(email, password);
       return ResponseHelper.success(res, 'Login successful', {
         user: userProfile,
+        token: UserService.generateToken(userProfile),
       });
     } catch (error) {
       return ResponseHelper.error(res, error.message, 401);
@@ -22,6 +23,7 @@ class AuthController {
       const userProfile = await UserService.signup(email, password, role);
       return ResponseHelper.created(res, 'Signup successful', {
         user: userProfile,
+        token: UserService.generateToken(userProfile),
       });
     } catch (error) {
       return ResponseHelper.error(res, error.message, 400);

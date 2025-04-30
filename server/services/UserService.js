@@ -1,4 +1,5 @@
 const FirestoreService = require('./FirestoreService');
+const jwt = require('jsonwebtoken');
 
 class UserService {
   async login(email, password) {
@@ -31,6 +32,18 @@ class UserService {
       email,
       role,
     };
+  }
+
+  generateToken(user) {
+    return jwt.sign(
+      {
+        uid: user.uid,
+        email: user.email,
+        role: user.role,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: '7d' }
+    );
   }
 }
 
