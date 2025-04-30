@@ -7,12 +7,18 @@ class DiscordRoutes extends IRoute {
   register(app) {
     const router = express.Router();
 
-    router.use(AuthMiddleware.authenticate(['business']));
-
     router.get('/oauth', DiscordController.initiateOAuth);
     router.get('/callback', DiscordController.handleCallback);
-    router.get('/channels/:uid', DiscordController.getDiscordChannels);
-    router.put('/channel/:uid', DiscordController.saveDiscordChannel);
+    router.get(
+      '/channels/:uid',
+      AuthMiddleware.authenticate(['business']),
+      DiscordController.getDiscordChannels
+    );
+    router.put(
+      '/channel/:uid',
+      AuthMiddleware.authenticate(['business']),
+      DiscordController.saveDiscordChannel
+    );
 
     app.use('/api/discord', router);
   }

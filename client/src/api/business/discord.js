@@ -1,23 +1,23 @@
 import { API_URL } from '../../constants/constants';
+import { fetchWithAuth } from '../../utils/fetchWithAuth';
 
 export const fetchDiscordProfile = async (uid) => {
-  const res = await fetch(`${API_URL}/business/profile/${uid}`);
+  const res = await fetchWithAuth(`${API_URL}/business/profile/${uid}`);
   if (!res.ok) throw new Error('Failed to load Discord profile');
   const { profile } = await res.json();
   return profile;
 };
 
 export const fetchDiscordChannels = async (uid) => {
-  const res = await fetch(`${API_URL}/discord/channels/${uid}`);
+  const res = await fetchWithAuth(`${API_URL}/discord/channels/${uid}`);
   if (!res.ok) throw new Error('Failed to fetch Discord channels');
   const data = await res.json();
   return data.channels || [];
 };
 
 export const updateDiscordSettings = async (uid, updatedProfile) => {
-  const res = await fetch(`${API_URL}/business/profile/${uid}`, {
+  const res = await fetchWithAuth(`${API_URL}/business/profile/${uid}`, {
     method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(updatedProfile),
   });
   if (!res.ok) throw new Error('Failed to update Discord settings');
@@ -37,9 +37,8 @@ export const disconnectDiscord = async (uid, profile) => {
 };
 
 export const saveDiscordChannel = async (uid, channelId) => {
-  const res = await fetch(`${API_URL}/discord/channel/${uid}`, {
+  const res = await fetchWithAuth(`${API_URL}/discord/channel/${uid}`, {
     method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ channelId }),
   });
   if (!res.ok) throw new Error('Failed to save Discord channel');
