@@ -15,6 +15,29 @@ const {
   where,
   getDocs,
 } = require('firebase/firestore');
+const EncryptionService = require('./EncryptionService');
+
+const SENSITIVE_KEYS = ['apiKey', 'discordAccessToken', 'githubToken'];
+
+function encryptSensitiveFields(data) {
+  const encrypted = { ...data };
+  for (const key of SENSITIVE_KEYS) {
+    if (data[key]) {
+      encrypted[key] = EncryptionService.encrypt(data[key]);
+    }
+  }
+  return encrypted;
+}
+
+function decryptSensitiveFields(data) {
+  const decrypted = { ...data };
+  for (const key of SENSITIVE_KEYS) {
+    if (data[key]) {
+      decrypted[key] = EncryptionService.decrypt(data[key]);
+    }
+  }
+  return decrypted;
+}
 
 class FirestoreService {
   // Auth related.
@@ -33,15 +56,21 @@ class FirestoreService {
 
   async getDocument(collectionName, id) {
     const document = await getDoc(this.getDocumentRef(collectionName, id));
-    return document.exists() ? document.data() : null;
+    return document.exists() ? decryptSensitiveFields(document.data()) : null;
   }
 
   async setDocument(collectionName, id, data) {
-    return setDoc(this.getDocumentRef(collectionName, id), data);
+    return setDoc(
+      this.getDocumentRef(collectionName, id),
+      encryptSensitiveFields(data)
+    );
   }
 
   async updateDocument(collectionName, id, data) {
-    return updateDoc(this.getDocumentRef(collectionName, id), data);
+    return updateDoc(
+      this.getDocumentRef(collectionName, id),
+      encryptSensitiveFields(data)
+    );
   }
 
   async deleteDocument(collectionName, id) {
@@ -49,7 +78,7 @@ class FirestoreService {
   }
 
   async addDocument(collectionName, data) {
-    return addDoc(collection(db, collectionName), data);
+    return addDoc(collection(db, collectionName), encryptSensitiveFields(data));
   }
 
   async queryDocuments(collectionName, field, operator, value) {
@@ -60,7 +89,7 @@ class FirestoreService {
     const snapshot = await getDocs(q);
     return snapshot.docs.map((docSnap) => ({
       id: docSnap.id,
-      ...docSnap.data(),
+      ...decryptSensitiveFields(docSnap.data()),
     }));
   }
 
@@ -68,7 +97,7 @@ class FirestoreService {
     const snap = await getDocs(collection(db, collectionName));
     return snap.docs.map((docSnap) => ({
       id: docSnap.id,
-      data: docSnap.data(),
+      ...decryptSensitiveFields(docSnap.data()),
     }));
   }
 }
