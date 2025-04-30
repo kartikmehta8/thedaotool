@@ -1,23 +1,27 @@
 const FirestoreService = require('./FirestoreService');
 const jwt = require('jsonwebtoken');
+const LoginThrottleService = require('./LoginThrottleService');
+
+const MAX_ATTEMPTS = Number(process.env.MAX_LOGIN_ATTEMPTS || 3);
 
 class UserService {
   async login(email, password) {
-    const result = await FirestoreService.login(email, password);
-    const userData = await FirestoreService.getDocument(
-      'users',
-      result.user.uid
-    );
-
-    if (!userData) {
-      throw new Error('User profile not found');
+    const hasReachedLimit = await this.hasReachedMaxRetries(email);
+    if (hasReachedLimit) {
+      throw new Error('Too many login attempts. Try again later.');
     }
 
-    return {
-      uid: result.user.uid,
-      email: result.user.email,
-      role: userData.role,
-    };
+    try {
+      const userCredential = await this.verifyLogin(email, password);
+      const userData = await this.getUserData(userCredential.user.uid);
+
+      await LoginThrottleService.reset(email);
+
+      return this.buildUserProfile(userCredential, userData);
+    } catch (err) {
+      await LoginThrottleService.increment(email);
+      throw err;
+    }
   }
 
   async signup(email, password, role) {
@@ -26,12 +30,7 @@ class UserService {
       email,
       role,
     });
-
-    return {
-      uid: result.user.uid,
-      email,
-      role,
-    };
+    return this.buildUserProfile(result, { role });
   }
 
   generateToken(user) {
@@ -44,6 +43,29 @@ class UserService {
       process.env.JWT_SECRET,
       { expiresIn: '7d' }
     );
+  }
+
+  async verifyLogin(email, password) {
+    return FirestoreService.login(email, password);
+  }
+
+  async getUserData(uid) {
+    const data = await FirestoreService.getDocument('users', uid);
+    if (!data) throw new Error('User profile not found');
+    return data;
+  }
+
+  buildUserProfile(userCredential, userData) {
+    return {
+      uid: userCredential.user.uid,
+      email: userCredential.user.email,
+      role: userData.role,
+    };
+  }
+
+  async hasReachedMaxRetries(email) {
+    const status = await LoginThrottleService.getStatus(email);
+    return status?.count >= MAX_ATTEMPTS;
   }
 }
 
