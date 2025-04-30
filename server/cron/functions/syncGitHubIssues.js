@@ -48,14 +48,14 @@ async function syncGitHubIssues() {
             amount: 'TBD',
           });
 
-          console.log(`✅ Synced issue #${issue.number} from ${repo}`);
+          console.log(`Synced issue #${issue.number} from ${repo}`);
         }
       } catch (err) {
-        console.error(`❌ Error syncing issues for repo ${repo}:`, err.message);
+        console.error(`Error syncing issues for repo ${repo}:`, err.message);
       }
     }
   } catch (err) {
-    console.error('❌ Error during GitHub Issue Sync:', err.message);
+    console.error('Error during GitHub Issue Sync:', err.message);
   }
 }
 

@@ -8,7 +8,6 @@ class ContractorController {
       await ContractorService.applyToContract(contractId, userId);
       return ResponseHelper.success(res, 'Applied successfully');
     } catch (err) {
-      console.error('Apply to Contract Error:', err.message);
       return ResponseHelper.error(res, 'Application failed');
     }
   }
@@ -19,7 +18,6 @@ class ContractorController {
       await ContractorService.submitWork(contractId, submittedLink);
       return ResponseHelper.success(res, 'Work submitted');
     } catch (err) {
-      console.error('Submit Work Error:', err.message);
       return ResponseHelper.error(res, 'Submission failed');
     }
   }
@@ -29,7 +27,6 @@ class ContractorController {
       const contracts = await ContractorService.fetchContracts(req.params.uid);
       return ResponseHelper.success(res, 'Contracts fetched', { contracts });
     } catch (err) {
-      console.error('Fetch Contracts Error:', err.message);
       return ResponseHelper.error(res, 'Fetch failed');
     }
   }
@@ -42,7 +39,6 @@ class ContractorController {
       }
       return ResponseHelper.error(res, 'Profile not found', 404);
     } catch (err) {
-      console.error('Get Profile Error:', err.message);
       return ResponseHelper.error(res, 'Failed to fetch profile');
     }
   }
@@ -52,7 +48,6 @@ class ContractorController {
       await ContractorService.saveProfile(req.params.uid, req.body);
       return ResponseHelper.success(res, 'Profile saved');
     } catch (err) {
-      console.error('Save Profile Error:', err.message);
       return ResponseHelper.error(res, 'Error saving profile');
     }
   }
@@ -68,7 +63,6 @@ class ContractorController {
       await ContractorService.unassignSelf(contractId);
       return ResponseHelper.success(res, 'Contractor unassigned');
     } catch (err) {
-      console.error('Unassign Self Error:', err.message);
       return ResponseHelper.error(res, 'Failed to unassign contractor');
     }
   }
@@ -80,7 +74,6 @@ class ContractorController {
       );
       return ResponseHelper.success(res, 'Payments fetched', { payments });
     } catch (err) {
-      console.error('Get Contractor Payments Error:', err.message);
       return ResponseHelper.error(res, 'Failed to fetch payments');
     }
   }

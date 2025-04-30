@@ -41,7 +41,6 @@ async function triggerEmail(templateKey, contractId, extraData = {}) {
       html: emailData.html,
     });
   } catch (err) {
-    console.error('❌ Email trigger failed:', err.message);
     return false;
   }
 }

@@ -13,7 +13,7 @@ module.exports = function initSocket(server) {
   });
 
   io.on('connection', (socket) => {
-    console.log(`🟢 Socket connected: ${socket.id}`);
+    console.log(`Socket connected: ${socket.id}`);
 
     socket.on('join-contract', (contractId) =>
       joinContract(socket, io, contractId)
@@ -45,7 +45,7 @@ async function joinContract(socket, io, contractId) {
 
     socket.emit('chat-history', history);
   } catch (err) {
-    console.error('❌ Error fetching chat history:', err.message);
+    console.error('Error fetching chat history:', err.message);
   }
 
   // Step 2: Setup real-time listener if not already.
@@ -71,10 +71,10 @@ async function sendMessage({ contractId, senderId, senderName, text }) {
   try {
     await push(chatRef, msg);
   } catch (err) {
-    console.error('❌ Error sending message:', err.message);
+    console.error('Error sending message:', err.message);
   }
 }
 
 function handleDisconnect(socket) {
-  console.log(`🔴 Disconnected: ${socket.id}`);
+  console.log(`Disconnected: ${socket.id}`);
 }

@@ -17,7 +17,6 @@ class DiscordController {
 
       res.redirect(`${process.env.FRONTEND_URL}/profile/business`);
     } catch (err) {
-      console.error('Discord OAuth Error:', err.message);
       res.status(500).send('Discord authorization failed.');
     }
   }
@@ -29,7 +28,6 @@ class DiscordController {
       );
       return ResponseHelper.success(res, 'Channels fetched', { channels });
     } catch (err) {
-      console.error('Fetch Discord Channels Error:', err.message);
       if (err.message === 'Unauthorized') {
         return ResponseHelper.error(res, 'Unauthorized', 401);
       }
@@ -45,7 +43,6 @@ class DiscordController {
       await DiscordService.saveDiscordChannel(uid, channelId);
       return ResponseHelper.success(res, 'Channel saved');
     } catch (err) {
-      console.error('Save Discord Channel Error:', err.message);
       return ResponseHelper.error(res, 'Failed to save channel');
     }
   }
