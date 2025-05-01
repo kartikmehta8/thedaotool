@@ -30,3 +30,14 @@ export const disconnectGitHub = async (uid, profile) => {
   );
   return true;
 };
+
+export const handleAuth = async (uid) => {
+  try {
+    const res = await fetch(`${API_URL}/github/auth?userId=${uid}`);
+    if (!res.ok) throw new Error('Failed to initiate GitHub OAuth');
+    const { redirectUrl } = await res.json();
+    return redirectUrl;
+  } catch (err) {
+    alert('Unable to initiate GitHub OAuth.');
+  }
+};
