@@ -12,7 +12,7 @@ export const loginUser = async (email, password) => {
     throw new Error(data.message || 'Login failed');
   }
 
-  return data.user;
+  return { user: data.user, token: data.token };
 };
 
 export const signupUser = async (email, password, role) => {
@@ -27,5 +27,5 @@ export const signupUser = async (email, password, role) => {
     throw new Error(data.message || 'Signup failed');
   }
 
-  return data.user;
+  return { user: data.user, token: data.token };
 };

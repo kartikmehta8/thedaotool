@@ -16,6 +16,7 @@ const { Title } = Typography;
 const BusinessProfile = () => {
   const [loading, setLoading] = useState(true);
   const [form] = Form.useForm();
+  const [profile, setProfile] = useState({});
   const user = JSON.parse(localStorage.getItem('payman-user')) || {};
   const email = user.email || '';
   const uid = user.uid;
@@ -33,6 +34,7 @@ const BusinessProfile = () => {
     setLoading(true);
     const profileData = await getBusinessProfile(uid);
     if (profileData) {
+      setProfile(profileData);
       form.setFieldsValue({ ...defaultFields, ...profileData });
     } else {
       form.setFieldsValue(defaultFields);
@@ -41,7 +43,14 @@ const BusinessProfile = () => {
   };
 
   const handleSubmit = async (values) => {
-    await saveBusinessProfile(uid, values, email);
+    await saveBusinessProfile(
+      uid,
+      {
+        ...profile,
+        ...values,
+      },
+      email
+    );
   };
 
   useEffect(() => {

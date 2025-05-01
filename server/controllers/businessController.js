@@ -8,7 +8,6 @@ class BusinessController {
       await BusinessService.createContract(values, userId);
       return ResponseHelper.success(res, 'Contract created');
     } catch (err) {
-      console.error('Create Contract Error:', err.message);
       return ResponseHelper.error(res, 'Creation failed');
     }
   }
@@ -18,7 +17,6 @@ class BusinessController {
       await BusinessService.deleteContract(req.params.id);
       return ResponseHelper.success(res, 'Deleted');
     } catch (err) {
-      console.error('Delete Contract Error:', err.message);
       return ResponseHelper.error(res, 'Delete failed');
     }
   }
@@ -28,7 +26,6 @@ class BusinessController {
       await BusinessService.updateContract(req.params.id, req.body);
       return ResponseHelper.success(res, 'Updated');
     } catch (err) {
-      console.error('Update Contract Error:', err.message);
       return ResponseHelper.error(res, 'Update failed');
     }
   }
@@ -38,7 +35,6 @@ class BusinessController {
       const contracts = await BusinessService.getContracts(req.params.uid);
       return ResponseHelper.success(res, 'Contracts fetched', { contracts });
     } catch (err) {
-      console.error('Get Contracts Error:', err.message);
       return ResponseHelper.error(res, 'Failed to fetch contracts');
     }
   }
@@ -54,7 +50,6 @@ class BusinessController {
       }
       return ResponseHelper.error(res, 'Contractor not found', 404);
     } catch (err) {
-      console.error('Get Contractor Error:', err.message);
       return ResponseHelper.error(res, 'Error fetching contractor');
     }
   }
@@ -64,7 +59,6 @@ class BusinessController {
       await BusinessService.updateContractor(req.params.id, req.body);
       return ResponseHelper.success(res, 'Contractor updated');
     } catch (err) {
-      console.error('Update Contractor Error:', err.message);
       return ResponseHelper.error(res, 'Error updating contractor');
     }
   }
@@ -78,7 +72,6 @@ class BusinessController {
       }
       return ResponseHelper.error(res, 'Profile not found', 404);
     } catch (err) {
-      console.error('Get Profile Error:', err.message);
       return ResponseHelper.error(res, 'Error fetching profile');
     }
   }
@@ -88,7 +81,6 @@ class BusinessController {
       await BusinessService.saveProfile(req.params.uid, req.body);
       return ResponseHelper.success(res, 'Profile saved');
     } catch (err) {
-      console.error('Save Profile Error:', err.message);
       return ResponseHelper.error(res, 'Error saving profile');
     }
   }
@@ -98,7 +90,6 @@ class BusinessController {
       await BusinessService.unassignContractor(req.params.contractId);
       return ResponseHelper.success(res, 'Contractor unassigned');
     } catch (err) {
-      console.error('Unassign Contractor Error:', err.message);
       return ResponseHelper.error(res, 'Failed to unassign contractor');
     }
   }
@@ -110,7 +101,6 @@ class BusinessController {
       );
       return ResponseHelper.success(res, 'Payments fetched', { payments });
     } catch (err) {
-      console.error('Get Payments Error:', err.message);
       return ResponseHelper.error(res, 'Failed to fetch payments');
     }
   }

@@ -13,7 +13,6 @@ class PaymanController {
 
       return ResponseHelper.success(res, 'API Key fetched', { apiKey });
     } catch (err) {
-      console.error('Get API Key Error:', err.message);
       return ResponseHelper.error(res, 'Error fetching API key');
     }
   }
@@ -36,7 +35,6 @@ class PaymanController {
         payeeId: payee.id,
       });
     } catch (err) {
-      console.error('Create Payee Error:', err.message);
       return ResponseHelper.error(res, 'Failed to create payee');
     }
   }
@@ -49,7 +47,6 @@ class PaymanController {
 
       return ResponseHelper.success(res, 'Payment sent successfully');
     } catch (err) {
-      console.error('Send Payment Error:', err.message);
       return ResponseHelper.error(res, 'Failed to send payment');
     }
   }
@@ -68,7 +65,6 @@ class PaymanController {
         balance,
       });
     } catch (err) {
-      console.error('Get Payman Balance Error:', err.message);
       return ResponseHelper.error(res, 'Failed to fetch balance');
     }
   }

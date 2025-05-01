@@ -1,9 +1,9 @@
 import { API_URL } from '../../constants/constants';
+import { fetchWithAuth } from '../../utils/fetchWithAuth';
 
 export const applyToContract = async (contractId, userId) => {
-  const res = await fetch(`${API_URL}/contractor/apply`, {
+  const res = await fetchWithAuth(`${API_URL}/contractor/apply`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ contractId, userId }),
   });
   if (!res.ok) throw new Error('Failed to apply to contract');
@@ -11,9 +11,8 @@ export const applyToContract = async (contractId, userId) => {
 };
 
 export const submitWork = async (contractId, submittedLink) => {
-  const res = await fetch(`${API_URL}/contractor/submit`, {
+  const res = await fetchWithAuth(`${API_URL}/contractor/submit`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ contractId, submittedLink }),
   });
   if (!res.ok) throw new Error('Failed to submit work');
@@ -21,16 +20,15 @@ export const submitWork = async (contractId, submittedLink) => {
 };
 
 export const fetchContractsForContractor = async (uid) => {
-  const res = await fetch(`${API_URL}/contractor/contracts/${uid}`);
+  const res = await fetchWithAuth(`${API_URL}/contractor/contracts/${uid}`);
   if (!res.ok) throw new Error('Failed to fetch contracts');
   const data = await res.json();
   return data.contracts || [];
 };
 
 export const unassignSelf = async (contractId) => {
-  const res = await fetch(`${API_URL}/contractor/unassign`, {
+  const res = await fetchWithAuth(`${API_URL}/contractor/unassign`, {
     method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ contractId }),
   });
   if (!res.ok) throw new Error('Failed to unassign yourself');

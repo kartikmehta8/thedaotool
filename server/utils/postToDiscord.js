@@ -36,7 +36,7 @@ const postToDiscord = async (contract) => {
       }
     );
   } catch (err) {
-    console.error('❌ Failed to post to Discord:', err.message);
+    console.error('Failed to post to Discord:', err.message);
   }
 };
 

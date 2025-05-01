@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, Typography, Tag, Button, Col } from 'antd';
 import { applyToContract, unassignSelf } from '../../api/contractor/contracts';
+import toast from '../../utils/toast';
 
 const { Text } = Typography;
 
@@ -22,8 +23,9 @@ const ContractCard = ({
     try {
       await applyToContract(contract.id, userId);
       onRefetch();
+      toast.success('Contract assigned successfully');
     } catch (err) {
-      console.error('Failed to apply to contract', err);
+      console.error('Failed to apply to contract');
     }
   };
 
@@ -31,8 +33,9 @@ const ContractCard = ({
     try {
       await unassignSelf(contract.id);
       onRefetch();
+      toast.success('Unassigned from contract successfully');
     } catch (err) {
-      console.error('Failed to unassign from contract', err);
+      console.error('Failed to unassign from contract');
     }
   };
 

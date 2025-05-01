@@ -1,16 +1,16 @@
 import { API_URL } from '../constants/constants';
+import { fetchWithAuth } from '../utils/fetchWithAuth';
 
 export const getApiKey = async (uid) => {
-  const res = await fetch(`${API_URL}/payman/key/${uid}`);
+  const res = await fetchWithAuth(`${API_URL}/payman/key/${uid}`);
   if (!res.ok) return null;
   const data = await res.json();
   return data.apiKey || null;
 };
 
 export const createPayee = async (contractorInfo, apiKey, contractorId) => {
-  const res = await fetch(`${API_URL}/payman/payee`, {
+  const res = await fetchWithAuth(`${API_URL}/payman/payee`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ contractorInfo, contractorId, apiKey }),
   });
   const data = await res.json();
@@ -19,9 +19,8 @@ export const createPayee = async (contractorInfo, apiKey, contractorId) => {
 };
 
 export const sendPayment = async (contract, payeeId, apiKey) => {
-  const res = await fetch(`${API_URL}/payman/send`, {
+  const res = await fetchWithAuth(`${API_URL}/payman/send`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ contract, payeeId, apiKey }),
   });
   const data = await res.json();
@@ -33,7 +32,7 @@ export const getPaymanBalance = async (uid) => {
   const apiKey = await getApiKey(uid);
   if (!apiKey) return null;
 
-  const res = await fetch(`${API_URL}/payman/balance/${uid}`);
+  const res = await fetchWithAuth(`${API_URL}/payman/balance/${uid}`);
   if (!res.ok) return null;
 
   const data = await res.json();

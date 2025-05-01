@@ -4,6 +4,7 @@ services:
     container_name: bizzy-backend
     environment:
       - PORT=5050 
+      - NODE_ENV=production
       - FB_API_KEY=${FB_API_KEY}
       - FB_AUTH_DOMAIN=${FB_AUTH_DOMAIN}
       - FB_PROJECT_ID=${FB_PROJECT_ID}
@@ -21,6 +22,10 @@ services:
       - DISCORD_CLIENT_ID=${DISCORD_CLIENT_ID}
       - DISCORD_CLIENT_SECRET=${DISCORD_CLIENT_SECRET}
       - DISCORD_BOT_TOKEN=${DISCORD_BOT_TOKEN}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRATION=${JWT_EXPIRATION}
+      - MAX_LOGIN_ATTEMPTS=${MAX_LOGIN_ATTEMPTS}
+      - ENCRYPTION_SECRET=${ENCRYPTION_SECRET}
     restart: unless-stopped
     networks:
       - nginx_proxy_net

@@ -6,7 +6,9 @@ import {
   updateDiscordSettings,
   fetchDiscordChannels,
   saveDiscordChannel,
+  fetchDiscordOAuthUrl,
 } from '../../api/business/discord';
+import toast from '../../utils/toast';
 
 const { Paragraph, Text } = Typography;
 const { Option } = Select;
@@ -22,7 +24,7 @@ const DiscordIntegration = ({ user }) => {
         const data = await fetchDiscordProfile(uid);
         setProfile(data || {});
       } catch (err) {
-        console.error('Failed to fetch Discord profile', err);
+        console.error('Failed to fetch Discord profile');
       }
     };
     loadProfile();
@@ -38,16 +40,20 @@ const DiscordIntegration = ({ user }) => {
     loadChannels();
   }, [profile.discordAccessToken, uid]);
 
-  const handleIntegration = () => {
-    window.location.href = `${process.env.REACT_APP_BACKEND_URL}/api/discord/oauth?userId=${uid}`;
+  const handleIntegration = async () => {
+    const redirectUrl = await fetchDiscordOAuthUrl(uid);
+    if (redirectUrl) {
+      window.location.href = redirectUrl;
+    }
   };
 
   const handleChannelSelect = async (value) => {
     try {
       await saveDiscordChannel(uid, value);
       setProfile((prev) => ({ ...prev, discordChannel: value }));
+      toast.success('Discord channel saved successfully');
     } catch (err) {
-      console.error('Failed to save Discord channel', err);
+      console.error('Failed to save Discord channel');
     }
   };
 
@@ -55,8 +61,11 @@ const DiscordIntegration = ({ user }) => {
     try {
       await updateDiscordSettings(uid, { ...profile, discordEnabled: checked });
       setProfile((prev) => ({ ...prev, discordEnabled: checked }));
+      toast.success(
+        `Discord posting ${checked ? 'enabled' : 'disabled'} successfully`
+      );
     } catch (err) {
-      console.error('Failed to update Discord settings', err);
+      console.error('Failed to update Discord settings');
     }
   };
 
@@ -64,8 +73,9 @@ const DiscordIntegration = ({ user }) => {
     try {
       await updateDiscordSettings(uid, { ...profile, discordSendMode: val });
       setProfile((prev) => ({ ...prev, discordSendMode: val }));
+      toast.success('Send mode updated successfully');
     } catch (err) {
-      console.error('Failed to update send mode', err);
+      console.error('Failed to update send mode');
     }
   };
 

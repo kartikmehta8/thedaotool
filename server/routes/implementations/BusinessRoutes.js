@@ -1,10 +1,13 @@
 const express = require('express');
 const BusinessController = require('../../controllers/businessController');
+const AuthMiddleware = require('../../middlewares/implementations/AuthMiddleware');
 const IRoute = require('../IRoute');
 
 class BusinessRoutes extends IRoute {
   register(app) {
     const router = express.Router();
+
+    router.use(AuthMiddleware.authenticate(['business']));
 
     router.post('/contract', BusinessController.createContract);
     router.delete('/contract/:id', BusinessController.deleteContract);

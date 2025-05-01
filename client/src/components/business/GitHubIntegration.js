@@ -5,8 +5,9 @@ import {
   disconnectGitHub,
   fetchGitHubRepos,
   saveGitHubRepo,
+  handleAuth,
 } from '../../api/business/github';
-import { API_URL } from '../../constants/constants';
+import toast from '../../utils/toast';
 
 const { Paragraph, Text } = Typography;
 const { Option } = Select;
@@ -36,14 +37,18 @@ const GitHubIntegration = ({ user }) => {
     load();
   }, [uid]);
 
-  const handleAuth = () => {
-    window.location.href = `${API_URL}/github/auth?userId=${uid}`;
+  const handleOAuth = async () => {
+    const redirectUrl = await handleAuth(uid);
+    if (redirectUrl) {
+      window.location.href = redirectUrl;
+    }
   };
 
   const handleRepoSelect = async (selectedRepo) => {
     const success = await saveGitHubRepo(uid, selectedRepo);
     if (success) {
       setProfile((prev) => ({ ...prev, repo: selectedRepo }));
+      toast.success('GitHub repo saved successfully');
     }
   };
 
@@ -90,7 +95,7 @@ const GitHubIntegration = ({ user }) => {
           </Button>
         </Space>
       ) : (
-        <Button type="default" onClick={handleAuth} block>
+        <Button type="default" onClick={handleOAuth} block>
           Authorize GitHub
         </Button>
       )}

@@ -38,7 +38,7 @@ const ContractorProfile = () => {
           form.setFieldsValue(defaultFields);
         }
       } catch (err) {
-        console.error('Failed to fetch contractor profile', err);
+        console.error('Failed to fetch contractor profile.');
         form.setFieldsValue(defaultFields);
       } finally {
         setLoading(false);
@@ -53,7 +53,7 @@ const ContractorProfile = () => {
       await saveContractorProfile(uid, values, email, defaultFields);
       toast.success('Profile loaded successfully');
     } catch (err) {
-      console.error('Failed to save contractor profile', err);
+      console.error('Failed to save contractor profile.');
     }
   };
 

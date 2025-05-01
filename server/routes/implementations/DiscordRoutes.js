@@ -1,5 +1,6 @@
 const express = require('express');
 const DiscordController = require('../../controllers/discordController');
+const AuthMiddleware = require('../../middlewares/implementations/AuthMiddleware');
 const IRoute = require('../IRoute');
 
 class DiscordRoutes extends IRoute {
@@ -8,8 +9,16 @@ class DiscordRoutes extends IRoute {
 
     router.get('/oauth', DiscordController.initiateOAuth);
     router.get('/callback', DiscordController.handleCallback);
-    router.get('/channels/:uid', DiscordController.getDiscordChannels);
-    router.put('/channel/:uid', DiscordController.saveDiscordChannel);
+    router.get(
+      '/channels/:uid',
+      AuthMiddleware.authenticate(['business']),
+      DiscordController.getDiscordChannels
+    );
+    router.put(
+      '/channel/:uid',
+      AuthMiddleware.authenticate(['business']),
+      DiscordController.saveDiscordChannel
+    );
 
     app.use('/api/discord', router);
   }
