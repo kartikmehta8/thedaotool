@@ -7,6 +7,7 @@ import {
   saveGitHubRepo,
 } from '../../api/business/github';
 import { API_URL } from '../../constants/constants';
+import toast from '../../utils/toast';
 
 const { Paragraph, Text } = Typography;
 const { Option } = Select;
@@ -44,6 +45,7 @@ const GitHubIntegration = ({ user }) => {
     const success = await saveGitHubRepo(uid, selectedRepo);
     if (success) {
       setProfile((prev) => ({ ...prev, repo: selectedRepo }));
+      toast.success('GitHub repo saved successfully');
     }
   };
 

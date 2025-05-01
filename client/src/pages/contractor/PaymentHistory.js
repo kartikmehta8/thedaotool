@@ -53,7 +53,7 @@ const ContractorPaymentHistory = ({ user }) => {
         const res = await getContractorPayments(user.uid);
         setData(res);
       } catch (err) {
-        console.error('Failed to fetch payments', err);
+        console.error('Failed to fetch payments.');
       } finally {
         setLoading(false);
       }

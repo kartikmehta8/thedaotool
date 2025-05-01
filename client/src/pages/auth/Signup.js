@@ -31,8 +31,7 @@ const Signup = () => {
       toast.success('Account created successfully!');
       navigate('/dashboard', { replace: true });
     } catch (err) {
-      console.error('Signup error:', err);
-      toast.error(err.message || 'Signup failed');
+      toast.error('Signup failed');
     } finally {
       setLoading(false);
     }

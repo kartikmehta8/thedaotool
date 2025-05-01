@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Modal, Input } from 'antd';
 import { submitWork } from '../../api/contractor/contracts';
+import toast from '../../utils/toast';
 
 const SubmitWorkModal = ({
   visible,
@@ -15,9 +16,10 @@ const SubmitWorkModal = ({
       await submitWork(contractId, submission);
       onSubmitSuccess();
       onCancel();
+      toast.success('Work submitted successfully');
       setSubmission('');
     } catch (err) {
-      console.error('Failed to submit work', err);
+      console.error('Failed to submit work.');
     }
   };
 

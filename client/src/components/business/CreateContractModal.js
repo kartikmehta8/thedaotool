@@ -1,6 +1,7 @@
 import React from 'react';
 import { Modal, Form, Input, DatePicker, Button } from 'antd';
 import { createContract } from '../../api/business/contracts';
+import toast from '../../utils/toast';
 
 const CreateContractModal = ({
   visible,
@@ -15,10 +16,11 @@ const CreateContractModal = ({
       const values = await form.validateFields();
       await createContract(values, userId);
       onCreateSuccess();
+      toast.success('Contract created successfully');
       onCancel();
       form.resetFields();
     } catch (err) {
-      console.error('Contract creation failed:', err);
+      console.error('Error creating contract.');
     }
   };
 

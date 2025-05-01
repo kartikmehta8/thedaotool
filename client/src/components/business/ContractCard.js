@@ -20,7 +20,7 @@ const ContractCard = ({ contract, onView, onChatOpen, onRefetch }) => {
       await deleteContract(contract.id);
       onRefetch();
     } catch (err) {
-      console.error('Failed to delete contract:', err);
+      console.error('Failed to delete contract');
     }
   };
 
