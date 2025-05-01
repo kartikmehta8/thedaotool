@@ -6,6 +6,7 @@ import {
   updateDiscordSettings,
   fetchDiscordChannels,
   saveDiscordChannel,
+  fetchDiscordOAuthUrl,
 } from '../../api/business/discord';
 import toast from '../../utils/toast';
 
@@ -39,8 +40,11 @@ const DiscordIntegration = ({ user }) => {
     loadChannels();
   }, [profile.discordAccessToken, uid]);
 
-  const handleIntegration = () => {
-    window.location.href = `${process.env.REACT_APP_BACKEND_URL}/api/discord/oauth?userId=${uid}`;
+  const handleIntegration = async () => {
+    const redirectUrl = await fetchDiscordOAuthUrl(uid);
+    if (redirectUrl) {
+      window.location.href = redirectUrl;
+    }
   };
 
   const handleChannelSelect = async (value) => {

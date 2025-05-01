@@ -38,6 +38,6 @@ export const handleAuth = async (uid) => {
     const { redirectUrl } = await res.json();
     return redirectUrl;
   } catch (err) {
-    alert('Unable to initiate GitHub OAuth.');
+    console.error('GitHub OAuth URL fetch failed.');
   }
 };

@@ -44,3 +44,16 @@ export const saveDiscordChannel = async (uid, channelId) => {
   if (!res.ok) throw new Error('Failed to save Discord channel');
   return true;
 };
+
+export const fetchDiscordOAuthUrl = async (uid) => {
+  try {
+    const res = await fetch(
+      `${process.env.REACT_APP_BACKEND_URL}/api/discord/oauth?userId=${uid}`
+    );
+    if (!res.ok) throw new Error('Failed to get Discord OAuth URL');
+    const { redirectUrl } = await res.json();
+    return redirectUrl;
+  } catch (err) {
+    console.error('OAuth URL fetch failed.');
+  }
+};

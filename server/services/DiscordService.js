@@ -1,19 +1,39 @@
 const axios = require('axios');
 const FirestoreService = require('./FirestoreService');
+const crypto = require('crypto');
 
 const CLIENT_ID = process.env.DISCORD_CLIENT_ID;
 const CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET;
 const REDIRECT_URI = `${process.env.SERVER_URL}/api/discord/callback`;
 const BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
+const DEFAULT_SCOPE = 'identify guilds bot';
+const STATE_LENGTH = 32;
+
+function generateRandomState() {
+  return crypto.randomBytes(STATE_LENGTH).toString('hex');
+}
 
 class DiscordService {
   generateOAuthURL(userId) {
+    const state = generateRandomState() + ':' + userId;
     return `https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(
       REDIRECT_URI
-    )}&response_type=code&scope=identify+guilds+bot&permissions=3072&state=${userId}`;
+    )}&response_type=code&scope=${encodeURIComponent(DEFAULT_SCOPE)}&permissions=3072&state=${state}`;
   }
 
-  async exchangeCodeForToken(code) {
+  validateRedirectUri(receivedUri) {
+    return receivedUri === REDIRECT_URI;
+  }
+
+  extractUserIdFromState(state) {
+    return state.split(':')[1] || null;
+  }
+
+  async exchangeCodeForToken(code, redirectUri) {
+    if (!this.validateRedirectUri(redirectUri)) {
+      throw new Error('Invalid redirect URI');
+    }
+
     const response = await axios.post(
       'https://discord.com/api/oauth2/token',
       new URLSearchParams({
@@ -21,7 +41,7 @@ class DiscordService {
         client_secret: CLIENT_SECRET,
         code,
         grant_type: 'authorization_code',
-        redirect_uri: REDIRECT_URI,
+        redirect_uri: redirectUri,
       }),
       { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
     );

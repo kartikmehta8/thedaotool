@@ -4,18 +4,33 @@ const ResponseHelper = require('../utils/ResponseHelper');
 class DiscordController {
   initiateOAuth(req, res) {
     const { userId } = req.query;
+    if (!userId) {
+      return ResponseHelper.badRequest(res, 'Missing user ID');
+    }
     const redirectURL = DiscordService.generateOAuthURL(userId);
-    res.redirect(redirectURL);
+    return res.json({ redirectUrl: redirectURL });
   }
 
   async handleCallback(req, res) {
     const { code, state } = req.query;
 
-    try {
-      const accessToken = await DiscordService.exchangeCodeForToken(code);
-      await DiscordService.saveAccessTokenToBusiness(state, accessToken);
+    if (!code || !state) {
+      return res.status(400).send('Missing OAuth parameters.');
+    }
 
-      res.redirect(`${process.env.FRONTEND_URL}/profile/business`);
+    try {
+      const userId = DiscordService.extractUserIdFromState(state);
+      if (!userId) {
+        return res.status(400).send('Invalid state parameter.');
+      }
+
+      const accessToken = await DiscordService.exchangeCodeForToken(
+        code,
+        process.env.SERVER_URL + '/api/discord/callback'
+      );
+      await DiscordService.saveAccessTokenToBusiness(userId, accessToken);
+
+      res.json(`${process.env.FRONTEND_URL}/profile/business`);
     } catch (err) {
       res.status(500).send('Discord authorization failed.');
     }
@@ -29,7 +44,7 @@ class DiscordController {
       return ResponseHelper.success(res, 'Channels fetched', { channels });
     } catch (err) {
       if (err.message === 'Unauthorized') {
-        return ResponseHelper.error(res, 'Unauthorized', 401);
+        return ResponseHelper.unauthorized(res);
       }
       return ResponseHelper.error(res, 'Failed to fetch channels');
     }
