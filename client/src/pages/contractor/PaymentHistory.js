@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Table, Card, Typography, Tag } from 'antd';
 import { getContractorPayments } from '../../api/contractor/payments';
 import formatDate from '../../utils/formatDate';
+import toast from '../../utils/toast';
 
 const { Title } = Typography;
 
@@ -53,7 +54,7 @@ const ContractorPaymentHistory = ({ user }) => {
         const res = await getContractorPayments(user.uid);
         setData(res);
       } catch (err) {
-        console.error('Failed to fetch payments.');
+        toast.error('Failed to fetch payments');
       } finally {
         setLoading(false);
       }

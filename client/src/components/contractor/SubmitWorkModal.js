@@ -19,7 +19,7 @@ const SubmitWorkModal = ({
       toast.success('Work submitted successfully');
       setSubmission('');
     } catch (err) {
-      console.error('Failed to submit work.');
+      toast.error('Failed to submit work');
     }
   };
 

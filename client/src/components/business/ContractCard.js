@@ -3,6 +3,7 @@ import { Card, Typography, Tag, Button, Col } from 'antd';
 import { MessageOutlined } from '@ant-design/icons';
 import { deleteContract } from '../../api/business/contracts';
 import formatDate from '../../utils/formatDate';
+import toast from '../../utils/toast';
 
 const { Text } = Typography;
 
@@ -20,7 +21,7 @@ const ContractCard = ({ contract, onView, onChatOpen, onRefetch }) => {
       await deleteContract(contract.id);
       onRefetch();
     } catch (err) {
-      console.error('Failed to delete contract');
+      toast.error('Failed to delete contract');
     }
   };
 

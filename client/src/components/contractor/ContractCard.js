@@ -25,7 +25,7 @@ const ContractCard = ({
       onRefetch();
       toast.success('Contract assigned successfully');
     } catch (err) {
-      console.error('Failed to apply to contract');
+      toast.error('Failed to apply to contract');
     }
   };
 
@@ -35,7 +35,7 @@ const ContractCard = ({
       onRefetch();
       toast.success('Unassigned from contract successfully');
     } catch (err) {
-      console.error('Failed to unassign from contract');
+      toast.error('Failed to unassign from contract');
     }
   };
 

@@ -20,7 +20,7 @@ const CreateContractModal = ({
       onCancel();
       form.resetFields();
     } catch (err) {
-      console.error('Error creating contract.');
+      toast.error('Error creating contract');
     }
   };
 
