@@ -14,7 +14,7 @@ class GithubController {
       console.log('Redirect URL:', redirectUrl);
       res.json({ redirectUrl });
     } catch (err) {
-      return ResponseHelper.internalError(res, 'OAuth initiation failed');
+      return ResponseHelper.error(res, 'OAuth initiation failed');
     }
   }
 
@@ -39,7 +39,7 @@ class GithubController {
       if (err.message === 'GitHub not authorized') {
         return ResponseHelper.unauthorized(res, err.message);
       }
-      return ResponseHelper.internalError(res, 'Failed to fetch repositories');
+      return ResponseHelper.error(res, 'Failed to fetch repositories');
     }
   }
 
