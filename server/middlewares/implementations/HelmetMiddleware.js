@@ -9,18 +9,14 @@ class HelmetMiddleware extends IMiddleware {
       contentSecurityPolicy: {
         directives: {
           defaultSrc: ["'self'"],
-          styleSrc: ["'self'"],
+          styleSrc: ["'self'", 'https:'],
         },
       },
-      dnsPrefetchControl: false,
-      expectCt: false,
-      hidePoweredBy: false,
-      hsts: false,
-      ieNoOpen: false,
-      noSniff: false,
-      permittedCrossDomainPolicies: false,
-      referrerPolicy: false,
-      xssFilter: false,
+      hsts: process.env.NODE_ENV === 'production' && {
+        maxAge: 31536000,
+        includeSubDomains: true,
+        preload: true,
+      },
     });
   }
 

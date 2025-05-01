@@ -7,7 +7,7 @@ async function syncGitHubIssues() {
     const businesses = await FirestoreService.getCollection('businesses');
 
     for (const business of businesses) {
-      const { githubToken, repo } = business.data;
+      const { githubToken, repo } = business;
       const businessId = business.id;
 
       if (!githubToken || !repo) continue;

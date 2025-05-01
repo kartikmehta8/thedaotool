@@ -17,7 +17,7 @@ const {
 } = require('firebase/firestore');
 const EncryptionService = require('./EncryptionService');
 
-const SENSITIVE_KEYS = ['apiKey', 'discordAccessToken', 'githubToken'];
+const SENSITIVE_KEYS = ['discordAccessToken', 'githubToken'];
 
 function encryptSensitiveFields(data) {
   const encrypted = { ...data };
