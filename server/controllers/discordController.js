@@ -29,8 +29,7 @@ class DiscordController {
         process.env.SERVER_URL + '/api/discord/callback'
       );
       await DiscordService.saveAccessTokenToBusiness(userId, accessToken);
-
-      res.json(`${process.env.FRONTEND_URL}/profile/business`);
+      res.redirect(`${process.env.FRONTEND_URL}/profile/business`);
     } catch (err) {
       res.status(500).send('Discord authorization failed.');
     }
