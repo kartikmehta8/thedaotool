@@ -1,20 +1,4 @@
 const { auth, db } = require('../utils/firebase');
-const {
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-} = require('firebase/auth');
-const {
-  doc,
-  getDoc,
-  setDoc,
-  addDoc,
-  updateDoc,
-  deleteDoc,
-  collection,
-  query,
-  where,
-  getDocs,
-} = require('firebase/firestore');
 const EncryptionService = require('./EncryptionService');
 
 const SENSITIVE_KEYS = ['discordAccessToken', 'githubToken'];
@@ -40,53 +24,58 @@ function decryptSensitiveFields(data) {
 }
 
 class FirestoreService {
-  // Auth related.
-  async login(email, password) {
-    return signInWithEmailAndPassword(auth, email, password);
+  async verifyIdToken(idToken) {
+    return auth.verifyIdToken(idToken);
   }
 
-  async signup(email, password) {
-    return createUserWithEmailAndPassword(auth, email, password);
+  async getUserByEmail(email) {
+    return auth.getUserByEmail(email);
   }
 
-  // Firestore CRUD.
+  async createUser(email, password) {
+    return auth.createUser({ email, password });
+  }
+
+  async deleteUser(uid) {
+    return auth.deleteUser(uid);
+  }
+
   getDocumentRef(collectionName, id) {
-    return doc(db, collectionName, id);
+    return db.collection(collectionName).doc(id);
   }
 
   async getDocument(collectionName, id) {
-    const document = await getDoc(this.getDocumentRef(collectionName, id));
-    return document.exists() ? decryptSensitiveFields(document.data()) : null;
+    const docSnap = await this.getDocumentRef(collectionName, id).get();
+    return docSnap.exists ? decryptSensitiveFields(docSnap.data()) : null;
   }
 
   async setDocument(collectionName, id, data) {
-    return setDoc(
-      this.getDocumentRef(collectionName, id),
-      encryptSensitiveFields(data)
+    return this.getDocumentRef(collectionName, id).set(
+      encryptSensitiveFields(data),
+      { merge: false }
     );
   }
 
   async updateDocument(collectionName, id, data) {
-    return updateDoc(
-      this.getDocumentRef(collectionName, id),
+    return this.getDocumentRef(collectionName, id).update(
       encryptSensitiveFields(data)
     );
   }
 
   async deleteDocument(collectionName, id) {
-    return deleteDoc(this.getDocumentRef(collectionName, id));
+    return this.getDocumentRef(collectionName, id).delete();
   }
 
   async addDocument(collectionName, data) {
-    return addDoc(collection(db, collectionName), encryptSensitiveFields(data));
+    return db.collection(collectionName).add(encryptSensitiveFields(data));
   }
 
   async queryDocuments(collectionName, field, operator, value) {
-    const q = query(
-      collection(db, collectionName),
-      where(field, operator, value)
-    );
-    const snapshot = await getDocs(q);
+    const snapshot = await db
+      .collection(collectionName)
+      .where(field, operator, value)
+      .get();
+
     return snapshot.docs.map((docSnap) => ({
       id: docSnap.id,
       ...decryptSensitiveFields(docSnap.data()),
@@ -94,8 +83,8 @@ class FirestoreService {
   }
 
   async getCollection(collectionName) {
-    const snap = await getDocs(collection(db, collectionName));
-    return snap.docs.map((docSnap) => ({
+    const snapshot = await db.collection(collectionName).get();
+    return snapshot.docs.map((docSnap) => ({
       id: docSnap.id,
       ...decryptSensitiveFields(docSnap.data()),
     }));

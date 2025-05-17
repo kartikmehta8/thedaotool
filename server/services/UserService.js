@@ -1,8 +1,10 @@
 const FirestoreService = require('./FirestoreService');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 const LoginThrottleService = require('./LoginThrottleService');
 
 const MAX_ATTEMPTS = Number(process.env.MAX_LOGIN_ATTEMPTS || 3);
+const SALT_ROUNDS = 10;
 
 class UserService {
   async login(email, password) {
@@ -12,12 +14,15 @@ class UserService {
     }
 
     try {
-      const userCredential = await this.verifyLogin(email, password);
-      const userData = await this.getUserData(userCredential.user.uid);
+      const user = await this.findUserByEmail(email);
+      if (!user) throw new Error('User not found');
+
+      const isValid = await bcrypt.compare(password, user.passwordHash);
+      if (!isValid) throw new Error('Invalid email or password');
 
       await LoginThrottleService.reset(email);
 
-      return this.buildUserProfile(userCredential, userData);
+      return this.buildUserProfile(user);
     } catch (err) {
       await LoginThrottleService.increment(email);
       throw err;
@@ -25,12 +30,43 @@ class UserService {
   }
 
   async signup(email, password, role) {
-    const result = await FirestoreService.signup(email, password);
-    await FirestoreService.setDocument('users', result.user.uid, {
+    const existingUser = await this.findUserByEmail(email);
+    if (existingUser) {
+      throw new Error('Email already in use');
+    }
+
+    const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
+
+    const userDoc = await FirestoreService.addDocument('users', {
       email,
       role,
+      passwordHash,
+      createdAt: new Date().toISOString(),
     });
-    return this.buildUserProfile(result, { role });
+
+    const user = {
+      uid: userDoc.id,
+      email,
+      role,
+    };
+
+    return user;
+  }
+
+  async findUserByEmail(email) {
+    const result = await FirestoreService.queryDocuments(
+      'users',
+      'email',
+      '==',
+      email
+    );
+    return result[0] || null;
+  }
+
+  async getUserData(uid) {
+    const data = await FirestoreService.getDocument('users', uid);
+    if (!data) throw new Error('User profile not found');
+    return data;
   }
 
   generateToken(user) {
@@ -45,21 +81,11 @@ class UserService {
     );
   }
 
-  async verifyLogin(email, password) {
-    return FirestoreService.login(email, password);
-  }
-
-  async getUserData(uid) {
-    const data = await FirestoreService.getDocument('users', uid);
-    if (!data) throw new Error('User profile not found');
-    return data;
-  }
-
-  buildUserProfile(userCredential, userData) {
+  buildUserProfile(user) {
     return {
-      uid: userCredential.user.uid,
-      email: userCredential.user.email,
-      role: userData.role,
+      uid: user.uid || user.id,
+      email: user.email,
+      role: user.role,
     };
   }
 

@@ -1,40 +1,33 @@
 const { rtdb } = require('../utils/firebase');
-const { ref, remove, set, update, get, child } = require('firebase/database');
 
 class RealtimeDatabaseService {
   getRef(path) {
-    return ref(rtdb, path);
+    return rtdb.ref(path);
   }
 
   async setData(path, data) {
     const reference = this.getRef(path);
-    await set(reference, data);
+    await reference.set(data);
   }
 
   async updateData(path, data) {
     const reference = this.getRef(path);
-    await update(reference, data);
+    await reference.update(data);
   }
 
   async removeData(path) {
     const reference = this.getRef(path);
-    await remove(reference);
+    await reference.remove();
   }
 
   async getData(path) {
-    const snapshot = await get(this.getRef(path));
-    if (snapshot.exists()) {
-      return snapshot.val();
-    }
-    return null;
+    const snapshot = await this.getRef(path).once('value');
+    return snapshot.exists() ? snapshot.val() : null;
   }
 
   async getChildData(path, childPath) {
-    const snapshot = await get(child(this.getRef(path), childPath));
-    if (snapshot.exists()) {
-      return snapshot.val();
-    }
-    return null;
+    const snapshot = await this.getRef(path).child(childPath).once('value');
+    return snapshot.exists() ? snapshot.val() : null;
   }
 }
 

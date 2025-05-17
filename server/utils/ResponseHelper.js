@@ -27,8 +27,8 @@ class ResponseHelper {
     return res.status(409).json({ success: false, message });
   }
 
-  static error(res, message = 'Internal server error') {
-    return res.status(500).json({ success: false, message });
+  static error(res, message = 'Internal server error', statusCode = 500) {
+    return res.status(statusCode).json({ success: false, message });
   }
 }
 

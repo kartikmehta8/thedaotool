@@ -1,6 +1,5 @@
 const { Server } = require('socket.io');
 const { rtdb } = require('../utils/firebase');
-const { ref, onChildAdded, get, push } = require('firebase/database');
 
 const listeners = {};
 
@@ -30,11 +29,11 @@ async function joinContract(socket, io, contractId) {
 
   socket.join(contractId);
 
-  const chatRef = ref(rtdb, `chats/${contractId}`);
+  const chatRef = rtdb.ref(`chats/${contractId}`);
 
   // Step 1: Emit chat history.
   try {
-    const snapshot = await get(chatRef);
+    const snapshot = await chatRef.once('value');
     const history = [];
 
     if (snapshot.exists()) {
@@ -50,7 +49,7 @@ async function joinContract(socket, io, contractId) {
 
   // Step 2: Setup real-time listener if not already.
   if (!listeners[contractId]) {
-    listeners[contractId] = onChildAdded(chatRef, (snapshot) => {
+    listeners[contractId] = chatRef.on('child_added', (snapshot) => {
       const msg = snapshot.val();
       io.to(contractId).emit('new-message', msg);
     });
@@ -60,7 +59,7 @@ async function joinContract(socket, io, contractId) {
 async function sendMessage({ contractId, senderId, senderName, text }) {
   if (!contractId || !text?.trim()) return;
 
-  const chatRef = ref(rtdb, `chats/${contractId}`);
+  const chatRef = rtdb.ref(`chats/${contractId}`);
   const msg = {
     senderId,
     senderName,
@@ -69,7 +68,7 @@ async function sendMessage({ contractId, senderId, senderName, text }) {
   };
 
   try {
-    await push(chatRef, msg);
+    await chatRef.push(msg);
   } catch (err) {
     console.error('Error sending message:', err.message);
   }

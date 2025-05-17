@@ -3,7 +3,7 @@ import { fetchWithAuth } from '../../utils/fetchWithAuth';
 
 export const getBusinessProfile = async (uid) => {
   const res = await fetchWithAuth(`${API_URL}/business/profile/${uid}`);
-  if (!res.ok) throw new Error('Failed to fetch profile');
+  if (!res.ok) return null; // TODO: handle error.
   const { profile } = await res.json();
   return profile;
 };
