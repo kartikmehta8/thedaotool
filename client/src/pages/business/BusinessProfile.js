@@ -9,6 +9,7 @@ import {
   GitHubIntegration,
   DiscordIntegration,
 } from '../../components/business';
+import toast from '../../utils/toast';
 
 const { Content } = Layout;
 const { Title } = Typography;
@@ -43,14 +44,19 @@ const BusinessProfile = () => {
   };
 
   const handleSubmit = async (values) => {
-    await saveBusinessProfile(
-      uid,
-      {
-        ...profile,
-        ...values,
-      },
-      email
-    );
+    try {
+      await saveBusinessProfile(
+        uid,
+        {
+          ...profile,
+          ...values,
+        },
+        email
+      );
+      toast.success('Profile updated successfully');
+    } catch (err) {
+      toast.error('Failed to update profile');
+    }
   };
 
   useEffect(() => {

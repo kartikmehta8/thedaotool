@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, Typography, Tag, Button, Col } from 'antd';
 import { applyToContract, unassignSelf } from '../../api/contractor/contracts';
 import toast from '../../utils/toast';
+import formatDateContract from '../../utils/formatDateContract';
 
 const { Text } = Typography;
 
@@ -61,7 +62,8 @@ const ContractCard = ({
         ) : (
           <>
             <p>
-              <Tag color="blue">Deadline</Tag> {contract.deadline}
+              <Tag color="blue">Deadline</Tag>{' '}
+              {formatDateContract(contract.deadline)}
             </p>
             <p>
               <Tag color="purple">Amount</Tag> ${contract.amount}

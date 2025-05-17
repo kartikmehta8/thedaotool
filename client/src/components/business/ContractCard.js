@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, Typography, Tag, Button, Col } from 'antd';
 import { MessageOutlined } from '@ant-design/icons';
 import { deleteContract } from '../../api/business/contracts';
-import formatDate from '../../utils/formatDate';
+import formatDateContract from '../../utils/formatDateContract';
 
 const { Text } = Typography;
 
@@ -43,7 +43,7 @@ const ContractCard = ({ contract, onView, onChatOpen, onRefetch }) => {
           <>
             <p>
               <Tag color="blue">Deadline</Tag>{' '}
-              {formatDate(contract.deadline) || 'N/A'}
+              {formatDateContract(contract.deadline) || 'N/A'}
             </p>
             <p>
               <Tag color="purple">Amount</Tag> ${contract.amount || 0}

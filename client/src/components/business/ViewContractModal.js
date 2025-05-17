@@ -11,7 +11,7 @@ import {
 
 import { createPayee, sendPayment } from '../../api/payman';
 import toast from '../../utils/toast';
-import formatDate from '../../utils/formatDate';
+import formatDateContract from '../../utils/formatDateContract';
 
 const { Option } = Select;
 
@@ -103,7 +103,8 @@ const ViewContractModal = ({
       )}
 
       <p>
-        <strong>Deadline:</strong> {formatDate(contract.deadline) || '—'}
+        <strong>Deadline:</strong>{' '}
+        {formatDateContract(contract.deadline) || '—'}
       </p>
 
       <Divider />
