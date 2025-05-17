@@ -1,4 +1,4 @@
-const BusinessService = require('../services/BusinessService');
+const BusinessService = require('../services/user/BusinessService');
 const ResponseHelper = require('../utils/ResponseHelper');
 
 class BusinessController {

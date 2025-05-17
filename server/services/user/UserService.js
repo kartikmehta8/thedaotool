@@ -1,7 +1,7 @@
-const FirestoreService = require('./FirestoreService');
+const FirestoreService = require('../database/FirestoreService');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const LoginThrottleService = require('./LoginThrottleService');
+const LoginThrottleService = require('../misc/LoginThrottleService');
 
 const MAX_ATTEMPTS = Number(process.env.MAX_LOGIN_ATTEMPTS || 3);
 const SALT_ROUNDS = 10;

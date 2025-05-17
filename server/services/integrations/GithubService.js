@@ -1,5 +1,5 @@
 const axios = require('axios');
-const FirestoreService = require('./FirestoreService');
+const FirestoreService = require('../database/FirestoreService');
 const crypto = require('crypto');
 
 const CLIENT_ID = process.env.GITHUB_CLIENT_ID;

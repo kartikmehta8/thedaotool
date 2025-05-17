@@ -1,5 +1,5 @@
-const { auth, db } = require('../utils/firebase');
-const EncryptionService = require('./EncryptionService');
+const { auth, db } = require('../../utils/firebase');
+const EncryptionService = require('../misc/EncryptionService');
 
 const SENSITIVE_KEYS = ['discordAccessToken', 'githubToken'];
 

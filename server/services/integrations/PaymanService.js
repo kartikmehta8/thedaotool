@@ -1,6 +1,6 @@
 const Paymanai = require('paymanai');
-const FirestoreService = require('./FirestoreService');
-const triggerEmail = require('../utils/triggerEmail');
+const FirestoreService = require('../database/FirestoreService');
+const triggerEmail = require('../../utils/triggerEmail');
 
 class PaymanService {
   getClient(apiKey) {

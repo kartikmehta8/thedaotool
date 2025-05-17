@@ -1,4 +1,4 @@
-const DiscordService = require('../services/DiscordService');
+const DiscordService = require('../services/integrations/DiscordService');
 const ResponseHelper = require('../utils/ResponseHelper');
 
 class DiscordController {

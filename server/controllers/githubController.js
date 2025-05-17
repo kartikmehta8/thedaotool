@@ -1,4 +1,4 @@
-const GithubService = require('../services/GithubService');
+const GithubService = require('../services/integrations/GithubService');
 const ResponseHelper = require('../utils/ResponseHelper');
 
 class GithubController {

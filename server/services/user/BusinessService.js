@@ -1,6 +1,6 @@
-const FirestoreService = require('./FirestoreService');
-const RealtimeDatabaseService = require('./RealtimeDatabaseService');
-const postToDiscord = require('../utils/postToDiscord');
+const FirestoreService = require('../database/FirestoreService');
+const RealtimeDatabaseService = require('../database/RealtimeDatabaseService');
+const postToDiscord = require('../../utils/postToDiscord');
 
 class BusinessService {
   async createContract(values, userId) {

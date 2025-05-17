@@ -1,4 +1,4 @@
-const ContractorService = require('../services/ContractorService');
+const ContractorService = require('../services/user/ContractorService');
 const ResponseHelper = require('../utils/ResponseHelper');
 
 class ContractorController {

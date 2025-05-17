@@ -1,6 +1,6 @@
 const sendMail = require('./mailer');
 const templates = require('../templates/emailTemplates');
-const FirestoreService = require('../services/FirestoreService');
+const FirestoreService = require('../services/database/FirestoreService');
 
 async function triggerEmail(templateKey, contractId, extraData = {}) {
   try {

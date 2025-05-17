@@ -1,5 +1,5 @@
-const FirestoreService = require('../../services/FirestoreService');
-const GithubService = require('../../services/GithubService');
+const FirestoreService = require('../../services/database/FirestoreService');
+const GithubService = require('../../services/integrations/GithubService');
 const postToDiscord = require('../../utils/postToDiscord');
 
 async function syncGitHubIssues() {

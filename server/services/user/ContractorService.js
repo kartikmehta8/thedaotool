@@ -1,6 +1,6 @@
-const FirestoreService = require('./FirestoreService');
-const RealtimeDatabaseService = require('./RealtimeDatabaseService');
-const triggerEmail = require('../utils/triggerEmail');
+const FirestoreService = require('../database/FirestoreService');
+const RealtimeDatabaseService = require('../database/RealtimeDatabaseService');
+const triggerEmail = require('../../utils/triggerEmail');
 
 class ContractorService {
   async applyToContract(contractId, userId) {
