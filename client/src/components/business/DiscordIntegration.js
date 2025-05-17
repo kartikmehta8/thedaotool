@@ -24,7 +24,7 @@ const DiscordIntegration = ({ user }) => {
         const data = await fetchDiscordProfile(uid);
         setProfile(data || {});
       } catch (err) {
-        console.error('Failed to fetch Discord profile');
+        toast.error('Failed to fetch Discord profile');
       }
     };
     loadProfile();
@@ -53,7 +53,7 @@ const DiscordIntegration = ({ user }) => {
       setProfile((prev) => ({ ...prev, discordChannel: value }));
       toast.success('Discord channel saved successfully');
     } catch (err) {
-      console.error('Failed to save Discord channel');
+      toast.error('Failed to save Discord channel');
     }
   };
 
@@ -65,7 +65,7 @@ const DiscordIntegration = ({ user }) => {
         `Discord posting ${checked ? 'enabled' : 'disabled'} successfully`
       );
     } catch (err) {
-      console.error('Failed to update Discord settings');
+      toast.error('Failed to update Discord settings');
     }
   };
 
@@ -75,7 +75,7 @@ const DiscordIntegration = ({ user }) => {
       setProfile((prev) => ({ ...prev, discordSendMode: val }));
       toast.success('Send mode updated successfully');
     } catch (err) {
-      console.error('Failed to update send mode');
+      toast.error('Failed to update send mode');
     }
   };
 

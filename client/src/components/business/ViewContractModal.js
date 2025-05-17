@@ -26,11 +26,11 @@ const ViewContractModal = ({
   const handleSaveUpdate = async () => {
     try {
       await updateContract(contract);
-      toast.success('Contract updated successfully.');
+      toast.success('Contract updated successfully');
       onUpdateSuccess();
       onCancel();
     } catch (err) {
-      toast.error('Failed to update contract.');
+      toast.error('Failed to update contract');
     }
   };
 
@@ -39,7 +39,7 @@ const ViewContractModal = ({
     try {
       const contractorData = await getContractorData(contract.contractorId);
       if (contractorData.payeeId) {
-        toast.warning('Payee already exists for this contractor.');
+        toast.warning('Payee already exists for this contractor');
         return;
       }
       await createPayee(contract.contractorInfo, apiKey, contract.contractorId);
@@ -57,11 +57,11 @@ const ViewContractModal = ({
       const contractorData = await getContractorData(contract.contractorId);
       const payeeId = contractorData?.payeeId || '';
       if (!payeeId) {
-        toast.warning('No payee found. Please create payee first.');
+        toast.warning('Please create payee first');
         return;
       }
       await sendPayment(contract, payeeId, apiKey);
-      toast.success('Payment sent successfully.');
+      toast.success('Payment sent successfully');
     } catch (err) {
       toast.error('Failed to send payment');
     }
@@ -70,10 +70,10 @@ const ViewContractModal = ({
   const handleUnassign = async () => {
     try {
       await unassignContractor(contract.id);
-      toast.success('Contractor unassigned and chat cleared.');
+      toast.success('Contractor unassigned and chat cleared');
       onUpdateSuccess();
     } catch {
-      toast.error('Failed to unassign contractor.');
+      toast.error('Failed to unassign contractor');
     }
   };
 

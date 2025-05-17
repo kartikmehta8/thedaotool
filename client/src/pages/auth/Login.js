@@ -19,10 +19,10 @@ const Login = () => {
     try {
       const user = await loginUser(email, password);
       await saveUserToStorage(user);
-      toast.success('Logged in successfully!');
       navigate('/dashboard', { replace: true });
+      navigate(0);
     } catch (err) {
-      toast.error(err.message || 'Login failed');
+      toast.error('Login failed');
     } finally {
       setLoading(false);
     }

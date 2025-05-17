@@ -48,7 +48,7 @@ const GitHubIntegration = ({ user }) => {
     const success = await saveGitHubRepo(uid, selectedRepo);
     if (success) {
       setProfile((prev) => ({ ...prev, repo: selectedRepo }));
-      toast.success('GitHub repo saved successfully');
+      toast.success('GitHub repository saved successfully');
     }
   };
 

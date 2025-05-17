@@ -28,8 +28,8 @@ const Signup = () => {
         throw new Error('Invalid user data');
       }
       saveUserToStorage(user);
-      toast.success('Account created successfully!');
       navigate('/dashboard', { replace: true });
+      navigate(0);
     } catch (err) {
       toast.error('Signup failed');
     } finally {
