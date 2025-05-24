@@ -1,4 +1,4 @@
-# Contributing to Bizzy Network
+# Contributing to The DAO Tool
 
 ## Welcome!
 
@@ -20,10 +20,10 @@ Please be respectful and considerate of others. We are committed to providing a 
 1. Fork the repository
 2. Clone your forked repository
    ```bash
-   git clone https://github.com/kartikmehta8/bizzy-network.git
-   cd project-name
+   git clone https://github.com/kartikmehta8/thedaotool.git
+   cd thedaotool
    ```
-3. Install dependencies
+3. Install dependencies (Client & Server)
    ```bash
    npm install
    ```
@@ -31,18 +31,6 @@ Please be respectful and considerate of others. We are committed to providing a 
    ```bash
    git checkout -b feature/your-feature-name
    ```
-
-## Development Workflow
-
-### Running the Project
-- Start development server
-  ```bash
-  npm start
-  ```
-- Build production version
-  ```bash
-  npm run build
-  ```
 
 ## Contribution Process
 
@@ -65,15 +53,6 @@ Please be respectful and considerate of others. We are committed to providing a 
 ## Code Style Guidelines
 - Format code with Prettier
 - Write meaningful commit messages
-
-### Commit Message Convention
-- Use conventional commits format:
-  - `feat:` for new features
-  - `fix:` for bug fixes
-  - `docs:` for documentation updates
-  - `style:` for formatting changes
-  - `refactor:` for code restructuring
-  - `test:` for test-related changes
 
 ## Questions?
 If you have questions, please open an issue or reach out to the maintainers.
