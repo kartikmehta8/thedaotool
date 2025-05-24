@@ -1,20 +1,20 @@
 {
-  "name": "bizzy-server",
+  "name": "thedaotool-server",
   "version": "1.0.0",
-  "description": "Server for Bizzy Network",
+  "description": "Server for The DAO Tool",
   "keywords": [
     "server",
     "node",
     "firebase",
     "rest-api"
   ],
-  "homepage": "https://github.com/kartikmehta8/bizzy-network#readme",
+  "homepage": "https://github.com/kartikmehta8/thedaotool#readme",
   "bugs": {
-    "url": "https://github.com/kartikmehta8/bizzy-network/issues"
+    "url": "https://github.com/kartikmehta8/thedaotool/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kartikmehta8/bizzy-network.git"
+    "url": "git+https://github.com/kartikmehta8/thedaotool.git"
   },
   "license": "MIT",
   "author": "kartikmehta8",
@@ -42,6 +42,7 @@
     "express-rate-limit": "^7.5.0",
     "firebase-admin": "^13.4.0",
     "helmet": "^8.1.0",
+    "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
     "node-cron": "^3.0.3",

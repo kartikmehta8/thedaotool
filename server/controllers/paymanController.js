@@ -1,6 +1,6 @@
-const PaymanService = require('../services/PaymanService');
+const PaymanService = require('../services/integrations/PaymanService');
 const ResponseHelper = require('../utils/ResponseHelper');
-const FirestoreService = require('../services/FirestoreService');
+const FirestoreService = require('../services/database/FirestoreService');
 
 class PaymanController {
   async getApiKey(req, res) {
@@ -8,7 +8,7 @@ class PaymanController {
       const apiKey = await PaymanService.getApiKey(req.params.uid);
 
       if (!apiKey) {
-        return ResponseHelper.error(res, 'Business not found', 404);
+        return ResponseHelper.error(res, 'Organization not found', 404);
       }
 
       return ResponseHelper.success(res, 'API Key fetched', { apiKey });
@@ -19,15 +19,15 @@ class PaymanController {
 
   async createPayee(req, res) {
     try {
-      const { contractorInfo, contractorId, apiKey } = req.body;
+      const { contributorInfo, contributorId, apiKey } = req.body;
 
-      if (!contractorId || !contractorInfo) {
-        return ResponseHelper.error(res, 'Invalid contractor info', 400);
+      if (!contributorId || !contributorInfo) {
+        return ResponseHelper.error(res, 'Invalid contributor info', 400);
       }
 
-      const payee = await PaymanService.createPayee(contractorInfo, apiKey);
+      const payee = await PaymanService.createPayee(contributorInfo, apiKey);
 
-      await FirestoreService.updateDocument('contractors', contractorId, {
+      await FirestoreService.updateDocument('contributors', contributorId, {
         payeeId: payee.id,
       });
 
@@ -41,9 +41,9 @@ class PaymanController {
 
   async sendPayment(req, res) {
     try {
-      const { contract, apiKey } = req.body;
+      const { bounty, apiKey } = req.body;
 
-      await PaymanService.sendPayment(contract, apiKey);
+      await PaymanService.sendPayment(bounty, apiKey);
 
       return ResponseHelper.success(res, 'Payment sent successfully');
     } catch (err) {

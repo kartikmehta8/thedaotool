@@ -1,4 +1,4 @@
-const GithubService = require('../services/GithubService');
+const GithubService = require('../services/integrations/GithubService');
 const ResponseHelper = require('../utils/ResponseHelper');
 
 class GithubController {
@@ -24,7 +24,7 @@ class GithubController {
       const { accessToken, userId } =
         await GithubService.exchangeCodeForAccessToken(code, state);
       await GithubService.saveAccessToken(userId, accessToken);
-      res.redirect(`${process.env.FRONTEND_URL}/profile/business`);
+      res.redirect(`${process.env.FRONTEND_URL}/profile/organization`);
     } catch (err) {
       return res.status(500).send('GitHub authorization failed.');
     }

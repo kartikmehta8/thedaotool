@@ -1,4 +1,4 @@
-const DiscordService = require('../services/DiscordService');
+const DiscordService = require('../services/integrations/DiscordService');
 const ResponseHelper = require('../utils/ResponseHelper');
 
 class DiscordController {
@@ -28,8 +28,8 @@ class DiscordController {
         code,
         process.env.SERVER_URL + '/api/discord/callback'
       );
-      await DiscordService.saveAccessTokenToBusiness(userId, accessToken);
-      res.redirect(`${process.env.FRONTEND_URL}/profile/business`);
+      await DiscordService.saveAccessTokenToOrganization(userId, accessToken);
+      res.redirect(`${process.env.FRONTEND_URL}/profile/organization`);
     } catch (err) {
       res.status(500).send('Discord authorization failed.');
     }

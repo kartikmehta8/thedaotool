@@ -1,6 +1,6 @@
 /**
  * @interface ICronJob
- * Defines the contract for all cron jobs.
+ * Defines the interface for all cron jobs.
  */
 class ICronJob {
   /**

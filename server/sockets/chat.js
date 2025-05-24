@@ -14,9 +14,7 @@ module.exports = function initSocket(server) {
   io.on('connection', (socket) => {
     console.log(`Socket connected: ${socket.id}`);
 
-    socket.on('join-contract', (contractId) =>
-      joinContract(socket, io, contractId)
-    );
+    socket.on('join-bounty', (bountyId) => joinBounty(socket, io, bountyId));
     socket.on('send-message', (data) => sendMessage(data));
     socket.on('disconnect', () => handleDisconnect(socket));
   });
@@ -24,12 +22,12 @@ module.exports = function initSocket(server) {
   return io;
 };
 
-async function joinContract(socket, io, contractId) {
-  if (!contractId) return;
+async function joinBounty(socket, io, bountyId) {
+  if (!bountyId) return;
 
-  socket.join(contractId);
+  socket.join(bountyId);
 
-  const chatRef = rtdb.ref(`chats/${contractId}`);
+  const chatRef = rtdb.ref(`chats/${bountyId}`);
 
   // Step 1: Emit chat history.
   try {
@@ -48,18 +46,18 @@ async function joinContract(socket, io, contractId) {
   }
 
   // Step 2: Setup real-time listener if not already.
-  if (!listeners[contractId]) {
-    listeners[contractId] = chatRef.on('child_added', (snapshot) => {
+  if (!listeners[bountyId]) {
+    listeners[bountyId] = chatRef.on('child_added', (snapshot) => {
       const msg = snapshot.val();
-      io.to(contractId).emit('new-message', msg);
+      io.to(bountyId).emit('new-message', msg);
     });
   }
 }
 
-async function sendMessage({ contractId, senderId, senderName, text }) {
-  if (!contractId || !text?.trim()) return;
+async function sendMessage({ bountyId, senderId, senderName, text }) {
+  if (!bountyId || !text?.trim()) return;
 
-  const chatRef = rtdb.ref(`chats/${contractId}`);
+  const chatRef = rtdb.ref(`chats/${bountyId}`);
   const msg = {
     senderId,
     senderName,

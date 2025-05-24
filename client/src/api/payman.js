@@ -8,20 +8,20 @@ export const getApiKey = async (uid) => {
   return data.apiKey || null;
 };
 
-export const createPayee = async (contractorInfo, apiKey, contractorId) => {
+export const createPayee = async (contributorInfo, apiKey, contributorId) => {
   const res = await fetchWithAuth(`${API_URL}/payman/payee`, {
     method: 'POST',
-    body: JSON.stringify({ contractorInfo, contractorId, apiKey }),
+    body: JSON.stringify({ contributorInfo, contributorId, apiKey }),
   });
   const data = await res.json();
   if (!res.ok) throw new Error(data.message || 'Failed to create payee');
   return data.payeeId;
 };
 
-export const sendPayment = async (contract, payeeId, apiKey) => {
+export const sendPayment = async (bounty, payeeId, apiKey) => {
   const res = await fetchWithAuth(`${API_URL}/payman/send`, {
     method: 'POST',
-    body: JSON.stringify({ contract, payeeId, apiKey }),
+    body: JSON.stringify({ bounty, payeeId, apiKey }),
   });
   const data = await res.json();
   if (!res.ok) throw new Error(data.message || 'Failed to send payment');

@@ -1,14 +1,14 @@
-const FirestoreService = require('../../services/FirestoreService');
-const GithubService = require('../../services/GithubService');
+const FirestoreService = require('../../services/database/FirestoreService');
+const GithubService = require('../../services/integrations/GithubService');
 const postToDiscord = require('../../utils/postToDiscord');
 
 async function syncGitHubIssues() {
   try {
-    const businesses = await FirestoreService.getCollection('businesses');
+    const organizations = await FirestoreService.getCollection('organizations');
 
-    for (const business of businesses) {
-      const { githubToken, repo } = business;
-      const businessId = business.id;
+    for (const organization of organizations) {
+      const { githubToken, repo } = organization;
+      const organizationId = organization.id;
 
       if (!githubToken || !repo) continue;
 
@@ -16,12 +16,12 @@ async function syncGitHubIssues() {
         const issues = await GithubService.fetchOpenIssues(repo, githubToken);
 
         for (const issue of issues) {
-          await FirestoreService.addDocument('contracts', {
+          await FirestoreService.addDocument('bounties', {
             name: issue.title,
             description: issue.body,
             githubIssueId: issue.id,
             deadline: '',
-            businessId,
+            organizationId,
             issueLink: issue.html_url,
             status: 'open',
             createdAt: new Date().toISOString(),
@@ -42,7 +42,7 @@ async function syncGitHubIssues() {
           );
 
           await postToDiscord({
-            businessId,
+            organizationId,
             name: issue.title,
             description: issue.body,
             amount: 'TBD',
