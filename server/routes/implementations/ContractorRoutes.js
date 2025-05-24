@@ -1,7 +1,17 @@
 const express = require('express');
 const ContractorController = require('../../controllers/contractorController');
 const AuthMiddleware = require('../../middlewares/implementations/AuthMiddleware');
+const ValidationMiddleware = require('../../middlewares/implementations/ValidationMiddleware');
 const IRoute = require('../IRoute');
+
+const {
+  applyToContractSchema,
+  submitWorkSchema,
+  uidParamSchema,
+  saveProfileSchema,
+  getProfileOrPaymentsSchema,
+  unassignSelfSchema,
+} = require('../../validators/contractorValidators');
 
 class ContractorRoutes extends IRoute {
   register(app) {
@@ -9,14 +19,47 @@ class ContractorRoutes extends IRoute {
 
     router.use(AuthMiddleware.authenticate(['contractor', 'business']));
 
-    router.post('/apply', ContractorController.applyToContract);
-    router.post('/submit', ContractorController.submitWork);
-    router.get('/contracts/:uid', ContractorController.fetchContracts);
-    router.get('/profile/:uid', ContractorController.getProfile);
-    router.put('/profile/:uid', ContractorController.saveProfile);
-    router.put('/unassign', ContractorController.unassignSelf);
+    router.post(
+      '/apply',
+      ValidationMiddleware.use(applyToContractSchema),
+      ContractorController.applyToContract
+    );
 
-    router.get('/payments/:uid', ContractorController.getContractorPayments);
+    router.post(
+      '/submit',
+      ValidationMiddleware.use(submitWorkSchema),
+      ContractorController.submitWork
+    );
+
+    router.get(
+      '/contracts/:uid',
+      ValidationMiddleware.use(uidParamSchema),
+      ContractorController.fetchContracts
+    );
+
+    router.get(
+      '/profile/:uid',
+      ValidationMiddleware.use(getProfileOrPaymentsSchema),
+      ContractorController.getProfile
+    );
+
+    router.put(
+      '/profile/:uid',
+      ValidationMiddleware.use(saveProfileSchema),
+      ContractorController.saveProfile
+    );
+
+    router.put(
+      '/unassign',
+      ValidationMiddleware.use(unassignSelfSchema),
+      ContractorController.unassignSelf
+    );
+
+    router.get(
+      '/payments/:uid',
+      ValidationMiddleware.use(getProfileOrPaymentsSchema),
+      ContractorController.getContractorPayments
+    );
 
     app.use('/api/contractor', router);
   }
