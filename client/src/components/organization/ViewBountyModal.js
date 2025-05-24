@@ -99,7 +99,8 @@ const ViewBountyModal = ({
       )}
 
       <p>
-        <strong>Deadline:</strong> {formatDateBounty(bounty.deadline) || '—'}
+        <strong>Deadline:</strong>{' '}
+        {bounty.deadline ? formatDateBounty(bounty.deadline) : '—'}
       </p>
 
       <Divider />

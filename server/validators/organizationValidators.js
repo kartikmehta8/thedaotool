@@ -20,12 +20,12 @@ const updateBountySchema = {
   body: Joi.object({
     name: Joi.string().min(3).max(100).optional(),
     description: Joi.string().min(10).max(2000).optional(),
-    deadline: Joi.date().optional(),
+    deadline: Joi.date().allow('').optional(),
     amount: Joi.number().min(1).optional(),
     status: Joi.string()
       .valid('open', 'in_progress', 'submitted', 'pending_payment', 'closed')
       .optional(),
-    submittedLink: Joi.string().uri().optional(),
+    submittedLink: Joi.string().uri().allow('').optional(),
     contributorId: Joi.string().allow(null).optional(),
     tags: Joi.array().items(Joi.string()).optional(),
   }),
