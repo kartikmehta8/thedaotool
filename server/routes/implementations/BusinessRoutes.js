@@ -2,17 +2,8 @@ const express = require('express');
 const BusinessController = require('../../controllers/businessController');
 const AuthMiddleware = require('../../middlewares/implementations/AuthMiddleware');
 const ValidationMiddleware = require('../../middlewares/implementations/ValidationMiddleware');
+const businessValidator = require('../../validators/businessValidators');
 const IRoute = require('../IRoute');
-
-const {
-  createContractSchema,
-  updateContractSchema,
-  contractIdParamSchema,
-  contractorIdParamSchema,
-  updateContractorSchema,
-  uidParamSchema,
-  uidAndBodySchema,
-} = require('../../validators/businessValidators');
 
 class BusinessRoutes extends IRoute {
   register(app) {
@@ -22,61 +13,61 @@ class BusinessRoutes extends IRoute {
 
     router.post(
       '/contract',
-      ValidationMiddleware.use(createContractSchema),
+      ValidationMiddleware.use(businessValidator.createContractSchema),
       BusinessController.createContract
     );
 
     router.delete(
       '/contract/:id',
-      ValidationMiddleware.use(contractorIdParamSchema),
+      ValidationMiddleware.use(businessValidator.contractorIdParamSchema),
       BusinessController.deleteContract
     );
 
     router.put(
       '/contract/:id',
-      ValidationMiddleware.use(updateContractSchema),
+      ValidationMiddleware.use(businessValidator.updateContractSchema),
       BusinessController.updateContract
     );
 
     router.get(
       '/contracts/:uid',
-      ValidationMiddleware.use(uidParamSchema),
+      ValidationMiddleware.use(businessValidator.uidParamSchema),
       BusinessController.getContracts
     );
 
     router.get(
       '/contractor/:id',
-      ValidationMiddleware.use(contractorIdParamSchema),
+      ValidationMiddleware.use(businessValidator.contractorIdParamSchema),
       BusinessController.getContractor
     );
 
     router.put(
       '/contractor/:id',
-      ValidationMiddleware.use(updateContractorSchema),
+      ValidationMiddleware.use(businessValidator.updateContractorSchema),
       BusinessController.updateContractor
     );
 
     router.put(
       '/contracts/:contractId/unassign',
-      ValidationMiddleware.use(contractIdParamSchema),
+      ValidationMiddleware.use(businessValidator.contractIdParamSchema),
       BusinessController.unassignContractor
     );
 
     router.get(
       '/profile/:uid',
-      ValidationMiddleware.use(uidParamSchema),
+      ValidationMiddleware.use(businessValidator.uidParamSchema),
       BusinessController.getProfile
     );
 
     router.put(
       '/profile/:uid',
-      ValidationMiddleware.use(uidAndBodySchema),
+      ValidationMiddleware.use(businessValidator.uidAndBodySchema),
       BusinessController.saveProfile
     );
 
     router.get(
       '/payments/:uid',
-      ValidationMiddleware.use(uidParamSchema),
+      ValidationMiddleware.use(businessValidator.uidParamSchema),
       BusinessController.getBusinessPayments
     );
 

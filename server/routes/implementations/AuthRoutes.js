@@ -1,10 +1,7 @@
 const express = require('express');
 const AuthController = require('../../controllers/authController');
 const ValidationMiddleware = require('../../middlewares/implementations/ValidationMiddleware');
-const {
-  loginSchema,
-  signupSchema,
-} = require('../../validators/authValidators');
+const authValidator = require('../../validators/authValidators');
 const IRoute = require('../IRoute');
 
 class AuthRoutes extends IRoute {
@@ -13,12 +10,12 @@ class AuthRoutes extends IRoute {
 
     router.post(
       '/login',
-      ValidationMiddleware.use({ body: loginSchema }),
+      ValidationMiddleware.use({ body: authValidator.loginSchema }),
       AuthController.loginUser
     );
     router.post(
       '/signup',
-      ValidationMiddleware.use({ body: signupSchema }),
+      ValidationMiddleware.use({ body: authValidator.signupSchema }),
       AuthController.signupUser
     );
 
