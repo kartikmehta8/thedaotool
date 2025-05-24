@@ -9,14 +9,14 @@ const { Title } = Typography;
 const { Content } = Layout;
 
 const roles = [
-  { label: 'Business', value: 'business' },
-  { label: 'Contractor', value: 'contractor' },
+  { label: 'Organization', value: 'organization' },
+  { label: 'Contributor', value: 'contributor' },
 ];
 
 const Signup = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('business');
+  const [role, setRole] = useState('organization');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 

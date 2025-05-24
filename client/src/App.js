@@ -9,7 +9,7 @@ import { ConfigProvider, theme } from 'antd';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { routes } from './routes/RoutesConfig';
 
-import { BusinessPaymentHistory, ContractorPaymentHistory } from './pages';
+import { OrganizationPaymentHistory, ContributorPaymentHistory } from './pages';
 
 const AppRoutes = () => {
   const { user } = useAuth();
@@ -24,10 +24,10 @@ const AppRoutes = () => {
               path={path}
               element={
                 user ? (
-                  user.role === 'business' ? (
-                    <BusinessPaymentHistory user={user} />
+                  user.role === 'organization' ? (
+                    <OrganizationPaymentHistory user={user} />
                   ) : (
-                    <ContractorPaymentHistory user={user} />
+                    <ContributorPaymentHistory user={user} />
                   )
                 ) : (
                   <Navigate to="/login" />

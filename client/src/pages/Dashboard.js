@@ -1,8 +1,8 @@
 import React from 'react';
 import { Navbar } from '../components';
 import { Layout } from 'antd';
-import BusinessDashboard from './business/BusinessDashboard';
-import ContractorDashboard from './contractor/ContractorDashboard';
+import OrganizationDashboard from './organization/OrganizationDashboard';
+import ContributorDashboard from './contributor/ContributorDashboard';
 import { useAuth } from '../context/AuthContext';
 
 const { Content } = Layout;
@@ -15,8 +15,8 @@ const Dashboard = () => {
     <Layout style={{ minHeight: '100vh', backgroundColor: '#141414' }}>
       <Navbar />
       <Content style={{ padding: '2rem' }}>
-        {role === 'business' && <BusinessDashboard />}
-        {role === 'contractor' && <ContractorDashboard />}
+        {role === 'organization' && <OrganizationDashboard />}
+        {role === 'contributor' && <ContributorDashboard />}
         {!role && (
           <div style={{ color: '#fff' }}>
             Unable to determine your role. Please contact support.

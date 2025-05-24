@@ -9,9 +9,9 @@ export const initSocket = () => {
   return socket;
 };
 
-export const listenToMessages = (contractId, onNewMessage, onHistory) => {
+export const listenToMessages = (bountyId, onNewMessage, onHistory) => {
   const socket = initSocket();
-  socket.emit('join-contract', contractId);
+  socket.emit('join-bounty', bountyId);
 
   socket.on('new-message', onNewMessage);
   socket.on('chat-history', onHistory);
@@ -22,11 +22,11 @@ export const listenToMessages = (contractId, onNewMessage, onHistory) => {
   };
 };
 
-export const sendMessage = (contractId, userId, senderName, text) => {
+export const sendMessage = (bountyId, userId, senderName, text) => {
   if (!text.trim()) return;
   const socket = initSocket();
   socket.emit('send-message', {
-    contractId,
+    bountyId,
     senderId: userId,
     senderName,
     text: text.trim(),

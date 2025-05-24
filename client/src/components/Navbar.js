@@ -15,7 +15,7 @@ const Navbar = () => {
 
   useEffect(() => {
     const fetchBalance = async () => {
-      if (role === 'business' && uid) {
+      if (role === 'organization' && uid) {
         const usd = await getPaymanBalance(uid);
         if (usd !== null) {
           setBalance(usd);
@@ -31,10 +31,10 @@ const Navbar = () => {
   };
 
   const handleProfile = () => {
-    if (role === 'business') {
-      navigate('/profile/business');
+    if (role === 'organization') {
+      navigate('/profile/organization');
     } else {
-      navigate('/profile/contractor');
+      navigate('/profile/contributor');
     }
   };
 
@@ -48,17 +48,14 @@ const Navbar = () => {
       }}
     >
       <div style={{ color: '#fff', fontSize: '18px', fontWeight: 'bold' }}>
-        Bizzy{' '}
+        DAO{' '}
         <span style={{ fontWeight: 'normal', fontSize: '14px', color: '#aaa' }}>
           [{role}]
         </span>
       </div>
       <Space>
-        {role === 'business' && balance !== null && (
+        {role === 'organization' && balance !== null && (
           <span style={{ color: '#3fefb4' }}>${balance.toFixed(2)}</span>
-        )}
-        {role === 'business' && balance === null && (
-          <span style={{ color: '#3fefb4' }}>Loading...</span>
         )}
         <Button type="default" onClick={() => navigate('/payment-history')}>
           Payments

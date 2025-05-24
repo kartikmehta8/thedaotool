@@ -3,8 +3,8 @@ import {
   Login,
   Dashboard,
   Landing,
-  BusinessProfile,
-  ContractorProfile,
+  OrganizationProfile,
+  ContributorProfile,
 } from '../pages';
 
 export const routes = [
@@ -12,10 +12,14 @@ export const routes = [
   { path: '/login', element: <Login />, isPrivate: false },
   { path: '/signup', element: <Signup />, isPrivate: false },
   { path: '/dashboard', element: <Dashboard />, isPrivate: true },
-  { path: '/profile/business', element: <BusinessProfile />, isPrivate: true },
   {
-    path: '/profile/contractor',
-    element: <ContractorProfile />,
+    path: '/profile/organization',
+    element: <OrganizationProfile />,
+    isPrivate: true,
+  },
+  {
+    path: '/profile/contributor',
+    element: <ContributorProfile />,
     isPrivate: true,
   },
   { path: '/payment-history', element: null, isPrivate: true },

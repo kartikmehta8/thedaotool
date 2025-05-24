@@ -2,22 +2,22 @@ import Login from './auth/Login';
 import Signup from './auth/Signup';
 import Dashboard from './Dashboard';
 import Landing from './Landing';
-import BusinessDashboard from './business/BusinessDashboard';
-import ContractorDashboard from './contractor/ContractorDashboard';
-import BusinessProfile from './business/BusinessProfile';
-import ContractorProfile from './contractor/ContractorProfile';
-import BusinessPaymentHistory from './business/PaymentHistory';
-import ContractorPaymentHistory from './contractor/PaymentHistory';
+import OrganizationDashboard from './organization/OrganizationDashboard';
+import ContributorDashboard from './contributor/ContributorDashboard';
+import OrganizationProfile from './organization/OrganizationProfile';
+import ContributorProfile from './contributor/ContributorProfile';
+import OrganizationPaymentHistory from './organization/PaymentHistory';
+import ContributorPaymentHistory from './contributor/PaymentHistory';
 
 export {
   Login,
   Signup,
   Dashboard,
   Landing,
-  BusinessDashboard,
-  ContractorDashboard,
-  BusinessProfile,
-  ContractorProfile,
-  BusinessPaymentHistory,
-  ContractorPaymentHistory,
+  OrganizationDashboard,
+  ContributorDashboard,
+  OrganizationProfile,
+  ContributorProfile,
+  OrganizationPaymentHistory,
+  ContributorPaymentHistory,
 };
