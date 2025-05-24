@@ -24,7 +24,7 @@ class ValidationMiddleware extends IMiddleware {
           if (error) {
             accumulatedErrors = accumulatedErrors.concat(error.details);
           } else {
-            req[part] = value;
+            Object.assign(req[part], value);
           }
         }
       }
