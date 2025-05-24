@@ -82,6 +82,12 @@ class GithubService {
   }
 
   async validateAndSaveRepo(uid, repoName) {
+    // Validate the repository name format
+    const repoNamePattern = /^[a-zA-Z0-9-_]+\/[a-zA-Z0-9-_]+$/;
+    if (!repoNamePattern.test(repoName)) {
+      throw new Error('Invalid repository name format');
+    }
+
     const organizationData = await FirestoreService.getDocument(
       'organizations',
       uid
