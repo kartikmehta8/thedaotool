@@ -7,7 +7,7 @@ class OrganizationService {
     const bounty = {
       name: values.name || '',
       description: values.description || '',
-      deadline: values.deadline || '',
+      deadline: values.deadline ? values.deadline.toISOString() : '',
       amount: Number(values.amount || 0),
       organizationId: userId,
       contributorId: null,
