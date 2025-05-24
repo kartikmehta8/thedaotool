@@ -104,7 +104,7 @@ class GithubService {
       `https://api.github.com/repos/${repo}/issues`,
       {
         headers: { Authorization: `Bearer ${token}` },
-        params: { labels: 'bizzy', state: 'open' },
+        params: { labels: 'dao', state: 'open' },
       }
     );
     return response.data;
@@ -114,9 +114,9 @@ class GithubService {
     return Array.from(
       new Set(
         labels
-          .filter((l) => l.name.toLowerCase() !== 'bizzy')
+          .filter((l) => l.name.toLowerCase() !== 'dao')
           .map((l) => l.name)
-          .concat('bizzy-platform')
+          .concat('dao-platform')
       )
     ).filter((l) => typeof l === 'string' && l.trim() !== '');
   }
