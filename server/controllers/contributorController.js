@@ -1,11 +1,11 @@
-const ContractorService = require('../services/user/ContractorService');
+const ContributorService = require('../services/user/ContributorService');
 const ResponseHelper = require('../utils/ResponseHelper');
 
-class ContractorController {
-  async applyToContract(req, res) {
+class ContributorController {
+  async applyToBounty(req, res) {
     try {
-      const { contractId, userId } = req.body;
-      await ContractorService.applyToContract(contractId, userId);
+      const { bountyId, userId } = req.body;
+      await ContributorService.applyToBounty(bountyId, userId);
       return ResponseHelper.success(res, 'Applied successfully');
     } catch (err) {
       return ResponseHelper.error(res, 'Application failed');
@@ -14,18 +14,18 @@ class ContractorController {
 
   async submitWork(req, res) {
     try {
-      const { contractId, submittedLink } = req.body;
-      await ContractorService.submitWork(contractId, submittedLink);
+      const { bountyId, submittedLink } = req.body;
+      await ContributorService.submitWork(bountyId, submittedLink);
       return ResponseHelper.success(res, 'Work submitted');
     } catch (err) {
       return ResponseHelper.error(res, 'Submission failed');
     }
   }
 
-  async fetchContracts(req, res) {
+  async fetchBounties(req, res) {
     try {
-      const contracts = await ContractorService.fetchContracts(req.params.uid);
-      return ResponseHelper.success(res, 'Contracts fetched', { contracts });
+      const bounties = await ContributorService.fetchBounties(req.params.uid);
+      return ResponseHelper.success(res, 'Bounties fetched', { bounties });
     } catch (err) {
       return ResponseHelper.error(res, 'Fetch failed');
     }
@@ -33,7 +33,7 @@ class ContractorController {
 
   async getProfile(req, res) {
     try {
-      const profile = await ContractorService.getProfile(req.params.uid);
+      const profile = await ContributorService.getProfile(req.params.uid);
       if (profile) {
         return ResponseHelper.success(res, 'Profile fetched', { profile });
       }
@@ -45,7 +45,7 @@ class ContractorController {
 
   async saveProfile(req, res) {
     try {
-      await ContractorService.saveProfile(req.params.uid, req.body);
+      await ContributorService.saveProfile(req.params.uid, req.body);
       return ResponseHelper.success(res, 'Profile saved');
     } catch (err) {
       return ResponseHelper.error(res, 'Error saving profile');
@@ -53,23 +53,23 @@ class ContractorController {
   }
 
   async unassignSelf(req, res) {
-    const { contractId } = req.body;
+    const { bountyId } = req.body;
 
-    if (!contractId) {
-      return ResponseHelper.error(res, 'Contract ID is required', 400);
+    if (!bountyId) {
+      return ResponseHelper.error(res, 'Bounty ID is required', 400);
     }
 
     try {
-      await ContractorService.unassignSelf(contractId);
-      return ResponseHelper.success(res, 'Contractor unassigned');
+      await ContributorService.unassignSelf(bountyId);
+      return ResponseHelper.success(res, 'Contributor unassigned');
     } catch (err) {
-      return ResponseHelper.error(res, 'Failed to unassign contractor');
+      return ResponseHelper.error(res, 'Failed to unassign contributor');
     }
   }
 
-  async getContractorPayments(req, res) {
+  async getContributorPayments(req, res) {
     try {
-      const payments = await ContractorService.getContractorPayments(
+      const payments = await ContributorService.getContributorPayments(
         req.params.uid
       );
       return ResponseHelper.success(res, 'Payments fetched', { payments });
@@ -79,4 +79,4 @@ class ContractorController {
   }
 }
 
-module.exports = new ContractorController();
+module.exports = new ContributorController();

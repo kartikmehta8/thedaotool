@@ -23,13 +23,13 @@ class DiscordRoutes extends IRoute {
 
     router.get(
       '/channels/:uid',
-      AuthMiddleware.authenticate(['business']),
+      AuthMiddleware.authenticate(['organization']),
       ValidationMiddleware.use(discordValidator.uidParamSchema),
       DiscordController.getDiscordChannels
     );
     router.put(
       '/channel/:uid',
-      AuthMiddleware.authenticate(['business']),
+      AuthMiddleware.authenticate(['organization']),
       ValidationMiddleware.use(discordValidator.saveChannelSchema),
       DiscordController.saveDiscordChannel
     );

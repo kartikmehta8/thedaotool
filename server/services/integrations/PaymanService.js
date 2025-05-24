@@ -8,13 +8,16 @@ class PaymanService {
   }
 
   async getApiKey(uid) {
-    const businessData = await FirestoreService.getDocument('businesses', uid);
-    return businessData?.apiKey || null;
+    const organizationData = await FirestoreService.getDocument(
+      'organizations',
+      uid
+    );
+    return organizationData?.apiKey || null;
   }
 
-  async createPayee(contractorInfo, apiKey) {
+  async createPayee(contributorInfo, apiKey) {
     const payman = this.getClient(apiKey);
-    const { name, email, accountNumber, routingNumber } = contractorInfo;
+    const { name, email, accountNumber, routingNumber } = contributorInfo;
 
     return payman.payments.createPayee({
       type: 'US_ACH',
@@ -28,41 +31,41 @@ class PaymanService {
     });
   }
 
-  async sendPayment(contract, apiKey) {
+  async sendPayment(bounty, apiKey) {
     const payman = this.getClient(apiKey);
 
     await payman.payments.sendPayment({
-      amountDecimal: Number(contract.amount),
-      payeeId: process.env.PAYMAN_TEST_PAYEE_ID, // For testing
-      memo: `Payment for ${contract.name}`,
-      metadata: { contractId: contract.id },
+      amountDecimal: Number(bounty.amount),
+      payeeId: process.env.PAYMAN_TEST_PAYEE_ID, // For testing.
+      memo: `Payment for ${bounty.name}`,
+      metadata: { bountyId: bounty.id },
     });
 
-    await FirestoreService.updateDocument('contracts', contract.id, {
+    await FirestoreService.updateDocument('bounties', bounty.id, {
       paid: true,
     });
 
-    const contractorData = await FirestoreService.getDocument(
-      'contractors',
-      contract.contractorId
+    const contributorData = await FirestoreService.getDocument(
+      'contributors',
+      bounty.contributorId
     );
 
-    if (!contractorData) {
-      throw new Error('Contractor not found');
+    if (!contributorData) {
+      throw new Error('Contributor not found');
     }
 
-    const newBalance = (contractorData.balance || 0) + Number(contract.amount);
+    const newBalance = (contributorData.balance || 0) + Number(bounty.amount);
 
     await FirestoreService.updateDocument(
-      'contractors',
-      contract.contractorId,
+      'contributors',
+      bounty.contributorId,
       {
         balance: newBalance,
       }
     );
 
-    await triggerEmail('paymentSentToContractor', contract.id, {
-      amount: contract.amount,
+    await triggerEmail('paymentSentToContributor', bounty.id, {
+      amount: bounty.amount,
     });
   }
 

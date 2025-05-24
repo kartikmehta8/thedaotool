@@ -1,6 +1,6 @@
 /**
  * @interface IMiddleware
- * Defines the contract for all middleware classes.
+ * Defines the interface for all middleware classes.
  */
 class IMiddleware {
   /**

@@ -7,7 +7,7 @@ class PaymanRoutes extends IRoute {
   register(app) {
     const router = express.Router();
 
-    router.use(AuthMiddleware.authenticate(['business']));
+    router.use(AuthMiddleware.authenticate(['organization']));
 
     router.get('/key/:uid', PaymanController.getApiKey);
     router.post('/payee', PaymanController.createPayee);

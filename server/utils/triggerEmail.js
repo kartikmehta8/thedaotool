@@ -2,35 +2,35 @@ const sendMail = require('./mailer');
 const templates = require('../templates/emailTemplates');
 const FirestoreService = require('../services/database/FirestoreService');
 
-async function triggerEmail(templateKey, contractId, extraData = {}) {
+async function triggerEmail(templateKey, bountyId, extraData = {}) {
   try {
-    const contract = await FirestoreService.getDocument(
-      'contracts',
-      contractId
-    );
-    if (!contract) throw new Error('Contract not found');
+    const bounty = await FirestoreService.getDocument('bounties', bountyId);
+    if (!bounty) throw new Error('Bounty not found');
 
-    const contractor = contract.contractorId
-      ? await FirestoreService.getDocument('contractors', contract.contractorId)
+    const contributor = bounty.contributorId
+      ? await FirestoreService.getDocument('contributors', bounty.contributorId)
       : {};
 
-    const business = contract.businessId
-      ? await FirestoreService.getDocument('businesses', contract.businessId)
+    const organization = bounty.organizationId
+      ? await FirestoreService.getDocument(
+          'organizations',
+          bounty.organizationId
+        )
       : {};
 
     const templateFn = templates[templateKey];
     if (!templateFn) throw new Error('Invalid template key');
 
     const emailData = templateFn({
-      contractor,
-      contract: { id: contractId, ...contract },
+      contributor,
+      bounty: { id: bountyId, ...bounty },
       ...extraData,
     });
 
     const recipient =
-      templateKey === 'paymentSentToContractor'
-        ? contractor?.email
-        : business?.email;
+      templateKey === 'paymentSentToContributor'
+        ? contributor?.email
+        : organization?.email;
 
     if (!recipient) throw new Error('No recipient found for email');
 

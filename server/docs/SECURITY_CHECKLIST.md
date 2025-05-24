@@ -46,7 +46,7 @@ Checklist of the most important security countermeasures when designing, testing
 ## Processing
 
 - [x] Check if all the endpoints are protected behind authentication to avoid broken authentication process.
-- [x] User own resource ID should be avoided. Use `/profile/business` instead of `/profile/<ID>/business`.
+- [x] User own resource ID should be avoided. Use `/profile/organization` instead of `/profile/<ID>/organization`.
 - [x] Don't auto-increment IDs. Use `UUID` instead.
 - [ ] If you are dealing with huge amount of data, use Workers and Queues to process as much as possible in background and return response fast to avoid HTTP Blocking.
 - [ ] Do not forget to turn the DEBUG mode OFF.

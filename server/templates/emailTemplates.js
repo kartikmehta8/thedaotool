@@ -1,28 +1,28 @@
 module.exports = {
-  contractAssignedToBusiness: ({ contractor, contract }) => ({
-    subject: `New Contractor Assigned: ${contract.name}`,
-    text: `${contractor.name} has been assigned to your contract "${contract.name}".`,
+  bountyAssignedToOrganization: ({ contributor, bounty }) => ({
+    subject: `New Contributor Assigned: ${bounty.name}`,
+    text: `${contributor.name} has been assigned to your bounty "${bounty.name}".`,
     html: `
-      <p><strong>${contractor.name}</strong> has been assigned to your contract <strong>${contract.name}</strong>.</p>
-      <p>Contractor Email: ${contractor.email}</p>
+      <p><strong>${contributor.name}</strong> has been assigned to your bounty <strong>${bounty.name}</strong>.</p>
+      <p>Contributor Email: ${contributor.email}</p>
     `,
   }),
 
-  paymentSentToContractor: ({ contract, amount }) => ({
-    subject: `Payment Sent for Contract: ${contract.name}`,
-    text: `A payment of $${amount} has been sent for the contract "${contract.name}".`,
+  paymentSentToContributor: ({ bounty, amount }) => ({
+    subject: `Payment Sent for Bounty: ${bounty.name}`,
+    text: `A payment of $${amount} has been sent for the bounty "${bounty.name}".`,
     html: `
       <p>Hi,</p>
-      <p>You have received a payment of <strong>$${amount}</strong> for your work on contract <strong>${contract.name}</strong>.</p>
+      <p>You have received a payment of <strong>$${amount}</strong> for your work on bounty <strong>${bounty.name}</strong>.</p>
     `,
   }),
 
-  submissionNotificationToBusiness: ({ contractor, contract }) => ({
-    subject: `Work Submitted: ${contract.name}`,
-    text: `${contractor.name} has submitted work for the contract "${contract.name}".`,
+  submissionNotificationToOrganization: ({ contributor, bounty }) => ({
+    subject: `Work Submitted: ${bounty.name}`,
+    text: `${contributor.name} has submitted work for the bounty "${bounty.name}".`,
     html: `
-      <p><strong>${contractor.name}</strong> has submitted work for the contract <strong>${contract.name}</strong>.</p>
-      <p>Contractor Email: ${contractor.email}</p>
+      <p><strong>${contributor.name}</strong> has submitted work for the bounty <strong>${bounty.name}</strong>.</p>
+      <p>Contributor Email: ${contributor.email}</p>
       <p>Check your dashboard to review and proceed.</p>
     `,
   }),

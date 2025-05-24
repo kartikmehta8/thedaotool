@@ -1,6 +1,6 @@
 /**
  * @interface IRoute
- * Defines the contract for all route classes.
+ * Defines the bounty for all route classes.
  */
 class IRoute {
   /**

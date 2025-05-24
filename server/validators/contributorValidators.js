@@ -1,15 +1,15 @@
 const Joi = require('joi');
 
-const applyToContractSchema = {
+const applyToBountySchema = {
   body: Joi.object({
-    contractId: Joi.string().required(),
+    bountyId: Joi.string().required(),
     userId: Joi.string().required(),
   }),
 };
 
 const submitWorkSchema = {
   body: Joi.object({
-    contractId: Joi.string().required(),
+    bountyId: Joi.string().required(),
     submittedLink: Joi.string().uri().required(),
   }),
 };
@@ -48,12 +48,12 @@ const getProfileOrPaymentsSchema = {
 
 const unassignSelfSchema = {
   body: Joi.object({
-    contractId: Joi.string().required(),
+    bountyId: Joi.string().required(),
   }),
 };
 
 module.exports = {
-  applyToContractSchema,
+  applyToBountySchema,
   submitWorkSchema,
   uidParamSchema,
   saveProfileSchema,

@@ -23,13 +23,13 @@ class GithubRoutes extends IRoute {
 
     router.get(
       '/repos/:uid',
-      AuthMiddleware.authenticate(['business']),
+      AuthMiddleware.authenticate(['organization']),
       ValidationMiddleware.use(githubValidator.uidParamSchema),
       GithubController.listRepos
     );
     router.post(
       '/repo/:uid',
-      AuthMiddleware.authenticate(['business']),
+      AuthMiddleware.authenticate(['organization']),
       ValidationMiddleware.use(githubValidator.saveRepoSchema),
       GithubController.saveSelectedRepo
     );

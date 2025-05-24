@@ -60,14 +60,17 @@ class GithubService {
   }
 
   async saveAccessToken(uid, accessToken) {
-    await FirestoreService.updateDocument('businesses', uid, {
+    await FirestoreService.updateDocument('organizations', uid, {
       githubToken: accessToken,
     });
   }
 
   async listRepos(uid) {
-    const businessData = await FirestoreService.getDocument('businesses', uid);
-    const { githubToken } = businessData || {};
+    const organizationData = await FirestoreService.getDocument(
+      'organizations',
+      uid
+    );
+    const { githubToken } = organizationData || {};
 
     if (!githubToken) throw new Error('GitHub not authorized');
 
@@ -79,8 +82,11 @@ class GithubService {
   }
 
   async validateAndSaveRepo(uid, repoName) {
-    const businessData = await FirestoreService.getDocument('businesses', uid);
-    const { githubToken } = businessData || {};
+    const organizationData = await FirestoreService.getDocument(
+      'organizations',
+      uid
+    );
+    const { githubToken } = organizationData || {};
 
     if (!githubToken) throw new Error('GitHub not authorized');
 
@@ -88,7 +94,7 @@ class GithubService {
       headers: { Authorization: `Bearer ${githubToken}` },
     });
 
-    await FirestoreService.updateDocument('businesses', uid, {
+    await FirestoreService.updateDocument('organizations', uid, {
       repo: repoName,
     });
   }

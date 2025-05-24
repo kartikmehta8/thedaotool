@@ -3,26 +3,26 @@ const FirestoreService = require('../services/database/FirestoreService');
 
 const BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
 
-const postToDiscord = async (contract) => {
+const postToDiscord = async (bounty) => {
   try {
-    const business = await FirestoreService.getDocument(
-      'businesses',
-      contract.businessId
+    const organization = await FirestoreService.getDocument(
+      'organizations',
+      bounty.organizationId
     );
 
-    if (!business) return;
+    if (!organization) return;
 
-    const { discordEnabled, discordChannel, discordSendMode } = business;
+    const { discordEnabled, discordChannel, discordSendMode } = organization;
 
     if (!discordEnabled || !discordChannel) return;
     if (
       discordSendMode === 'own' &&
-      contract.businessId !== contract.businessId
+      bounty.organizationId !== bounty.organizationId
     )
       return;
 
     const message = {
-      content: `📢 **New Contract Listed**\n\n**Title:** ${contract.name}\n**Amount:** $${contract.amount || 'N/A'}\n**Description:** ${contract.description?.slice(0, 180) || ''}...\n\n[View on Platform](${process.env.FRONTEND_URL}/dashboard)`,
+      content: `📢 **New Bounty Listed**\n\n**Title:** ${bounty.name}\n**Amount:** $${bounty.amount || 'N/A'}\n**Description:** ${bounty.description?.slice(0, 180) || ''}...\n\n[View on Platform](${process.env.FRONTEND_URL}/dashboard)`,
     };
 
     await axios.post(

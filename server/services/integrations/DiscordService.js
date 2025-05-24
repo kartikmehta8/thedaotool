@@ -49,21 +49,24 @@ class DiscordService {
     return response.data.access_token;
   }
 
-  async saveAccessTokenToBusiness(uid, accessToken) {
-    return FirestoreService.updateDocument('businesses', uid, {
+  async saveAccessTokenToOrganization(uid, accessToken) {
+    return FirestoreService.updateDocument('organizations', uid, {
       discordAccessToken: accessToken,
       discordEnabled: true,
     });
   }
 
   async fetchMutualGuildChannels(uid) {
-    const businessData = await FirestoreService.getDocument('businesses', uid);
+    const organizationData = await FirestoreService.getDocument(
+      'organizations',
+      uid
+    );
 
-    if (!businessData?.discordAccessToken) {
+    if (!organizationData?.discordAccessToken) {
       throw new Error('Unauthorized');
     }
 
-    const { discordAccessToken } = businessData;
+    const { discordAccessToken } = organizationData;
 
     const userGuilds = await axios.get(
       'https://discord.com/api/users/@me/guilds',
@@ -106,7 +109,7 @@ class DiscordService {
   }
 
   async saveDiscordChannel(uid, channelId) {
-    return FirestoreService.updateDocument('businesses', uid, {
+    return FirestoreService.updateDocument('organizations', uid, {
       discordChannel: channelId,
     });
   }

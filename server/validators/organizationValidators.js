@@ -1,6 +1,6 @@
 const Joi = require('joi');
 
-const createContractSchema = {
+const createBountySchema = {
   body: Joi.object({
     values: Joi.object({
       name: Joi.string().min(3).max(100).required(),
@@ -13,7 +13,7 @@ const createContractSchema = {
   }),
 };
 
-const updateContractSchema = {
+const updateBountySchema = {
   params: Joi.object({
     id: Joi.string().required(),
   }),
@@ -26,24 +26,24 @@ const updateContractSchema = {
       .valid('open', 'in_progress', 'submitted', 'pending_payment', 'closed')
       .optional(),
     submittedLink: Joi.string().uri().optional(),
-    contractorId: Joi.string().allow(null).optional(),
+    contributorId: Joi.string().allow(null).optional(),
     tags: Joi.array().items(Joi.string()).optional(),
   }),
 };
 
-const contractIdParamSchema = {
+const bountyIdParamSchema = {
   params: Joi.object({
-    contractId: Joi.string().required(),
+    bountyId: Joi.string().required(),
   }),
 };
 
-const contractorIdParamSchema = {
+const contributorIdParamSchema = {
   params: Joi.object({
     id: Joi.string().required(),
   }),
 };
 
-const updateContractorSchema = {
+const updateContributorSchema = {
   params: Joi.object({
     id: Joi.string().required(),
   }),
@@ -91,11 +91,11 @@ const uidAndBodySchema = {
 };
 
 module.exports = {
-  createContractSchema,
-  updateContractSchema,
-  contractIdParamSchema,
-  contractorIdParamSchema,
-  updateContractorSchema,
+  createBountySchema,
+  updateBountySchema,
+  bountyIdParamSchema,
+  contributorIdParamSchema,
+  updateContributorSchema,
   uidParamSchema,
   uidAndBodySchema,
 };
