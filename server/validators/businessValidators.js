@@ -83,9 +83,9 @@ const uidAndBodySchema = {
     discordGuild: Joi.string().allow('').optional(),
     discordSendMode: Joi.string().allow('').optional(),
     email: Joi.string().email().required(),
-    githubToken: Joi.string().optional(),
+    githubToken: Joi.string().allow('').optional(),
     industry: Joi.string().optional(),
-    repo: Joi.string().optional(),
+    repo: Joi.string().allow('').optional(),
     website: Joi.string().uri().optional(),
   }),
 };
