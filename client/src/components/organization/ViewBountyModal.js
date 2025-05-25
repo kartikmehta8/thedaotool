@@ -25,11 +25,17 @@ const ViewBountyModal = ({
 }) => {
   const handleSaveUpdate = async () => {
     try {
-      await updateBounty(bounty);
+      await updateBounty({
+        ...bounty,
+        deadline: bounty.deadline
+          ? new Date(bounty.deadline._seconds * 1000).toISOString() // TODO: Handle date conversion properly.
+          : null,
+      });
       toast.success('Bounty updated successfully');
       onUpdateSuccess();
       onCancel();
     } catch (err) {
+      console.error(err);
       toast.error('Failed to update bounty');
     }
   };
@@ -46,6 +52,7 @@ const ViewBountyModal = ({
       await updateContributorData(bounty.contributorId, {
         payeeId: contributorData.payeeId,
       });
+      toast.success('Payee created successfully');
     } catch (err) {
       toast.error('Failed to create payee');
     }
@@ -99,7 +106,8 @@ const ViewBountyModal = ({
       )}
 
       <p>
-        <strong>Deadline:</strong> {formatDateBounty(bounty.deadline) || '—'}
+        <strong>Deadline:</strong>{' '}
+        {bounty.deadline ? formatDateBounty(bounty.deadline) : '—'}
       </p>
 
       <Divider />

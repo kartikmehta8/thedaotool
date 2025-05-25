@@ -20,12 +20,12 @@ const updateBountySchema = {
   body: Joi.object({
     name: Joi.string().min(3).max(100).optional(),
     description: Joi.string().min(10).max(2000).optional(),
-    deadline: Joi.date().optional(),
+    deadline: Joi.date().allow('').optional(),
     amount: Joi.number().min(1).optional(),
     status: Joi.string()
       .valid('open', 'in_progress', 'submitted', 'pending_payment', 'closed')
       .optional(),
-    submittedLink: Joi.string().uri().optional(),
+    submittedLink: Joi.string().uri().allow('').optional(),
     contributorId: Joi.string().allow(null).optional(),
     tags: Joi.array().items(Joi.string()).optional(),
   }),
@@ -77,9 +77,9 @@ const uidAndBodySchema = {
     apiKey: Joi.string().allow('').optional(),
     companyName: Joi.string().min(3).max(100).required(),
     description: Joi.string().max(2000).optional(),
-    discordAccessToken: Joi.string().optional(),
-    discordChannelId: Joi.string().optional(),
-    discordEnabled: Joi.boolean().optional(),
+    discordAccessToken: Joi.string().allow('').optional(),
+    discordChannelId: Joi.string().allow('').optional(),
+    discordEnabled: Joi.boolean().allow('').optional(),
     discordGuild: Joi.string().allow('').optional(),
     discordSendMode: Joi.string().allow('').optional(),
     email: Joi.string().email().required(),
