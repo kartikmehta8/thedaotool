@@ -1,109 +1,51 @@
-# Bizzy Network – Powered by PaymanAI
+# The DAO Tool
 
-![banner](./client/src/assets/banner.png)
+![Banner](./server/docs/assets/banner.png)
+A modern open-source platform to manage bounties, contributors, payments, and DAO workflows — all in one place.
 
-**Bizzy Network** is a full-stack, payman-based task marketplace built to connect businesses with contractors seamlessly. The platform automates the entire workflow—from contract creation and assignment to real-time collaboration and final payment—by integrating Firebase, React, and the powerful **PaymanAI Payment SDK**.
+![License](https://img.shields.io/badge/license-MIT-green)
+![Status](https://img.shields.io/badge/status-Alpha-blue)
 
-**Watch Demo Here - [bit.ly/bizzy-network](https://bit.ly/bizzy-network)**
+## Project Links
 
-## Key Features
+| Resource       | Link                                                                                     |
+|----------------|------------------------------------------------------------------------------------------|
+| Website        | [https://www.thedaotool.com](https://www.thedaotool.com)                                 |
+| DAO App        | [https://app.thedaotool.com](https://app.thedaotool.com)                                 |
+| Docs           | [https://docs.thedaotool.com](https://docs.thedaotool.com)                               |
+| GitHub         | [https://github.com/kartikmehta8/thedaotool](https://github.com/kartikmehta8/thedaotool) |
+| X              | [https://x.com/thedaotool](https://twitter.com/thedaotool)                               |
+| Discord        | [https://discord.gg/j22jFHA7](https://discord.gg/j22jFHA7)                               |
 
-![Workflow](./client/src/assets/workflow.svg)
+**Follow us on [X](https://x.com/thedaotool) for the latest updates, feature releases, and announcements.**
 
-- **Create & manage contracts**: Define task details, deadlines, budgets.
-- **Assign contractors & track status**: `open`, `assigned`, `pending_payment`, `paid`.
-- **Payee creation + direct payments** using PaymanAI SDK.
-- **Real-time chat** between business and contractor (per contract).
-- **Modern dark-themed UI** with role-based dashboards (business & contractor).
-- **Manage profiles**: Users can update tags, skills, and account info.
+## Getting Started
 
-## Payment Flow
+```bash
+# Check CONTRIBUTING.md or docs for detailed instructions.
+git clone https://github.com/kartikmehta8/thedaotool
+cd thedaotool
 
-1. Businesses create a **payee profile** for each contractor (once).
-2. Upon submission, contractors mark work as `pending_payment`.
-3. Businesses review and **send payments** securely using **PaymanAI**.
-4. Transaction metadata and tracking are stored for transparency.
+# Install dependencies in client/ and server/
+npm install
 
-## Value for PaymanAI
+# Start development server.
+npm run dev
 
-| Impact Area | Value |
-|-------------|--------|
-| **Adoption** | Opens up a new **B2B task marketplace** use case |
-| **Stickiness** | High-frequency usage for recurring contractors |
-| **Expansion** | Room to integrate **Payman Agents**, AI recommendations, escrow |
+# Start development client.
+npm start
+```
 
-## SWOT Analysis
-
-| Strengths | Opportunities |
-|-----------|---------------|
-| Covers full contract lifecycle (create → assign → submit → pay) | Leverage international payout rails |
-| Seamless payee creation via PaymanAI SDK | Offer premium features like analytics, escrow, and automation |
-
-| Weaknesses | Threats |
-|------------|---------|
-| Payee creation still requires some business-side manual input | PaymanAI API downtime could affect payment workflows |
-| No deep reporting, summaries (planned for future releases) | Competitors like Deel, Upwork, and Toptal offer similar platforms |
-
----
+- Frontend: http://localhost:3000  
+- Backend API: http://localhost:5050  
 
 ## Tech Stack
 
-- **Frontend**: React + Ant Design (dark mode UI)
-- **Backend**: Firebase Firestore & Realtime Database
-- **Auth**: Firebase Auth
-- **Payments**: PaymanAI SDK
-- **Deployment**: Vercel
+- React + Ant Design (Frontend)
+- Node.js + Express (Backend)
+- Firebase (Database, Misc)
+- Solana + Payman (Wallets & Payouts)
 
-## Folder Structure
+## License
 
-```
-/.github
-  ├── ISSUE_TEMPLATES/
-  └── PULL_REQUEST_TEMPLATE.md
-/public
-/src
-  ├── api/
-  │   ├── auth.js
-  │   ├── firebaseBusiness.js / firebaseContractor.js
-  │   ├── payman.js
-  ├── assets/
-  ├── pages/
-  │   ├── auth/
-  │   ├── business/
-  │   ├── contractor/
-  │   ├── Dashboard.js / Landing.js
-  ├── components/
-  │   ├── business/
-  │   ├── contractor/
-  │   ├── InfoPopup.js
-  │   └── Navbar.js
-  ├── providers/
-  │   └── firebase.js
-  ├── utils/
-  │   └── toast.js
-  └── App.js / index.js
-.env.sample
-.prettierrc
-.prettierignore
-package.json
-CODE_OF_CONDUCT.md
-CONTRIBUTING.md
-LICENSE
-README.md
-SECURITY.md
-```
-
-## Roadmap
-
-- **Invoice generation**
-- **Reporting dashboard**
-- **AI-based contractor suggestions**
-- **On-chain escrow**
-- **Contractor ratings & reviews**
-- **Automated Payments**
-
-<h3>
-  <p align="center">
-    Made with ❤️ by <a href="https://www.mrmehta.in">kartikmehta8</a> for Community
-  </p>
-</h3>
+This project is licensed under the [MIT License](LICENSE).
