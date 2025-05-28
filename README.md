@@ -14,8 +14,8 @@ A modern open-source platform to manage bounties, contributors, payments, and DA
 | DAO App        | [https://app.thedaotool.com](https://app.thedaotool.com)                                 |
 | Docs           | [https://docs.thedaotool.com](https://docs.thedaotool.com)                               |
 | GitHub         | [https://github.com/kartikmehta8/thedaotool](https://github.com/kartikmehta8/thedaotool) |
-| X              | [https://x.com/thedaotool](https://twitter.com/thedaotool)                               |
-| Discord        | [https://discord.gg/j22jFHA7](https://discord.gg/j22jFHA7)                               |
+| X              | [https://x.com/thedaotool](https://x.com/thedaotool)                               |
+| Discord        | [https://discord.gg/VsyDp52Saq](https://discord.gg/VsyDp52Saq)                               |
 
 **Follow us on [X](https://x.com/thedaotool) for the latest updates, feature releases, and announcements.**
 
