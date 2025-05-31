@@ -4,12 +4,7 @@ import {
   updateBounty,
   unassignContributor,
 } from '../../api/organization/bounties';
-import {
-  getContributorData,
-  updateContributorData,
-} from '../../api/organization/profile';
 
-import { createPayee, sendPayment } from '../../api/payman';
 import toast from '../../utils/toast';
 import formatDateBounty from '../../utils/formatDateBounty';
 
@@ -18,7 +13,6 @@ const { Option } = Select;
 const ViewBountyModal = ({
   visible,
   bounty,
-  apiKey,
   onCancel,
   onUpdateSuccess,
   setSelectedBounty,
@@ -37,40 +31,6 @@ const ViewBountyModal = ({
     } catch (err) {
       console.error(err);
       toast.error('Failed to update bounty');
-    }
-  };
-
-  const handlePayeeSetup = async () => {
-    if (!bounty?.contributorInfo || !apiKey) return;
-    try {
-      const contributorData = await getContributorData(bounty.contributorId);
-      if (contributorData.payeeId) {
-        toast.warning('Payee already exists for this contributor');
-        return;
-      }
-      await createPayee(bounty.contributorInfo, apiKey, bounty.contributorId);
-      await updateContributorData(bounty.contributorId, {
-        payeeId: contributorData.payeeId,
-      });
-      toast.success('Payee created successfully');
-    } catch (err) {
-      toast.error('Failed to create payee');
-    }
-  };
-
-  const handleSendPayment = async () => {
-    if (!bounty?.contributorInfo || !apiKey) return;
-    try {
-      const contributorData = await getContributorData(bounty.contributorId);
-      const payeeId = contributorData?.payeeId || '';
-      if (!payeeId) {
-        toast.warning('Please create payee first');
-        return;
-      }
-      await sendPayment(bounty, payeeId, apiKey);
-      toast.success('Payment sent successfully');
-    } catch (err) {
-      toast.error('Failed to send payment');
     }
   };
 
@@ -164,22 +124,14 @@ const ViewBountyModal = ({
             {bounty.submittedLink || 'Not submitted yet'}
           </p>
           <Divider />
-          <Button
-            type="dashed"
-            onClick={handlePayeeSetup}
-            block
-            style={{ marginBottom: 10 }}
-          >
-            Create Payee
-          </Button>
-          <Button
+          {/* <Button
             type="primary"
             onClick={handleSendPayment}
             block
             style={{ marginBottom: 10 }}
           >
             Send Payment
-          </Button>
+          </Button> */}
           <Button danger onClick={handleUnassign} block>
             Unassign Contributor
           </Button>
