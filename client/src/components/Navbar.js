@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Layout, Button, Space } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { getPaymanBalance } from '../api/payman';
 
 const { Header } = Layout;
 
@@ -9,21 +8,6 @@ const Navbar = () => {
   const navigate = useNavigate();
   const localUser = JSON.parse(localStorage.getItem('payman-user'));
   const role = localUser?.role;
-  const uid = localUser?.uid;
-
-  const [balance, setBalance] = useState(null);
-
-  useEffect(() => {
-    const fetchBalance = async () => {
-      if (role === 'organization' && uid) {
-        const usd = await getPaymanBalance(uid);
-        if (usd !== null) {
-          setBalance(usd);
-        }
-      }
-    };
-    fetchBalance();
-  }, [uid, role]);
 
   const handleLogout = () => {
     localStorage.removeItem('payman-user');
@@ -54,9 +38,6 @@ const Navbar = () => {
         </span>
       </div>
       <Space>
-        {role === 'organization' && balance !== null && (
-          <span style={{ color: '#3fefb4' }}>${balance.toFixed(2)}</span>
-        )}
         <Button type="default" onClick={() => navigate('/payment-history')}>
           Payments
         </Button>

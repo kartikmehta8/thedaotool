@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Typography, Button, Row } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { getBountysForOrganization } from '../../api/organization/bounties';
-import { getApiKey } from '../../api/payman';
 
 import {
   ChatModal,
@@ -20,15 +19,11 @@ const OrganizationDashboard = () => {
   const [chatModal, setChatModal] = useState(false);
   const [chatBountyId, setChatBountyId] = useState(null);
   const [selectedBounty, setSelectedBounty] = useState(null);
-  const [apiKey, setApiKey] = useState('');
 
   const user = JSON.parse(localStorage.getItem('payman-user')) || {};
   const uid = user.uid;
 
   const fetchBountys = async () => {
-    const key = await getApiKey(uid);
-    setApiKey(key);
-
     const fetchedBountys = await getBountysForOrganization(uid);
     setBountys(fetchedBountys);
   };
@@ -83,7 +78,6 @@ const OrganizationDashboard = () => {
         <ViewBountyModal
           visible={viewModal}
           bounty={selectedBounty}
-          apiKey={apiKey}
           onCancel={() => setViewModal(false)}
           onUpdateSuccess={fetchBountys}
           setSelectedBounty={setSelectedBounty}
