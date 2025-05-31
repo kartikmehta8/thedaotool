@@ -26,7 +26,8 @@ const ContributorProfile = () => {
   const { user } = useAuth();
   const email = user.email;
   const uid = user.uid;
-  const emailVerified = JSON.parse(localStorage.getItem('payman-user'))?.emailVerified || false;
+  const emailVerified =
+    JSON.parse(localStorage.getItem('payman-user'))?.emailVerified || false;
 
   const [token, setToken] = useState('');
   const [otpSent, setOtpSent] = useState(false);

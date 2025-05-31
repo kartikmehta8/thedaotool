@@ -1,12 +1,22 @@
 import React from 'react';
-import { Modal, Divider, Select, Button, InputNumber, Row, Col } from 'antd';
+import {
+  Modal,
+  Divider,
+  Select,
+  Button,
+  Input,
+  InputNumber,
+  Row,
+  Col,
+  DatePicker,
+  Tag,
+} from 'antd';
+import dayjs from 'dayjs';
 import {
   updateBounty,
   unassignContributor,
 } from '../../api/organization/bounties';
-
 import toast from '../../utils/toast';
-import formatDateBounty from '../../utils/formatDateBounty';
 
 const { Option } = Select;
 
@@ -21,9 +31,12 @@ const ViewBountyModal = ({
     try {
       await updateBounty({
         ...bounty,
-        deadline: bounty.deadline
-          ? new Date(bounty.deadline._seconds * 1000).toISOString() // TODO: Handle date conversion properly.
-          : null,
+        deadline:
+          bounty.deadline instanceof Date
+            ? bounty.deadline.toISOString()
+            : bounty.deadline?._seconds
+              ? new Date(bounty.deadline._seconds * 1000).toISOString()
+              : null,
       });
       toast.success('Bounty updated successfully');
       onUpdateSuccess();
@@ -46,36 +59,55 @@ const ViewBountyModal = ({
 
   return (
     <Modal
-      title={bounty?.name}
+      title="Edit Bounty"
       open={visible}
       onCancel={onCancel}
       onOk={handleSaveUpdate}
       okText="Save Changes"
-      width={600}
+      width={700}
     >
-      <p>
-        <strong>Description:</strong> {bounty.description}
-      </p>
-
-      {bounty.github && bounty.issueLink && (
-        <p>
-          <a href={bounty.issueLink} target="_blank" rel="noopener noreferrer">
-            <strong>Issue Link</strong>
-          </a>
-        </p>
-      )}
-
-      <p>
-        <strong>Deadline:</strong>{' '}
-        {bounty.deadline ? formatDateBounty(bounty.deadline) : '—'}
-      </p>
-
-      <Divider />
-      <p>
-        <strong>Amount & Status:</strong>
-      </p>
-      <Row gutter={12}>
-        <Col xs={24} sm={12}>
+      <Row gutter={[16, 16]}>
+        <Col span={24}>
+          <Input
+            placeholder="Bounty Name"
+            value={bounty.name}
+            onChange={(e) =>
+              setSelectedBounty({ ...bounty, name: e.target.value })
+            }
+          />
+        </Col>
+        <Col span={24}>
+          <Input.TextArea
+            placeholder="Bounty Description"
+            rows={4}
+            value={bounty.description}
+            onChange={(e) =>
+              setSelectedBounty({ ...bounty, description: e.target.value })
+            }
+          />
+        </Col>
+        <Col span={24}>
+          <DatePicker
+            style={{ width: '100%' }}
+            placeholder="Deadline"
+            value={
+              bounty.deadline
+                ? dayjs(
+                    bounty.deadline._seconds
+                      ? bounty.deadline._seconds * 1000
+                      : bounty.deadline
+                  )
+                : null
+            }
+            onChange={(date) =>
+              setSelectedBounty({
+                ...bounty,
+                deadline: date ? date.toDate() : null,
+              })
+            }
+          />
+        </Col>
+        <Col span={12}>
           <InputNumber
             min={0}
             value={bounty.amount}
@@ -87,7 +119,7 @@ const ViewBountyModal = ({
             placeholder="Amount"
           />
         </Col>
-        <Col xs={24} sm={12}>
+        <Col span={12}>
           <Select
             value={bounty.status}
             onChange={(val) => setSelectedBounty({ ...bounty, status: val })}
@@ -99,44 +131,63 @@ const ViewBountyModal = ({
             <Option value="closed">Closed</Option>
           </Select>
         </Col>
+        <Col span={24}>
+          <Select
+            mode="tags"
+            style={{ width: '100%' }}
+            placeholder="Tags"
+            value={bounty.tags || []}
+            onChange={(tags) => setSelectedBounty({ ...bounty, tags })}
+          />
+        </Col>
+        {bounty.github && bounty.issueLink && (
+          <Col span={24}>
+            <Input
+              placeholder="Issue Link"
+              value={bounty.issueLink}
+              onChange={(e) =>
+                setSelectedBounty({ ...bounty, issueLink: e.target.value })
+              }
+            />
+          </Col>
+        )}
+        {bounty.submittedLink && (
+          <Col span={24}>
+            <Input
+              placeholder="Submitted Work Link"
+              value={bounty.submittedLink}
+              onChange={(e) =>
+                setSelectedBounty({ ...bounty, submittedLink: e.target.value })
+              }
+            />
+          </Col>
+        )}
+        {bounty.contributorId && (
+          <>
+            <Col span={24}>
+              <Divider />
+              <p>
+                <strong>Contributor:</strong>{' '}
+                {bounty.contributorInfo?.linkedin ? (
+                  <a
+                    href={bounty.contributorInfo.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ color: '#69b1ff', fontWeight: 'bold' }}
+                  >
+                    {bounty.contributorInfo.name || 'View Profile'}
+                  </a>
+                ) : (
+                  <Tag>{bounty.contributorId}</Tag>
+                )}
+              </p>
+              <Button danger onClick={handleUnassign} block>
+                Unassign Contributor
+              </Button>
+            </Col>
+          </>
+        )}
       </Row>
-
-      {bounty.contributorId && (
-        <>
-          <Divider />
-          <p>
-            <strong>Contributor:</strong>{' '}
-            {bounty.contributorInfo?.linkedin ? (
-              <a
-                href={bounty.contributorInfo.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ color: '#69b1ff', fontWeight: 'bold' }}
-              >
-                {bounty.contributorInfo.name || 'View Profile'}
-              </a>
-            ) : (
-              bounty.contributorId
-            )}
-          </p>
-          <p>
-            <strong>Work Link:</strong>{' '}
-            {bounty.submittedLink || 'Not submitted yet'}
-          </p>
-          <Divider />
-          {/* <Button
-            type="primary"
-            onClick={handleSendPayment}
-            block
-            style={{ marginBottom: 10 }}
-          >
-            Send Payment
-          </Button> */}
-          <Button danger onClick={handleUnassign} block>
-            Unassign Contributor
-          </Button>
-        </>
-      )}
     </Modal>
   );
 };
