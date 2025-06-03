@@ -102,18 +102,19 @@ const OrganizationProfile = () => {
   return (
     <Layout style={{ minHeight: '100vh', backgroundColor: '#141414' }}>
       <Content
+        className="page-container"
         style={{
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
           flexDirection: 'column',
-          marginTop: 50,
-          marginBottom: 50,
         }}
       >
         <Card
-          style={{ width: 500, backgroundColor: '#1f1f1f', marginBottom: 20 }}
+          className="form-card"
+          style={{ backgroundColor: '#1f1f1f', marginBottom: 20 }}
           loading={loading}
+          bodyStyle={{ padding: '1rem' }}
         >
           <Title level={3} style={{ color: '#fff', textAlign: 'center' }}>
             Organization Profile
@@ -178,8 +179,10 @@ const OrganizationProfile = () => {
           </Form>
         </Card>
         <Card
-          style={{ width: 500, backgroundColor: '#1f1f1f', marginBottom: 20 }}
+          className="form-card"
+          style={{ backgroundColor: '#1f1f1f', marginBottom: 20 }}
           loading={loading}
+          bodyStyle={{ padding: '1rem' }}
         >
           {/* <PaymanIntegration user={user} /> */}
         </Card>
@@ -190,8 +193,10 @@ const OrganizationProfile = () => {
           <GitHubIntegration user={user} />
         </Card>
         <Card
-          style={{ width: 500, backgroundColor: '#1f1f1f' }}
+          className="form-card"
+          style={{ backgroundColor: '#1f1f1f' }}
           loading={loading}
+          bodyStyle={{ padding: '1rem' }}
         >
           <DiscordIntegration user={user} />
         </Card>

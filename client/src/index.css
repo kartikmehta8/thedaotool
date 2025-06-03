@@ -10,3 +10,12 @@ html {
   color: #fff;
   margin: 0;
 }
+
+.page-container {
+  padding: 2rem;
+}
+
+.form-card {
+  width: 100%;
+  max-width: 500px;
+}

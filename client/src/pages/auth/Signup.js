@@ -47,12 +47,9 @@ const Signup = () => {
         }}
       >
         <Card
-          style={{
-            width: 400,
-            backgroundColor: '#1f1f1f',
-            color: '#fff',
-            marginTop: 100,
-          }}
+          className="form-card"
+          style={{ backgroundColor: '#1f1f1f', color: '#fff', marginTop: 100 }}
+          bodyStyle={{ padding: '1rem' }}
         >
           <Title level={3} style={{ color: '#fff', textAlign: 'center' }}>
             Sign Up
