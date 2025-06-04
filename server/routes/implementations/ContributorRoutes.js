@@ -3,6 +3,7 @@ const ContributorController = require('../../controllers/contributorController')
 const AuthMiddleware = require('../../middlewares/implementations/AuthMiddleware');
 const ValidationMiddleware = require('../../middlewares/implementations/ValidationMiddleware');
 const contributorValidator = require('../../validators/contributorValidators');
+const EmailVerifiedMiddleware = require('../../middlewares/implementations/EmailVerifiedMiddleware');
 const IRoute = require('../IRoute');
 
 class ContributorRoutes extends IRoute {
@@ -13,12 +14,14 @@ class ContributorRoutes extends IRoute {
 
     router.post(
       '/apply',
+      EmailVerifiedMiddleware.requireVerified,
       ValidationMiddleware.use(contributorValidator.applyToBountySchema),
       ContributorController.applyToBounty
     );
 
     router.post(
       '/submit',
+      EmailVerifiedMiddleware.requireVerified,
       ValidationMiddleware.use(contributorValidator.submitWorkSchema),
       ContributorController.submitWork
     );
