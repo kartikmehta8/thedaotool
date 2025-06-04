@@ -1,6 +1,7 @@
 const express = require('express');
 const OrganizationController = require('../../controllers/organizationController');
 const AuthMiddleware = require('../../middlewares/implementations/AuthMiddleware');
+const EmailVerifiedMiddleware = require('../../middlewares/implementations/EmailVerifiedMiddleware');
 const ValidationMiddleware = require('../../middlewares/implementations/ValidationMiddleware');
 const organizationValidator = require('../../validators/organizationValidators');
 const IRoute = require('../IRoute');
@@ -13,6 +14,7 @@ class OrganizationRoutes extends IRoute {
 
     router.post(
       '/bounty',
+      EmailVerifiedMiddleware.requireVerified,
       ValidationMiddleware.use(organizationValidator.createBountySchema),
       OrganizationController.createBounty
     );

@@ -5,8 +5,14 @@ import toast from '../../utils/toast';
 
 const SubmitWorkModal = ({ visible, bountyId, onCancel, onSubmitSuccess }) => {
   const [submission, setSubmission] = useState('');
+  const emailVerified =
+    JSON.parse(localStorage.getItem('payman-user'))?.emailVerified || false;
 
   const handleSubmitWork = async () => {
+    if (!emailVerified) {
+      toast.warning('Please verify your email before submitting work');
+      return;
+    }
     try {
       await submitWork(bountyId, submission);
       onSubmitSuccess();

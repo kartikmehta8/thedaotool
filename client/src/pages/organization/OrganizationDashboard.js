@@ -9,6 +9,8 @@ import {
   CreateBountyModal,
   ViewBountyModal,
 } from '../../components/organization';
+import EmailVerificationBanner from '../../components/EmailVerificationBanner';
+import toast from '../../utils/toast';
 
 const { Title } = Typography;
 
@@ -22,6 +24,7 @@ const OrganizationDashboard = () => {
 
   const user = JSON.parse(localStorage.getItem('payman-user')) || {};
   const uid = user.uid;
+  const emailVerified = user.emailVerified;
 
   const fetchBountys = async () => {
     const fetchedBountys = await getBountysForOrganization(uid);
@@ -43,9 +46,16 @@ const OrganizationDashboard = () => {
       <Title level={3} style={{ color: '#fff' }}>
         My Bounties
       </Title>
+      {!emailVerified && <EmailVerificationBanner email={user.email} />}
       <Button
         icon={<PlusOutlined />}
-        onClick={() => setModalVisible(true)}
+        onClick={() => {
+          if (!emailVerified) {
+            toast.warning('Please verify your email before creating a bounty');
+            return;
+          }
+          setModalVisible(true);
+        }}
         type="primary"
         style={{ marginBottom: 16 }}
       >

@@ -8,6 +8,7 @@ import {
   SubmitWorkModal,
   ChatModal,
 } from '../../components/contributor';
+import EmailVerificationBanner from '../../components/EmailVerificationBanner';
 
 const { Title } = Typography;
 
@@ -21,6 +22,7 @@ const ContributorDashboard = () => {
 
   const user = JSON.parse(localStorage.getItem('payman-user')) || {};
   const uid = user.uid;
+  const emailVerified = user.emailVerified;
 
   const loadBountys = async () => {
     const bountysData = await fetchBountysForContributor(uid);
@@ -55,6 +57,7 @@ const ContributorDashboard = () => {
       <Title level={3} style={{ color: '#fff' }}>
         Available Bounties
       </Title>
+      {!emailVerified && <EmailVerificationBanner email={user.email} />}
 
       <div style={{ marginBottom: '1rem' }}>
         <span style={{ color: '#fff', marginRight: '0.5rem' }}>

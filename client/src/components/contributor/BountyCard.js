@@ -20,7 +20,13 @@ const BountyCard = ({
   onOpenSubmitModal,
   onOpenChat,
 }) => {
+  const emailVerified =
+    JSON.parse(localStorage.getItem('payman-user'))?.emailVerified || false;
   const handleApplyToBounty = async () => {
+    if (!emailVerified) {
+      toast.warning('Please verify your email before applying');
+      return;
+    }
     try {
       await applyToBounty(bounty.id, userId);
       onRefetch();

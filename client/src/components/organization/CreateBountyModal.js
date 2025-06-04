@@ -5,8 +5,14 @@ import toast from '../../utils/toast';
 
 const CreateBountyModal = ({ visible, onCancel, onCreateSuccess, userId }) => {
   const [form] = Form.useForm();
+  const emailVerified =
+    JSON.parse(localStorage.getItem('payman-user'))?.emailVerified || false;
 
   const handleCreate = async () => {
+    if (!emailVerified) {
+      toast.warning('Please verify your email before creating a bounty');
+      return;
+    }
     try {
       const values = await form.validateFields();
       await createBounty(values, userId);
