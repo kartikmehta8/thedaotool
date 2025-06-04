@@ -16,7 +16,7 @@ import {
 import {
   GitHubIntegration,
   DiscordIntegration,
-  PaymanIntegration,
+  // PaymanIntegration,
 } from '../../components/organization';
 import toast from '../../utils/toast';
 import { sendEmailVerification, verifyEmailToken } from '../../api/auth';
@@ -181,7 +181,7 @@ const OrganizationProfile = () => {
           style={{ width: 500, backgroundColor: '#1f1f1f', marginBottom: 20 }}
           loading={loading}
         >
-          <PaymanIntegration user={user} />
+          {/* <PaymanIntegration user={user} /> */}
         </Card>
         <Card
           style={{ width: 500, backgroundColor: '#1f1f1f', marginBottom: 20 }}
