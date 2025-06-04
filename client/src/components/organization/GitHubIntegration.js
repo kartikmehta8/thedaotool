@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Typography, Space, Select, Spin } from 'antd';
-import { getOrganizationProfile } from '../../api/organization/profile';
 import {
   disconnectGitHub,
   fetchGitHubRepos,
@@ -12,30 +11,22 @@ import toast from '../../utils/toast';
 const { Paragraph, Text } = Typography;
 const { Option } = Select;
 
-const GitHubIntegration = ({ user }) => {
-  const [profile, setProfile] = useState({});
+const GitHubIntegration = ({ uid, profile, setProfile }) => {
   const [repos, setRepos] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [selectingRepo, setSelectingRepo] = useState(false);
-
-  const uid = user.uid;
-
   useEffect(() => {
-    const load = async () => {
-      const data = await getOrganizationProfile(uid);
-      setProfile(data || {});
-      setLoading(false);
-
-      if (data?.githubToken) {
+    const loadRepos = async () => {
+      if (profile?.githubToken) {
         setSelectingRepo(true);
         const repoList = await fetchGitHubRepos(uid);
         setRepos(repoList);
         setSelectingRepo(false);
+      } else {
+        setRepos([]);
       }
     };
-
-    load();
-  }, [uid]);
+    loadRepos();
+  }, [profile?.githubToken, uid]);
 
   const handleOAuth = async () => {
     const redirectUrl = await handleAuth(uid);
@@ -57,8 +48,6 @@ const GitHubIntegration = ({ user }) => {
     setRepos([]);
     setProfile((prev) => ({ ...prev, githubToken: '', repo: '' }));
   };
-
-  if (loading) return <Spin />;
 
   return (
     <>

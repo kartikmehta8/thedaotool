@@ -190,7 +190,11 @@ const OrganizationProfile = () => {
           style={{ width: 500, backgroundColor: '#1f1f1f', marginBottom: 20 }}
           loading={loading}
         >
-          <GitHubIntegration user={user} />
+          <GitHubIntegration
+            uid={uid}
+            profile={profile}
+            setProfile={setProfile}
+          />
         </Card>
         <Card
           className="form-card"
@@ -198,7 +202,11 @@ const OrganizationProfile = () => {
           loading={loading}
           bodyStyle={{ padding: '1rem' }}
         >
-          <DiscordIntegration user={user} />
+          <DiscordIntegration
+            uid={uid}
+            profile={profile}
+            setProfile={setProfile}
+          />
         </Card>
       </Content>
     </Layout>
