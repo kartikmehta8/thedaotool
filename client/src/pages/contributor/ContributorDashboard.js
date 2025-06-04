@@ -27,7 +27,9 @@ const ContributorDashboard = () => {
   const loadBountys = async () => {
     const bountysData = await fetchBountysForContributor(uid);
     setBountys(bountysData);
+  };
 
+  const loadSkills = async () => {
     const profile = await getContributorProfile(uid);
     if (profile?.skills) {
       const formattedSkills = profile.skills
@@ -39,6 +41,7 @@ const ContributorDashboard = () => {
 
   useEffect(() => {
     loadBountys();
+    loadSkills();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
