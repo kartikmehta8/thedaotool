@@ -1,9 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { Layout, Typography, Input, Button, Card, Form } from 'antd';
+import {
+  Layout,
+  Typography,
+  Input,
+  Button,
+  Card,
+  Form,
+  Space,
+  Tag,
+} from 'antd';
 import {
   fetchContributorProfile,
   saveContributorProfile,
 } from '../../api/contributor/profile';
+import { sendEmailVerification, verifyEmailToken } from '../../api/auth';
 import { useAuth } from '../../context/AuthContext';
 import toast from '../../utils/toast';
 
@@ -16,6 +26,11 @@ const ContributorProfile = () => {
   const { user } = useAuth();
   const email = user.email;
   const uid = user.uid;
+  const emailVerified =
+    JSON.parse(localStorage.getItem('payman-user'))?.emailVerified || false;
+
+  const [token, setToken] = useState('');
+  const [otpSent, setOtpSent] = useState(false);
 
   const defaultFields = {
     name: '',
@@ -56,6 +71,28 @@ const ContributorProfile = () => {
     }
   };
 
+  const handleSendVerification = async () => {
+    try {
+      await sendEmailVerification(email);
+      toast.success('Verification email sent');
+      setOtpSent(true);
+    } catch (err) {
+      toast.error(err.message);
+    }
+  };
+
+  const handleVerifyToken = async () => {
+    try {
+      await verifyEmailToken(email, token);
+      toast.success('Email verified');
+      user.emailVerified = true;
+      localStorage.setItem('payman-user', JSON.stringify(user));
+      setOtpSent(false);
+    } catch (err) {
+      toast.error(err.message);
+    }
+  };
+
   return (
     <Layout style={{ minHeight: '100vh', backgroundColor: '#141414' }}>
       <Content
@@ -81,6 +118,32 @@ const ContributorProfile = () => {
             <Form.Item name="email" label="Email">
               <Input value={email} disabled style={{ color: '#ccc' }} />
             </Form.Item>
+            {!emailVerified ? (
+              <>
+                <Space style={{ marginBottom: 10 }}>
+                  <Tag color="red">Email not verified</Tag>
+                  <Button size="small" onClick={handleSendVerification}>
+                    Send Verification OTP
+                  </Button>
+                </Space>
+                {otpSent && (
+                  <Space direction="vertical" style={{ width: '100%' }}>
+                    <Input
+                      placeholder="Enter OTP"
+                      value={token}
+                      onChange={(e) => setToken(e.target.value)}
+                    />
+                    <Button block type="primary" onClick={handleVerifyToken}>
+                      Verify Email
+                    </Button>
+                  </Space>
+                )}
+              </>
+            ) : (
+              <Tag color="green" style={{ marginBottom: 10 }}>
+                Email Verified
+              </Tag>
+            )}
             <Form.Item name="roleTitle" label="Your Role / Title">
               <Input placeholder="Frontend Engineer, Designer, etc." />
             </Form.Item>

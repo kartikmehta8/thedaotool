@@ -23,7 +23,7 @@ const updateBountySchema = {
     deadline: Joi.date().allow('').optional(),
     amount: Joi.number().min(1).optional(),
     status: Joi.string()
-      .valid('open', 'in_progress', 'submitted', 'pending_payment', 'closed')
+      .valid('open', 'assigned', 'submitted', 'pending_payment', 'closed')
       .optional(),
     submittedLink: Joi.string().uri().allow('').optional(),
     contributorId: Joi.string().allow(null).optional(),

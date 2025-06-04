@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Input, Typography, Card, Layout } from 'antd';
+import { Button, Input, Typography, Card, Layout, Flex } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { loginUser } from '../../api/auth';
 import { saveUserToStorage } from '../../utils/localStorage';
@@ -69,14 +69,23 @@ const Login = () => {
           >
             Log In
           </Button>
-          <Button
-            type="link"
-            block
-            onClick={() => navigate('/signup')}
-            style={{ marginTop: 10 }}
+          <Flex
+            direction="column"
+            justify="center"
+            align="center"
+            style={{ marginTop: 20 }}
           >
-            Don't have an account?
-          </Button>
+            <Button type="link" block onClick={() => navigate('/signup')}>
+              Don't have an account?
+            </Button>
+            <Button
+              type="link"
+              block
+              onClick={() => navigate('/forgot-password')}
+            >
+              Forgot Password?
+            </Button>
+          </Flex>
         </Card>
       </Content>
     </Layout>
