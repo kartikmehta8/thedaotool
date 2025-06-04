@@ -4,19 +4,20 @@ import {
   Divider,
   Select,
   Button,
-  Input,
   InputNumber,
-  Row,
-  Col,
+  Input,
   DatePicker,
   Tag,
+  Row,
+  Col,
+  Grid,
 } from 'antd';
-import dayjs from 'dayjs';
 import {
   updateBounty,
   unassignContributor,
 } from '../../api/organization/bounties';
 import toast from '../../utils/toast';
+import dayjs from 'dayjs';
 
 const { Option } = Select;
 
@@ -57,6 +58,8 @@ const ViewBountyModal = ({
     }
   };
 
+  const screens = Grid.useBreakpoint();
+
   return (
     <Modal
       title="Edit Bounty"
@@ -64,7 +67,8 @@ const ViewBountyModal = ({
       onCancel={onCancel}
       onOk={handleSaveUpdate}
       okText="Save Changes"
-      width={700}
+      width={screens.xs ? '100%' : 600}
+      bodyStyle={{ maxHeight: '60vh', overflowY: 'auto' }}
     >
       <Row gutter={[16, 16]}>
         <Col span={24}>

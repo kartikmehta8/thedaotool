@@ -14,7 +14,7 @@ const Dashboard = () => {
   return (
     <Layout style={{ minHeight: '100vh', backgroundColor: '#141414' }}>
       <Navbar />
-      <Content style={{ padding: '2rem' }}>
+      <Content className="page-container">
         {role === 'organization' && <OrganizationDashboard />}
         {role === 'contributor' && <ContributorDashboard />}
         {!role && (

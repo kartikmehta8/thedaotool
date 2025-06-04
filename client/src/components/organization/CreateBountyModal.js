@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Form, Input, DatePicker, Button } from 'antd';
+import { Modal, Form, Input, DatePicker, Button, Tooltip, Grid } from 'antd';
 import { createBounty } from '../../api/organization/bounties';
 import toast from '../../utils/toast';
 
@@ -19,6 +19,8 @@ const CreateBountyModal = ({ visible, onCancel, onCreateSuccess, userId }) => {
     }
   };
 
+  const screens = Grid.useBreakpoint();
+
   return (
     <Modal
       title="Create New Bounty"
@@ -26,6 +28,8 @@ const CreateBountyModal = ({ visible, onCancel, onCreateSuccess, userId }) => {
       onCancel={onCancel}
       footer={null}
       closeIcon={<span style={{ color: '#fff', fontSize: '16px' }}>×</span>}
+      width={screens.xs ? '100%' : 600}
+      bodyStyle={{ maxHeight: '60vh', overflowY: 'auto' }}
     >
       <Form layout="vertical" form={form}>
         <Form.Item
@@ -58,7 +62,14 @@ const CreateBountyModal = ({ visible, onCancel, onCreateSuccess, userId }) => {
         </Form.Item>
         <Form.Item
           name="tags"
-          label="Tags (comma separated)"
+          label={
+            <span>
+              Tags (comma separated)
+              <Tooltip title="Used for skill matching" placement="right">
+                <span style={{ marginLeft: 4, cursor: 'help' }}>?</span>
+              </Tooltip>
+            </span>
+          }
           rules={[{ required: false }]}
         >
           <Input />

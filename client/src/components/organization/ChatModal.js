@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Input, List } from 'antd';
+import { Modal, Input, List, Grid } from 'antd';
 import { listenToMessages, sendMessage } from '../../realtime/chat';
 
 const ChatModal = ({ visible, bountyId, userId, onClose }) => {
@@ -31,13 +31,16 @@ const ChatModal = ({ visible, bountyId, userId, onClose }) => {
     onClose();
   };
 
+  const screens = Grid.useBreakpoint();
+
   return (
     <Modal
       open={visible}
       onCancel={handleModalClose}
       title="Chat with Contributor"
       footer={null}
-      width={600}
+      width={screens.xs ? '100%' : 600}
+      bodyStyle={{ maxHeight: '60vh', overflowY: 'auto' }}
     >
       <div
         style={{

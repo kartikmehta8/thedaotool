@@ -39,7 +39,7 @@ const OrganizationDashboard = () => {
   }, []);
 
   return (
-    <div style={{ padding: '2rem' }}>
+    <div className="page-container">
       <Title level={3} style={{ color: '#fff' }}>
         My Bounties
       </Title>

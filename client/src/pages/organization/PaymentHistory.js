@@ -57,18 +57,26 @@ const OrganizationPaymentHistory = ({ user }) => {
   }, [user.uid]);
 
   return (
-    <Card
-      title={<Title level={4}>Payment History</Title>}
-      style={{ margin: 24 }}
-    >
-      <Table
-        dataSource={data}
-        columns={columns}
-        loading={loading}
-        rowKey={(record) => record.id}
-        pagination={{ pageSize: 5 }}
-      />
-    </Card>
+    <div className="page-container">
+      <Card
+        title={
+          <Title level={4} style={{ color: '#fff' }}>
+            Payment History
+          </Title>
+        }
+        style={{ backgroundColor: '#1f1f1f' }}
+        bodyStyle={{ padding: '1rem' }}
+      >
+        <Table
+          dataSource={data}
+          columns={columns}
+          loading={loading}
+          rowKey={(record) => record.id}
+          pagination={{ pageSize: 5 }}
+          scroll={{ x: 'max-content' }}
+        />
+      </Card>
+    </div>
   );
 };
 
