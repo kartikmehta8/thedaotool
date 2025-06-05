@@ -15,41 +15,47 @@ async function syncGitHubIssues() {
       try {
         const issues = await GithubService.fetchOpenIssues(repo, githubToken);
 
-        for (const issue of issues) {
-          await FirestoreService.addDocument('bounties', {
-            name: issue.title,
-            description: issue.body,
-            githubIssueId: issue.id,
-            deadline: '',
-            organizationId,
-            issueLink: issue.html_url,
-            status: 'open',
-            createdAt: new Date().toISOString(),
-            github: true,
-            submittedLink: '',
-            tags: issue.labels.map((l) => l.name),
-          });
+        const bountyDocs = issues.map((issue) => ({
+          name: issue.title,
+          description: issue.body,
+          githubIssueId: issue.id,
+          deadline: '',
+          organizationId,
+          issueLink: issue.html_url,
+          status: 'open',
+          createdAt: new Date().toISOString(),
+          github: true,
+          submittedLink: '',
+          tags: issue.labels.map((l) => l.name),
+        }));
 
-          const updatedLabels = GithubService.prepareUpdatedLabels(
-            issue.labels
-          );
+        await FirestoreService.addDocumentsBatch('bounties', bountyDocs);
 
-          await GithubService.updateIssueLabels(
-            repo,
-            issue.number,
-            updatedLabels,
-            githubToken
-          );
+        await Promise.all(
+          issues.map((issue) => {
+            const updatedLabels = GithubService.prepareUpdatedLabels(
+              issue.labels
+            );
 
-          await postToDiscord({
-            organizationId,
-            name: issue.title,
-            description: issue.body,
-            amount: 'TBD',
-          });
+            return GithubService.updateIssueLabels(
+              repo,
+              issue.number,
+              updatedLabels,
+              githubToken
+            );
+          })
+        );
 
-          console.log(`Synced issue #${issue.number} from ${repo}`);
-        }
+        await Promise.all(
+          issues.map((issue) =>
+            postToDiscord({
+              organizationId,
+              name: issue.title,
+              description: issue.body,
+              amount: 'TBD',
+            })
+          )
+        );
       } catch (err) {
         console.error(`Error syncing issues for repo ${repo}:`, err.message);
       }

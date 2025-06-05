@@ -70,6 +70,15 @@ class FirestoreService {
     return db.collection(collectionName).add(encryptSensitiveFields(data));
   }
 
+  async addDocumentsBatch(collectionName, docs) {
+    const batch = db.batch();
+    docs.forEach((doc) => {
+      const ref = db.collection(collectionName).doc();
+      batch.set(ref, encryptSensitiveFields(doc));
+    });
+    await batch.commit();
+  }
+
   async queryDocuments(collectionName, field, operator, value) {
     const snapshot = await db
       .collection(collectionName)

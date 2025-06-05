@@ -6,7 +6,6 @@ class LoginAttemptCleanupJob extends ICronJob {
   schedule() {
     // Schedule: every 60 seconds.
     cron.schedule('* * * * *', async () => {
-      console.log('Running login attempt cleanup...');
       await RealtimeDatabaseService.removeData('loginAttempts');
     });
   }

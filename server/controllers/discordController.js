@@ -18,47 +18,32 @@ class DiscordController {
       return res.status(400).send('Missing OAuth parameters.');
     }
 
-    try {
-      const userId = DiscordService.extractUserIdFromState(state);
-      if (!userId) {
-        return res.status(400).send('Invalid state parameter.');
-      }
-
-      const accessToken = await DiscordService.exchangeCodeForToken(
-        code,
-        process.env.SERVER_URL + '/api/discord/callback'
-      );
-      await DiscordService.saveAccessTokenToOrganization(userId, accessToken);
-      res.redirect(`${process.env.FRONTEND_URL}/profile/organization`);
-    } catch (err) {
-      res.status(500).send('Discord authorization failed.');
+    const userId = DiscordService.extractUserIdFromState(state);
+    if (!userId) {
+      return res.status(400).send('Invalid state parameter.');
     }
+
+    const accessToken = await DiscordService.exchangeCodeForToken(
+      code,
+      process.env.SERVER_URL + '/api/discord/callback'
+    );
+    await DiscordService.saveAccessTokenToOrganization(userId, accessToken);
+    res.redirect(`${process.env.FRONTEND_URL}/profile/organization`);
   }
 
   async getDiscordChannels(req, res) {
-    try {
-      const channels = await DiscordService.fetchMutualGuildChannels(
-        req.params.uid
-      );
-      return ResponseHelper.success(res, 'Channels fetched', { channels });
-    } catch (err) {
-      if (err.message === 'Unauthorized') {
-        return ResponseHelper.unauthorized(res);
-      }
-      return ResponseHelper.error(res, 'Failed to fetch channels');
-    }
+    const channels = await DiscordService.fetchMutualGuildChannels(
+      req.params.uid
+    );
+    return ResponseHelper.success(res, 'Channels fetched', { channels });
   }
 
   async saveDiscordChannel(req, res) {
     const { uid } = req.params;
     const { channelId } = req.body;
 
-    try {
-      await DiscordService.saveDiscordChannel(uid, channelId);
-      return ResponseHelper.success(res, 'Channel saved');
-    } catch (err) {
-      return ResponseHelper.error(res, 'Failed to save channel');
-    }
+    await DiscordService.saveDiscordChannel(uid, channelId);
+    return ResponseHelper.success(res, 'Channel saved');
   }
 }
 

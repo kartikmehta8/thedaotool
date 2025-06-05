@@ -2,6 +2,7 @@ const express = require('express');
 const AuthController = require('../../controllers/authController');
 const ValidationMiddleware = require('../../middlewares/implementations/ValidationMiddleware');
 const authValidator = require('../../validators/authValidators');
+const catchAsync = require('../../utils/catchAsync');
 const IRoute = require('../IRoute');
 
 class AuthRoutes extends IRoute {
@@ -11,33 +12,33 @@ class AuthRoutes extends IRoute {
     router.post(
       '/login',
       ValidationMiddleware.use({ body: authValidator.loginSchema }),
-      AuthController.loginUser
+      catchAsync(AuthController.loginUser)
     );
     router.post(
       '/signup',
       ValidationMiddleware.use({ body: authValidator.signupSchema }),
-      AuthController.signupUser
+      catchAsync(AuthController.signupUser)
     );
     router.post(
       '/forgot-password',
       ValidationMiddleware.use({ body: authValidator.emailSchema }),
-      AuthController.sendPasswordReset
+      catchAsync(AuthController.sendPasswordReset)
     );
     router.post(
       '/reset-password',
       ValidationMiddleware.use({ body: authValidator.resetPasswordSchema }),
-      AuthController.resetPassword
+      catchAsync(AuthController.resetPassword)
     );
 
     router.post(
       '/verify-email',
       ValidationMiddleware.use({ body: authValidator.emailSchema }),
-      AuthController.sendEmailVerification
+      catchAsync(AuthController.sendEmailVerification)
     );
     router.post(
       '/verify-token',
       ValidationMiddleware.use({ body: authValidator.verifyTokenSchema }),
-      AuthController.verifyOTPToken
+      catchAsync(AuthController.verifyOTPToken)
     );
 
     app.use('/api/auth', router);

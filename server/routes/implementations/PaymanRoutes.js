@@ -1,6 +1,7 @@
 const express = require('express');
 const PaymanController = require('../../controllers/paymanController');
 const AuthMiddleware = require('../../middlewares/implementations/AuthMiddleware');
+const catchAsync = require('../../utils/catchAsync');
 const IRoute = require('../IRoute');
 
 class PaymanRoutes extends IRoute {
@@ -9,10 +10,10 @@ class PaymanRoutes extends IRoute {
 
     router.use(AuthMiddleware.authenticate(['organization']));
 
-    router.get('/key/:uid', PaymanController.getApiKey);
-    router.post('/payee', PaymanController.createPayee);
-    router.post('/send', PaymanController.sendPayment);
-    router.get('/balance/:uid', PaymanController.getPaymanBalance);
+    router.get('/key/:uid', catchAsync(PaymanController.getApiKey));
+    router.post('/payee', catchAsync(PaymanController.createPayee));
+    router.post('/send', catchAsync(PaymanController.sendPayment));
+    router.get('/balance/:uid', catchAsync(PaymanController.getPaymanBalance));
 
     app.use('/api/payman', router);
   }

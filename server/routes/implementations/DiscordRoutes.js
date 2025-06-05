@@ -3,6 +3,7 @@ const DiscordController = require('../../controllers/discordController');
 const AuthMiddleware = require('../../middlewares/implementations/AuthMiddleware');
 const ValidationMiddleware = require('../../middlewares/implementations/ValidationMiddleware');
 const discordValidator = require('../../validators/discordValidators');
+const catchAsync = require('../../utils/catchAsync');
 const IRoute = require('../IRoute');
 
 class DiscordRoutes extends IRoute {
@@ -12,26 +13,26 @@ class DiscordRoutes extends IRoute {
     router.get(
       '/oauth',
       ValidationMiddleware.use(discordValidator.initiateOAuthSchema),
-      DiscordController.initiateOAuth
+      catchAsync(DiscordController.initiateOAuth)
     );
 
     router.get(
       '/callback',
       ValidationMiddleware.use(discordValidator.callbackSchema),
-      DiscordController.handleCallback
+      catchAsync(DiscordController.handleCallback)
     );
 
     router.get(
       '/channels/:uid',
       AuthMiddleware.authenticate(['organization']),
       ValidationMiddleware.use(discordValidator.uidParamSchema),
-      DiscordController.getDiscordChannels
+      catchAsync(DiscordController.getDiscordChannels)
     );
     router.put(
       '/channel/:uid',
       AuthMiddleware.authenticate(['organization']),
       ValidationMiddleware.use(discordValidator.saveChannelSchema),
-      DiscordController.saveDiscordChannel
+      catchAsync(DiscordController.saveDiscordChannel)
     );
 
     app.use('/api/discord', router);

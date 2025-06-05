@@ -4,6 +4,7 @@ const AuthMiddleware = require('../../middlewares/implementations/AuthMiddleware
 const ValidationMiddleware = require('../../middlewares/implementations/ValidationMiddleware');
 const contributorValidator = require('../../validators/contributorValidators');
 const EmailVerifiedMiddleware = require('../../middlewares/implementations/EmailVerifiedMiddleware');
+const catchAsync = require('../../utils/catchAsync');
 const IRoute = require('../IRoute');
 
 class ContributorRoutes extends IRoute {
@@ -16,44 +17,44 @@ class ContributorRoutes extends IRoute {
       '/apply',
       EmailVerifiedMiddleware.requireVerified,
       ValidationMiddleware.use(contributorValidator.applyToBountySchema),
-      ContributorController.applyToBounty
+      catchAsync(ContributorController.applyToBounty)
     );
 
     router.post(
       '/submit',
       EmailVerifiedMiddleware.requireVerified,
       ValidationMiddleware.use(contributorValidator.submitWorkSchema),
-      ContributorController.submitWork
+      catchAsync(ContributorController.submitWork)
     );
 
     router.get(
       '/bounties/:uid',
       ValidationMiddleware.use(contributorValidator.uidParamSchema),
-      ContributorController.fetchBounties
+      catchAsync(ContributorController.fetchBounties)
     );
 
     router.get(
       '/profile/:uid',
       ValidationMiddleware.use(contributorValidator.getProfileOrPaymentsSchema),
-      ContributorController.getProfile
+      catchAsync(ContributorController.getProfile)
     );
 
     router.put(
       '/profile/:uid',
       ValidationMiddleware.use(contributorValidator.saveProfileSchema),
-      ContributorController.saveProfile
+      catchAsync(ContributorController.saveProfile)
     );
 
     router.put(
       '/unassign',
       ValidationMiddleware.use(contributorValidator.unassignSelfSchema),
-      ContributorController.unassignSelf
+      catchAsync(ContributorController.unassignSelf)
     );
 
     router.get(
       '/payments/:uid',
       ValidationMiddleware.use(contributorValidator.getProfileOrPaymentsSchema),
-      ContributorController.getContributorPayments
+      catchAsync(ContributorController.getContributorPayments)
     );
 
     app.use('/api/contributor', router);
