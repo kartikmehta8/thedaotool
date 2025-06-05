@@ -1,6 +1,6 @@
 const FirestoreService = require('../database/FirestoreService');
 const RealtimeDatabaseService = require('../database/RealtimeDatabaseService');
-const triggerEmail = require('../../utils/triggerEmail');
+const EmailService = require('../misc/EmailService');
 
 class ContributorService {
   async applyToBounty(bountyId, userId) {
@@ -9,7 +9,8 @@ class ContributorService {
       contributorId: userId,
     });
 
-    await triggerEmail('bountyAssignedToOrganization', bountyId, {
+    await EmailService.sendBountyAssignedToOrganization({
+      bountyId,
       contributorId: userId,
     });
   }
@@ -20,7 +21,8 @@ class ContributorService {
       submittedLink,
     });
 
-    await triggerEmail('submissionNotificationToOrganization', bountyId, {
+    await EmailService.sendSubmissionNotificationToOrganization({
+      bountyId,
       submittedLink,
     });
   }
