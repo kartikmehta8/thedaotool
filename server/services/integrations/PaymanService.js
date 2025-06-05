@@ -1,6 +1,6 @@
 const Paymanai = require('paymanai');
 const FirestoreService = require('../database/FirestoreService');
-const triggerEmail = require('../../utils/triggerEmail');
+const EmailService = require('../misc/EmailService');
 
 class PaymanService {
   getClient(apiKey) {
@@ -64,7 +64,8 @@ class PaymanService {
       }
     );
 
-    await triggerEmail('paymentSentToContributor', bounty.id, {
+    await EmailService.sendPaymentSentToContributor({
+      bountyId: bounty.id,
       amount: bounty.amount,
     });
   }
