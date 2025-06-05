@@ -1,9 +1,9 @@
 const express = require('express');
-const DiscordController = require('../../controllers/discordController');
-const AuthMiddleware = require('../../middlewares/implementations/AuthMiddleware');
-const ValidationMiddleware = require('../../middlewares/implementations/ValidationMiddleware');
-const discordValidator = require('../../validators/discordValidators');
-const catchAsync = require('../../utils/catchAsync');
+const DiscordController = require('@controllers/discordController');
+const AuthMiddleware = require('@middlewares/implementations/auth/AuthMiddleware');
+const ValidationMiddleware = require('@middlewares/implementations/validation/ValidationMiddleware');
+const discordValidator = require('@validators/discordValidators');
+const catchAsync = require('@utils/catchAsync');
 const IRoute = require('../IRoute');
 
 class DiscordRoutes extends IRoute {

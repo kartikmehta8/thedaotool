@@ -1,6 +1,6 @@
-const FirestoreService = require('../database/FirestoreService');
-const RealtimeDatabaseService = require('../database/RealtimeDatabaseService');
-const EmailService = require('../misc/EmailService');
+const FirestoreService = require('@services/database/FirestoreService');
+const RealtimeDatabaseService = require('@services/database/RealtimeDatabaseService');
+const EmailService = require('@services/misc/EmailService');
 
 class ContributorService {
   async applyToBounty(bountyId, userId) {

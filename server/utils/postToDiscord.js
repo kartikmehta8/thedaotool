@@ -1,5 +1,5 @@
 const axios = require('axios');
-const FirestoreService = require('../services/database/FirestoreService');
+const FirestoreService = require('@services/database/FirestoreService');
 
 const BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
 

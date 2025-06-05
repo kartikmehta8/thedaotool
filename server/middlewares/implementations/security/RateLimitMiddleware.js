@@ -1,5 +1,5 @@
 const rateLimit = require('express-rate-limit');
-const IMiddleware = require('../IMiddleware');
+const IMiddleware = require('@middlewares/IMiddleware');
 
 class RateLimitMiddleware extends IMiddleware {
   constructor() {

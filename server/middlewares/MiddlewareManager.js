@@ -7,17 +7,29 @@ class MiddlewareManager {
   }
 
   loadMiddlewares() {
-    const middlewares = [];
     const implementationsPath = path.join(__dirname, 'implementations');
-    const files = fs.readdirSync(implementationsPath);
+    const files = this.getFilesRecursively(implementationsPath);
 
-    files.forEach((file) => {
-      const MiddlewareClass = require(path.join(implementationsPath, file));
-      const instance = new MiddlewareClass();
-      middlewares.push(instance);
+    return files.map((file) => {
+      const MiddlewareClass = require(file);
+      return new MiddlewareClass();
     });
+  }
 
-    return middlewares;
+  getFilesRecursively(dir) {
+    const entries = fs.readdirSync(dir, { withFileTypes: true });
+    let files = [];
+
+    for (const entry of entries) {
+      const fullPath = path.join(dir, entry.name);
+      if (entry.isDirectory()) {
+        files = files.concat(this.getFilesRecursively(fullPath));
+      } else if (entry.isFile() && fullPath.endsWith('.js')) {
+        files.push(fullPath);
+      }
+    }
+
+    return files;
   }
 
   applyMiddlewares(app) {

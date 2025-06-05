@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const ResponseHelper = require('../../utils/ResponseHelper');
+const ResponseHelper = require('@utils/ResponseHelper');
 
 class AuthMiddleware {
   static authenticate(allowedRoles = []) {

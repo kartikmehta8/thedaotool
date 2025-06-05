@@ -46,6 +46,16 @@
     "node-cron": "^3.0.3",
     "nodemailer": "^6.10.0",
     "paymanai": "^2.7.0",
-    "socket.io": "^4.8.1"
+    "socket.io": "^4.8.1",
+    "module-alias": "^2.2.2"
+  },
+  "_moduleAliases": {
+    "@controllers": "./controllers",
+    "@middlewares": "./middlewares",
+    "@routes": "./routes",
+    "@services": "./services",
+    "@utils": "./utils",
+    "@validators": "./validators",
+    "@cron": "./cron"
   }
 }

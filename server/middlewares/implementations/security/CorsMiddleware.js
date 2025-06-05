@@ -1,5 +1,5 @@
 const cors = require('cors');
-const IMiddleware = require('../IMiddleware');
+const IMiddleware = require('@middlewares/IMiddleware');
 require('dotenv').config();
 
 class CorsMiddleware extends IMiddleware {

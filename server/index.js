@@ -1,4 +1,5 @@
 require('dotenv').config();
+require('module-alias/register');
 const express = require('express');
 const http = require('http');
 
@@ -6,10 +7,10 @@ const app = express();
 const server = http.createServer(app);
 const initSocket = require('./sockets/chat');
 
-const MiddlewareManager = require('./middlewares/MiddlewareManager');
-const RouteManager = require('./routes/RouteManager');
-const CronManager = require('./cron/CronManager');
-const ErrorHandlerMiddleware = require('./middlewares/implementations/ErrorHandlerMiddleware');
+const MiddlewareManager = require('@middlewares/MiddlewareManager');
+const RouteManager = require('@routes/RouteManager');
+const CronManager = require('@cron/CronManager');
+const ErrorHandlerMiddleware = require('@middlewares/implementations/core/ErrorHandlerMiddleware');
 
 const middlewareManager = new MiddlewareManager();
 middlewareManager.applyMiddlewares(app);

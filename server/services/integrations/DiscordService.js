@@ -1,5 +1,5 @@
 const axios = require('axios');
-const FirestoreService = require('../database/FirestoreService');
+const FirestoreService = require('@services/database/FirestoreService');
 const crypto = require('crypto');
 
 const CLIENT_ID = process.env.DISCORD_CLIENT_ID;

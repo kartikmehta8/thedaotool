@@ -1,5 +1,5 @@
 const compression = require('compression');
-const IMiddleware = require('../IMiddleware');
+const IMiddleware = require('@middlewares/IMiddleware');
 
 class CompressionMiddleware extends IMiddleware {
   constructor() {

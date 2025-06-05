@@ -1,5 +1,5 @@
-const IMiddleware = require('../IMiddleware');
-const ResponseHelper = require('../../utils/ResponseHelper');
+const IMiddleware = require('@middlewares/IMiddleware');
+const ResponseHelper = require('@utils/ResponseHelper');
 
 class ErrorHandlerMiddleware extends IMiddleware {
   apply(app) {

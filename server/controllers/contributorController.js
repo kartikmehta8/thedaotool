@@ -1,5 +1,5 @@
-const ContributorService = require('../services/user/ContributorService');
-const ResponseHelper = require('../utils/ResponseHelper');
+const ContributorService = require('@services/user/ContributorService');
+const ResponseHelper = require('@utils/ResponseHelper');
 
 class ContributorController {
   async applyToBounty(req, res) {

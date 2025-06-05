@@ -1,5 +1,5 @@
-const UserService = require('../../services/user/UserService');
-const ResponseHelper = require('../../utils/ResponseHelper');
+const UserService = require('@services/user/UserService');
+const ResponseHelper = require('@utils/ResponseHelper');
 
 class EmailVerifiedMiddleware {
   static async requireVerified(req, res, next) {

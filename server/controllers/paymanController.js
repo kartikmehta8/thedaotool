@@ -1,6 +1,6 @@
-const PaymanService = require('../services/integrations/PaymanService');
-const ResponseHelper = require('../utils/ResponseHelper');
-const FirestoreService = require('../services/database/FirestoreService');
+const PaymanService = require('@services/integrations/PaymanService');
+const ResponseHelper = require('@utils/ResponseHelper');
+const FirestoreService = require('@services/database/FirestoreService');
 
 class PaymanController {
   async getApiKey(req, res) {

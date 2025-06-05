@@ -1,6 +1,6 @@
-const FirestoreService = require('../database/FirestoreService');
-const RealtimeDatabaseService = require('../database/RealtimeDatabaseService');
-const postToDiscord = require('../../utils/postToDiscord');
+const FirestoreService = require('@services/database/FirestoreService');
+const RealtimeDatabaseService = require('@services/database/RealtimeDatabaseService');
+const postToDiscord = require('@utils/postToDiscord');
 
 class OrganizationService {
   async createBounty(values, userId) {

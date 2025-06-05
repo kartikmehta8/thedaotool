@@ -1,9 +1,9 @@
-const FirestoreService = require('../database/FirestoreService');
+const FirestoreService = require('@services/database/FirestoreService');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const LoginThrottleService = require('../misc/LoginThrottleService');
-const OTPService = require('../misc/OTPTokenService');
-const EmailService = require('../misc/EmailService');
+const LoginThrottleService = require('@services/misc/LoginThrottleService');
+const OTPService = require('@services/misc/OTPTokenService');
+const EmailService = require('@services/misc/EmailService');
 
 const MAX_ATTEMPTS = Number(process.env.MAX_LOGIN_ATTEMPTS || 3);
 const SALT_ROUNDS = 10;
