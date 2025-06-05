@@ -1,7 +1,7 @@
 const express = require('express');
-const PaymanController = require('../../controllers/paymanController');
-const AuthMiddleware = require('../../middlewares/implementations/AuthMiddleware');
-const catchAsync = require('../../utils/catchAsync');
+const PaymanController = require('@controllers/paymanController');
+const AuthMiddleware = require('@middlewares/implementations/auth/AuthMiddleware');
+const catchAsync = require('@utils/catchAsync');
 const IRoute = require('../IRoute');
 
 class PaymanRoutes extends IRoute {

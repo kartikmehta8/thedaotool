@@ -1,5 +1,5 @@
-const OrganizationService = require('../services/user/OrganizationService');
-const ResponseHelper = require('../utils/ResponseHelper');
+const OrganizationService = require('@services/user/OrganizationService');
+const ResponseHelper = require('@utils/ResponseHelper');
 
 class OrganizationController {
   async createBounty(req, res) {

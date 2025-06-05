@@ -1,9 +1,9 @@
 const express = require('express');
-const GithubController = require('../../controllers/githubController');
-const AuthMiddleware = require('../../middlewares/implementations/AuthMiddleware');
-const ValidationMiddleware = require('../../middlewares/implementations/ValidationMiddleware');
-const githubValidator = require('../../validators/githubValidators');
-const catchAsync = require('../../utils/catchAsync');
+const GithubController = require('@controllers/githubController');
+const AuthMiddleware = require('@middlewares/implementations/auth/AuthMiddleware');
+const ValidationMiddleware = require('@middlewares/implementations/validation/ValidationMiddleware');
+const githubValidator = require('@validators/githubValidators');
+const catchAsync = require('@utils/catchAsync');
 const IRoute = require('../IRoute');
 
 class GithubRoutes extends IRoute {

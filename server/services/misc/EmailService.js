@@ -1,5 +1,5 @@
-const sendMail = require('../../utils/mailer');
-const FirestoreService = require('../database/FirestoreService');
+const sendMail = require('@utils/mailer');
+const FirestoreService = require('@services/database/FirestoreService');
 
 class EmailService {
   async sendVerificationEmail({ to, token }) {

@@ -1,5 +1,5 @@
-const GithubService = require('../services/integrations/GithubService');
-const ResponseHelper = require('../utils/ResponseHelper');
+const GithubService = require('@services/integrations/GithubService');
+const ResponseHelper = require('@utils/ResponseHelper');
 
 class GithubController {
   async initiateOAuth(req, res) {

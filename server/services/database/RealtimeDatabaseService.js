@@ -1,4 +1,4 @@
-const { rtdb } = require('../../utils/firebase');
+const { rtdb } = require('@utils/firebase');
 
 class RealtimeDatabaseService {
   getRef(path) {

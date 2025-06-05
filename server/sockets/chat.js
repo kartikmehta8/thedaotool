@@ -1,5 +1,5 @@
 const { Server } = require('socket.io');
-const { rtdb } = require('../utils/firebase');
+const { rtdb } = require('@utils/firebase');
 
 const listeners = {};
 

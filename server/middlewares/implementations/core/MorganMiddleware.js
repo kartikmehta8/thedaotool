@@ -1,5 +1,5 @@
 const morgan = require('morgan');
-const IMiddleware = require('../IMiddleware');
+const IMiddleware = require('@middlewares/IMiddleware');
 
 class MorganMiddleware extends IMiddleware {
   constructor() {

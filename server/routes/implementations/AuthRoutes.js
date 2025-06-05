@@ -1,8 +1,8 @@
 const express = require('express');
-const AuthController = require('../../controllers/authController');
-const ValidationMiddleware = require('../../middlewares/implementations/ValidationMiddleware');
-const authValidator = require('../../validators/authValidators');
-const catchAsync = require('../../utils/catchAsync');
+const AuthController = require('@controllers/authController');
+const ValidationMiddleware = require('@middlewares/implementations/validation/ValidationMiddleware');
+const authValidator = require('@validators/authValidators');
+const catchAsync = require('@utils/catchAsync');
 const IRoute = require('../IRoute');
 
 class AuthRoutes extends IRoute {

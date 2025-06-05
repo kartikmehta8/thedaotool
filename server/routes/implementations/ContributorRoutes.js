@@ -1,10 +1,10 @@
 const express = require('express');
-const ContributorController = require('../../controllers/contributorController');
-const AuthMiddleware = require('../../middlewares/implementations/AuthMiddleware');
-const ValidationMiddleware = require('../../middlewares/implementations/ValidationMiddleware');
-const contributorValidator = require('../../validators/contributorValidators');
-const EmailVerifiedMiddleware = require('../../middlewares/implementations/EmailVerifiedMiddleware');
-const catchAsync = require('../../utils/catchAsync');
+const ContributorController = require('@controllers/contributorController');
+const AuthMiddleware = require('@middlewares/implementations/auth/AuthMiddleware');
+const ValidationMiddleware = require('@middlewares/implementations/validation/ValidationMiddleware');
+const contributorValidator = require('@validators/contributorValidators');
+const EmailVerifiedMiddleware = require('@middlewares/implementations/auth/EmailVerifiedMiddleware');
+const catchAsync = require('@utils/catchAsync');
 const IRoute = require('../IRoute');
 
 class ContributorRoutes extends IRoute {

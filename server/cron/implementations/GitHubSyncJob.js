@@ -1,6 +1,6 @@
 const cron = require('node-cron');
-const syncGitHubIssues = require('../functions/syncGitHubIssues');
-const ICronJob = require('../ICronJob');
+const syncGitHubIssues = require('@cron/functions/syncGitHubIssues');
+const ICronJob = require('@cron/ICronJob');
 
 class GitHubSyncJob extends ICronJob {
   schedule() {

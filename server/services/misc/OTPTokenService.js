@@ -1,5 +1,5 @@
 const crypto = require('crypto');
-const FirestoreService = require('../database/FirestoreService');
+const FirestoreService = require('@services/database/FirestoreService');
 
 const OTP_COLLECTION = 'otp_tokens';
 const OTP_EXPIRY_MINUTES = 15;

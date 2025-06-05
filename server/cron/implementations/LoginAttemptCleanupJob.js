@@ -1,6 +1,6 @@
 const cron = require('node-cron');
-const ICronJob = require('../ICronJob');
-const RealtimeDatabaseService = require('../../services/database/RealtimeDatabaseService');
+const ICronJob = require('@cron/ICronJob');
+const RealtimeDatabaseService = require('@services/database/RealtimeDatabaseService');
 
 class LoginAttemptCleanupJob extends ICronJob {
   schedule() {

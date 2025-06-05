@@ -1,4 +1,4 @@
-const IMiddleware = require('../IMiddleware');
+const IMiddleware = require('@middlewares/IMiddleware');
 
 class ContentTypeValidatorMiddleware extends IMiddleware {
   apply(app) {

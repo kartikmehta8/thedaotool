@@ -1,5 +1,5 @@
 const express = require('express');
-const IMiddleware = require('../IMiddleware');
+const IMiddleware = require('@middlewares/IMiddleware');
 
 class BodyParserMiddleware extends IMiddleware {
   apply(app) {

@@ -1,10 +1,10 @@
 const express = require('express');
-const OrganizationController = require('../../controllers/organizationController');
-const AuthMiddleware = require('../../middlewares/implementations/AuthMiddleware');
-const EmailVerifiedMiddleware = require('../../middlewares/implementations/EmailVerifiedMiddleware');
-const ValidationMiddleware = require('../../middlewares/implementations/ValidationMiddleware');
-const organizationValidator = require('../../validators/organizationValidators');
-const catchAsync = require('../../utils/catchAsync');
+const OrganizationController = require('@controllers/organizationController');
+const AuthMiddleware = require('@middlewares/implementations/auth/AuthMiddleware');
+const EmailVerifiedMiddleware = require('@middlewares/implementations/auth/EmailVerifiedMiddleware');
+const ValidationMiddleware = require('@middlewares/implementations/validation/ValidationMiddleware');
+const organizationValidator = require('@validators/organizationValidators');
+const catchAsync = require('@utils/catchAsync');
 const IRoute = require('../IRoute');
 
 class OrganizationRoutes extends IRoute {

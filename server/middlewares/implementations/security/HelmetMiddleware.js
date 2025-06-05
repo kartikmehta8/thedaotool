@@ -1,5 +1,5 @@
 const helmet = require('helmet');
-const IMiddleware = require('../IMiddleware');
+const IMiddleware = require('@middlewares/IMiddleware');
 
 class HelmetMiddleware extends IMiddleware {
   constructor() {

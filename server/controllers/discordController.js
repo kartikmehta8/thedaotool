@@ -1,5 +1,5 @@
-const DiscordService = require('../services/integrations/DiscordService');
-const ResponseHelper = require('../utils/ResponseHelper');
+const DiscordService = require('@services/integrations/DiscordService');
+const ResponseHelper = require('@utils/ResponseHelper');
 
 class DiscordController {
   initiateOAuth(req, res) {

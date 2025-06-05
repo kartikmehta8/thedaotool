@@ -1,4 +1,4 @@
-const RealtimeDatabaseService = require('../database/RealtimeDatabaseService');
+const RealtimeDatabaseService = require('@services/database/RealtimeDatabaseService');
 
 class LoginThrottleService {
   getUserKey(email) {
