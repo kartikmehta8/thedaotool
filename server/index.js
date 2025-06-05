@@ -18,7 +18,6 @@ middlewareManager.applyMiddlewares(app);
 const routeManager = new RouteManager();
 routeManager.applyRoutes(app);
 
-// Apply centralized error handler after all routes
 new ErrorHandlerMiddleware().apply(app);
 
 const cronManager = new CronManager();
