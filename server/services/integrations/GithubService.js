@@ -72,7 +72,11 @@ class GithubService {
     );
     const { githubToken } = organizationData || {};
 
-    if (!githubToken) throw new Error('GitHub not authorized');
+    if (!githubToken) {
+      const err = new Error('GitHub not authorized');
+      err.status = 401;
+      throw err;
+    }
 
     const response = await axios.get('https://api.github.com/user/repos', {
       headers: { Authorization: `Bearer ${githubToken}` },
@@ -88,7 +92,11 @@ class GithubService {
     );
     const { githubToken } = organizationData || {};
 
-    if (!githubToken) throw new Error('GitHub not authorized');
+    if (!githubToken) {
+      const err = new Error('GitHub not authorized');
+      err.status = 401;
+      throw err;
+    }
 
     await axios.get(`https://api.github.com/repos/${repoName}`, {
       headers: { Authorization: `Bearer ${githubToken}` },

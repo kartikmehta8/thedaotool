@@ -4,9 +4,8 @@ const ICronJob = require('../ICronJob');
 
 class GitHubSyncJob extends ICronJob {
   schedule() {
-    // Schedule: every 20 seconds.
-    cron.schedule('*/20 * * * * *', async () => {
-      console.log('Running GitHub issue sync...');
+    // Schedule: every 10 minutes.
+    cron.schedule('0 */10 * * * *', async () => {
       await syncGitHubIssues();
     });
   }

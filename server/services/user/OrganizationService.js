@@ -31,7 +31,6 @@ class OrganizationService {
   }
 
   async getBounties(organizationId) {
-    const bounties = [];
     const bountyList = await FirestoreService.queryDocuments(
       'bounties',
       'organizationId',
@@ -39,21 +38,23 @@ class OrganizationService {
       organizationId
     );
 
-    for (const bounty of bountyList) {
-      let contributorInfo = null;
+    const bounties = await Promise.all(
+      bountyList.map(async (bounty) => {
+        let contributorInfo = null;
 
-      if (bounty.contributorId) {
-        const contributor = await FirestoreService.getDocument(
-          'contributors',
-          bounty.contributorId
-        );
-        if (contributor) {
-          contributorInfo = { id: bounty.contributorId, ...contributor };
+        if (bounty.contributorId) {
+          const contributor = await FirestoreService.getDocument(
+            'contributors',
+            bounty.contributorId
+          );
+          if (contributor) {
+            contributorInfo = { id: bounty.contributorId, ...contributor };
+          }
         }
-      }
 
-      bounties.push({ ...bounty, contributorInfo });
-    }
+        return { ...bounty, contributorInfo };
+      })
+    );
 
     return bounties;
   }

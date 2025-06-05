@@ -3,6 +3,7 @@ const GithubController = require('../../controllers/githubController');
 const AuthMiddleware = require('../../middlewares/implementations/AuthMiddleware');
 const ValidationMiddleware = require('../../middlewares/implementations/ValidationMiddleware');
 const githubValidator = require('../../validators/githubValidators');
+const catchAsync = require('../../utils/catchAsync');
 const IRoute = require('../IRoute');
 
 class GithubRoutes extends IRoute {
@@ -12,26 +13,26 @@ class GithubRoutes extends IRoute {
     router.get(
       '/auth',
       ValidationMiddleware.use(githubValidator.initiateOAuthSchema),
-      GithubController.initiateOAuth
+      catchAsync(GithubController.initiateOAuth)
     );
 
     router.get(
       '/callback',
       ValidationMiddleware.use(githubValidator.callbackSchema),
-      GithubController.handleCallback
+      catchAsync(GithubController.handleCallback)
     );
 
     router.get(
       '/repos/:uid',
       AuthMiddleware.authenticate(['organization']),
       ValidationMiddleware.use(githubValidator.uidParamSchema),
-      GithubController.listRepos
+      catchAsync(GithubController.listRepos)
     );
     router.post(
       '/repo/:uid',
       AuthMiddleware.authenticate(['organization']),
       ValidationMiddleware.use(githubValidator.saveRepoSchema),
-      GithubController.saveSelectedRepo
+      catchAsync(GithubController.saveSelectedRepo)
     );
 
     app.use('/api/github', router);

@@ -12,7 +12,8 @@ module.exports = function initSocket(server) {
   });
 
   io.on('connection', (socket) => {
-    console.log(`Socket connected: ${socket.id}`);
+    // eslint-disable-next-line no-console
+    console.info(`Socket connected: ${socket.id}`);
 
     socket.on('join-bounty', (bountyId) => joinBounty(socket, io, bountyId));
     socket.on('send-message', (data) => sendMessage(data));
@@ -73,5 +74,6 @@ async function sendMessage({ bountyId, senderId, senderName, text }) {
 }
 
 function handleDisconnect(socket) {
-  console.log(`Disconnected: ${socket.id}`);
+  // eslint-disable-next-line no-console
+  console.info(`Disconnected: ${socket.id}`);
 }

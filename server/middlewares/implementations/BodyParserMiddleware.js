@@ -1,14 +1,9 @@
-const bodyParser = require('body-parser');
+const express = require('express');
 const IMiddleware = require('../IMiddleware');
 
 class BodyParserMiddleware extends IMiddleware {
-  constructor() {
-    super();
-    this.middleware = bodyParser.json();
-  }
-
   apply(app) {
-    app.use(this.middleware);
+    app.use(express.json());
   }
 }
 

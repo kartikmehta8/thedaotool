@@ -9,6 +9,7 @@ const initSocket = require('./sockets/chat');
 const MiddlewareManager = require('./middlewares/MiddlewareManager');
 const RouteManager = require('./routes/RouteManager');
 const CronManager = require('./cron/CronManager');
+const ErrorHandlerMiddleware = require('./middlewares/implementations/ErrorHandlerMiddleware');
 
 const middlewareManager = new MiddlewareManager();
 middlewareManager.applyMiddlewares(app);
@@ -16,11 +17,15 @@ middlewareManager.applyMiddlewares(app);
 const routeManager = new RouteManager();
 routeManager.applyRoutes(app);
 
+// Apply centralized error handler after all routes
+new ErrorHandlerMiddleware().apply(app);
+
 const cronManager = new CronManager();
 cronManager.scheduleJobs();
 
 initSocket(server);
 
 server.listen(process.env.PORT, () => {
-  console.log(`server: ${process.env.PORT}`);
+  // eslint-disable-next-line no-console
+  console.info(`server: ${process.env.PORT}`);
 });
