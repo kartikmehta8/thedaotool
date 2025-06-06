@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Typography, Tag } from 'antd';
+import { Card, Typography, Tag, Tabs } from 'antd';
 import {
   LineChart,
   Line,
@@ -77,55 +77,77 @@ const OrganizationInsights = ({ user }) => {
     .map(([date, count]) => ({ date, count }))
     .sort((a, b) => a.date.localeCompare(b.date));
 
+  const lineChart = (
+    <Card
+      style={{ backgroundColor: '#1f1f1f' }}
+      bodyStyle={{ padding: '1rem' }}
+    >
+      <Title level={4} style={{ color: '#fff' }}>
+        Bounties Created
+      </Title>
+      <ResponsiveContainer width="100%" height={300}>
+        <LineChart
+          data={monthlyData}
+          margin={{ top: 5, right: 20, left: 0, bottom: 5 }}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="date" />
+          <YAxis allowDecimals={false} />
+          <Tooltip />
+          <Line type="monotone" dataKey="count" stroke="#82ca9d" />
+        </LineChart>
+      </ResponsiveContainer>
+    </Card>
+  );
+
+  const pieChart = (
+    <Card
+      style={{ backgroundColor: '#1f1f1f' }}
+      bodyStyle={{ padding: '1rem' }}
+    >
+      <Title level={4} style={{ color: '#fff' }}>
+        Bounty Status Distribution
+      </Title>
+      <ResponsiveContainer width="100%" height={300}>
+        <PieChart>
+          <Pie
+            data={statusData}
+            dataKey="value"
+            nameKey="name"
+            cx="50%"
+            cy="50%"
+            outerRadius={120}
+            label
+          >
+            {statusData.map((entry, index) => (
+              <Cell key={index} fill={COLORS[index % COLORS.length]} />
+            ))}
+          </Pie>
+          <Tooltip />
+          <Legend />
+        </PieChart>
+      </ResponsiveContainer>
+    </Card>
+  );
+
+  const paymentsTable = (
+    <PaymentHistoryTable
+      fetchPayments={getOrganizationPayments}
+      userId={user.uid}
+      columns={columns}
+      title="Payment History"
+    />
+  );
+
+  const items = [
+    { key: 'line', label: 'Bounties Over Time', children: lineChart },
+    { key: 'pie', label: 'Status Distribution', children: pieChart },
+    { key: 'table', label: 'Payment History', children: paymentsTable },
+  ];
+
   return (
     <div className="page-container">
-      <Card
-        style={{ backgroundColor: '#1f1f1f', marginBottom: 20 }}
-        bodyStyle={{ padding: '1rem' }}
-      >
-        <Title level={4} style={{ color: '#fff' }}>
-          Bounties Created
-        </Title>
-        <ResponsiveContainer width="100%" height={300}>
-          <LineChart
-            data={monthlyData}
-            margin={{ top: 5, right: 20, left: 0, bottom: 5 }}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="date" />
-            <YAxis allowDecimals={false} />
-            <Tooltip />
-            <Line type="monotone" dataKey="count" stroke="#82ca9d" />
-          </LineChart>
-        </ResponsiveContainer>
-      </Card>
-
-      <Card
-        style={{ backgroundColor: '#1f1f1f', marginBottom: 20 }}
-        bodyStyle={{ padding: '1rem' }}
-      >
-        <Title level={4} style={{ color: '#fff' }}>
-          Bounty Status Distribution
-        </Title>
-        <ResponsiveContainer width="100%" height={300}>
-          <PieChart>
-            <Pie data={statusData} dataKey="value" nameKey="name" label>
-              {statusData.map((entry, index) => (
-                <Cell key={index} fill={COLORS[index % COLORS.length]} />
-              ))}
-            </Pie>
-            <Tooltip />
-            <Legend />
-          </PieChart>
-        </ResponsiveContainer>
-      </Card>
-
-      <PaymentHistoryTable
-        fetchPayments={getOrganizationPayments}
-        userId={user.uid}
-        columns={columns}
-        title="Payment History"
-      />
+      <Tabs defaultActiveKey="line" items={items} />
     </div>
   );
 };

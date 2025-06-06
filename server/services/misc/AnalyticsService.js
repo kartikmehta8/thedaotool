@@ -12,6 +12,7 @@ class AnalyticsService {
     const statusCounts = {
       open: 0,
       assigned: 0,
+      submitted: 0,
       pending_payment: 0,
       closed: 0,
     };
@@ -53,6 +54,7 @@ class AnalyticsService {
     const statusCounts = {
       open: 0,
       assigned: 0,
+      submitted: 0,
       pending_payment: 0,
       closed: 0,
     };
