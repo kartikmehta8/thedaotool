@@ -11,6 +11,7 @@ import {
 } from '../../components/organization';
 import EmailVerificationBanner from '../../components/EmailVerificationBanner';
 import toast from '../../utils/toast';
+import { useAuth } from '../../context/AuthContext';
 
 const { Title } = Typography;
 
@@ -22,7 +23,7 @@ const OrganizationDashboard = () => {
   const [chatBountyId, setChatBountyId] = useState(null);
   const [selectedBounty, setSelectedBounty] = useState(null);
 
-  const user = JSON.parse(localStorage.getItem('payman-user')) || {};
+  const { user } = useAuth();
   const uid = user.uid;
   const emailVerified = user.emailVerified;
 

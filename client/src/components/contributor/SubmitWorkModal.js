@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { Modal, Input, Grid } from 'antd';
 import { submitWork } from '../../api/contributor/bounties';
 import toast from '../../utils/toast';
+import { useAuth } from '../../context/AuthContext';
 
 const SubmitWorkModal = ({ visible, bountyId, onCancel, onSubmitSuccess }) => {
   const [submission, setSubmission] = useState('');
-  const emailVerified =
-    JSON.parse(localStorage.getItem('payman-user'))?.emailVerified || false;
+  const { user } = useAuth();
+  const emailVerified = user?.emailVerified || false;
 
   const handleSubmitWork = async () => {
     if (!emailVerified) {

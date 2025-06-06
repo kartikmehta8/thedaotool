@@ -2,11 +2,12 @@ import React from 'react';
 import { Modal, Form, Input, DatePicker, Button, Tooltip, Grid } from 'antd';
 import { createBounty } from '../../api/organization/bounties';
 import toast from '../../utils/toast';
+import { useAuth } from '../../context/AuthContext';
 
 const CreateBountyModal = ({ visible, onCancel, onCreateSuccess, userId }) => {
   const [form] = Form.useForm();
-  const emailVerified =
-    JSON.parse(localStorage.getItem('payman-user'))?.emailVerified || false;
+  const { user } = useAuth();
+  const emailVerified = user?.emailVerified || false;
 
   const handleCreate = async () => {
     if (!emailVerified) {

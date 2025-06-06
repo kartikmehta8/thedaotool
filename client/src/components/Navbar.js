@@ -2,19 +2,21 @@ import React, { useState } from 'react';
 import { Layout, Button, Space, Drawer, Grid } from 'antd';
 import { MenuOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const { Header } = Layout;
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const localUser = JSON.parse(localStorage.getItem('payman-user'));
-  const role = localUser?.role;
+  const { user, setUser } = useAuth();
+  const role = user?.role;
 
   const [drawerOpen, setDrawerOpen] = useState(false);
   const screens = Grid.useBreakpoint();
 
   const handleLogout = () => {
     localStorage.removeItem('payman-user');
+    setUser(null);
     navigate('/login');
   };
 

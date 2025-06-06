@@ -13,8 +13,8 @@ import {
   fetchContributorProfile,
   saveContributorProfile,
 } from '../../api/contributor/profile';
-import { sendEmailVerification, verifyEmailToken } from '../../api/auth';
 import { useAuth } from '../../context/AuthContext';
+import useEmailVerification from '../../hooks/useEmailVerification';
 import toast from '../../utils/toast';
 
 const { Content } = Layout;
@@ -26,11 +26,14 @@ const ContributorProfile = () => {
   const { user } = useAuth();
   const email = user.email;
   const uid = user.uid;
-  const emailVerified =
-    JSON.parse(localStorage.getItem('payman-user'))?.emailVerified || false;
-
-  const [token, setToken] = useState('');
-  const [otpSent, setOtpSent] = useState(false);
+  const {
+    token,
+    setToken,
+    otpSent,
+    emailVerified,
+    handleSendVerification,
+    handleVerifyToken,
+  } = useEmailVerification(email);
 
   const defaultFields = {
     name: '',
@@ -68,28 +71,6 @@ const ContributorProfile = () => {
       toast.success('Profile loaded successfully');
     } catch (err) {
       toast.error('Failed to save contributor profile');
-    }
-  };
-
-  const handleSendVerification = async () => {
-    try {
-      await sendEmailVerification(email);
-      toast.success('Verification email sent');
-      setOtpSent(true);
-    } catch (err) {
-      toast.error(err.message);
-    }
-  };
-
-  const handleVerifyToken = async () => {
-    try {
-      await verifyEmailToken(email, token);
-      toast.success('Email verified');
-      user.emailVerified = true;
-      localStorage.setItem('payman-user', JSON.stringify(user));
-      setOtpSent(false);
-    } catch (err) {
-      toast.error(err.message);
     }
   };
 

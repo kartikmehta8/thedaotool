@@ -1,14 +1,28 @@
-import Login from './auth/Login';
-import Signup from './auth/Signup';
-import ForgotPassword from './auth/ForgotPassword';
-import Dashboard from './Dashboard';
-import Landing from './Landing';
-import OrganizationDashboard from './organization/OrganizationDashboard';
-import ContributorDashboard from './contributor/ContributorDashboard';
-import OrganizationProfile from './organization/OrganizationProfile';
-import ContributorProfile from './contributor/ContributorProfile';
-import OrganizationPaymentHistory from './organization/PaymentHistory';
-import ContributorPaymentHistory from './contributor/PaymentHistory';
+import { lazy } from 'react';
+
+const Login = lazy(() => import('./auth/Login'));
+const Signup = lazy(() => import('./auth/Signup'));
+const ForgotPassword = lazy(() => import('./auth/ForgotPassword'));
+const Dashboard = lazy(() => import('./Dashboard'));
+const Landing = lazy(() => import('./Landing'));
+const OrganizationDashboard = lazy(
+  () => import('./organization/OrganizationDashboard')
+);
+const ContributorDashboard = lazy(
+  () => import('./contributor/ContributorDashboard')
+);
+const OrganizationProfile = lazy(
+  () => import('./organization/OrganizationProfile')
+);
+const ContributorProfile = lazy(
+  () => import('./contributor/ContributorProfile')
+);
+const OrganizationPaymentHistory = lazy(
+  () => import('./organization/PaymentHistory')
+);
+const ContributorPaymentHistory = lazy(
+  () => import('./contributor/PaymentHistory')
+);
 
 export {
   Login,

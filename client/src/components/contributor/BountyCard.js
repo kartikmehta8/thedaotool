@@ -3,6 +3,7 @@ import { Card, Typography, Tag, Button, Col } from 'antd';
 import { applyToBounty, unassignSelf } from '../../api/contributor/bounties';
 import toast from '../../utils/toast';
 import formatDateBounty from '../../utils/formatDateBounty';
+import { useAuth } from '../../context/AuthContext';
 
 const { Text } = Typography;
 
@@ -20,8 +21,8 @@ const BountyCard = ({
   onOpenSubmitModal,
   onOpenChat,
 }) => {
-  const emailVerified =
-    JSON.parse(localStorage.getItem('payman-user'))?.emailVerified || false;
+  const { user } = useAuth();
+  const emailVerified = user?.emailVerified || false;
   const handleApplyToBounty = async () => {
     if (!emailVerified) {
       toast.warning('Please verify your email before applying');

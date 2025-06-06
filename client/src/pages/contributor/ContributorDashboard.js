@@ -9,6 +9,7 @@ import {
   ChatModal,
 } from '../../components/contributor';
 import EmailVerificationBanner from '../../components/EmailVerificationBanner';
+import { useAuth } from '../../context/AuthContext';
 
 const { Title } = Typography;
 
@@ -20,7 +21,7 @@ const ContributorDashboard = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [chatModalVisible, setChatModalVisible] = useState(false);
 
-  const user = JSON.parse(localStorage.getItem('payman-user')) || {};
+  const { user } = useAuth();
   const uid = user.uid;
   const emailVerified = user.emailVerified;
 
