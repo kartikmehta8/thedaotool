@@ -1,12 +1,12 @@
 const cron = require('node-cron');
 const ICronJob = require('@cron/ICronJob');
-const OTPTokenService = require('@services/misc/OTPTokenService');
+const { otpCleanupQueue } = require('@queues');
 
 class OTPTokenCleanupJob extends ICronJob {
   schedule() {
     // Schedule: every 10 minutes
     cron.schedule('0 */10 * * * *', async () => {
-      await OTPTokenService.clearExpiredOTPs();
+      await otpCleanupQueue.add('otpCleanup', {});
     });
   }
 }

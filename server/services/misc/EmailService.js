@@ -1,5 +1,6 @@
 const sendMail = require('@utils/mailer');
 const FirestoreService = require('@services/database/FirestoreService');
+const { emailQueue } = require('@queues');
 
 class EmailService {
   async sendVerificationEmail({ to, token }) {
@@ -9,7 +10,7 @@ class EmailService {
       <p>This token expires in 15 minutes.</p>
     `;
 
-    return sendMail({
+    return emailQueue.add('email', {
       to,
       subject: 'Verify Your Email – The DAO Tool',
       text: `Verify your email`,
@@ -24,7 +25,7 @@ class EmailService {
       <p>This token will expire in 15 minutes. If you didn’t request this, you can ignore the message.</p>
     `;
 
-    return sendMail({
+    return emailQueue.add('email', {
       to,
       subject: 'Password Reset – The DAO Tool',
       text: `Reset your password`,
@@ -60,7 +61,7 @@ class EmailService {
         <p>Contributor Email: ${contributor.email}</p>
       `;
 
-      return sendMail({
+      return emailQueue.add('email', {
         to: recipient,
         subject: `New Contributor Assigned: ${bounty.name}`,
         text: `${contributor.name} has been assigned to your bounty "${bounty.name}".`,
@@ -99,7 +100,7 @@ class EmailService {
         <p>Check your dashboard to review and proceed.</p>
       `;
 
-      return sendMail({
+      return emailQueue.add('email', {
         to: recipient,
         subject: `Work Submitted: ${bounty.name}`,
         text: `${contributor.name} has submitted work for the bounty "${bounty.name}".`,
@@ -130,7 +131,7 @@ class EmailService {
         <p>You have received a payment of <strong>$${amount}</strong> for your work on bounty <strong>${bounty.name}</strong>.</p>
       `;
 
-      return sendMail({
+      return emailQueue.add('email', {
         to: recipient,
         subject: `Payment Sent for Bounty: ${bounty.name}`,
         text: `A payment of $${amount} has been sent for the bounty "${bounty.name}".`,
