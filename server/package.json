@@ -42,12 +42,11 @@
     "helmet": "^8.1.0",
     "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
+    "module-alias": "^2.2.2",
     "morgan": "^1.10.0",
     "node-cron": "^3.0.3",
     "nodemailer": "^6.10.0",
-    "paymanai": "^2.7.0",
-    "socket.io": "^4.8.1",
-    "module-alias": "^2.2.2"
+    "socket.io": "^4.8.1"
   },
   "_moduleAliases": {
     "@controllers": "./controllers",
