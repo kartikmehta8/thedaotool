@@ -22,7 +22,7 @@ class QueueService {
 
   process(name, handler, concurrency = 1) {
     const queue = this.getQueue(name);
-    queue.process(concurrency, async (job) => {
+    queue.process(name, concurrency, async (job) => {
       const start = new Date().toISOString();
       try {
         await handler(job.data);
@@ -31,6 +31,12 @@ class QueueService {
         console.error(`[${name}] ${start} failed`, err.message);
         throw err;
       }
+    });
+    queue.on('failed', (job, err) => {
+      console.error(`Job '${name}' failed`, err.message);
+    });
+    queue.on('completed', () => {
+      console.info(`Job '${name}' completed`);
     });
     console.info(`Queue '${name}' started with concurrency ${concurrency}`);
   }
