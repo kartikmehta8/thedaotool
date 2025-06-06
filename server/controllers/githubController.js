@@ -1,5 +1,6 @@
 const GithubService = require('@services/integrations/GithubService');
 const ResponseHelper = require('@utils/ResponseHelper');
+const { githubSyncQueue } = require('@queues');
 
 class GithubController {
   async initiateOAuth(req, res) {
@@ -36,6 +37,7 @@ class GithubController {
     }
 
     await GithubService.validateAndSaveRepo(uid, repo);
+    await githubSyncQueue.add('githubSync', {});
     return ResponseHelper.success(res, 'Repository saved');
   }
 }

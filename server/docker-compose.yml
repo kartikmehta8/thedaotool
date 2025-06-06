@@ -20,6 +20,13 @@ services:
       - JWT_EXPIRATION=${JWT_EXPIRATION}
       - MAX_LOGIN_ATTEMPTS=${MAX_LOGIN_ATTEMPTS}
       - ENCRYPTION_SECRET=${ENCRYPTION_SECRET}
+      - REDIS_URL=redis://redis:6379
+    restart: unless-stopped
+    networks:
+      - nginx_proxy_net
+
+  redis:
+    image: redis:alpine
     restart: unless-stopped
     networks:
       - nginx_proxy_net

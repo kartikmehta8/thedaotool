@@ -2,6 +2,7 @@ require('dotenv').config();
 require('module-alias/register');
 const express = require('express');
 const http = require('http');
+require('@queues');
 
 const app = express();
 const server = http.createServer(app);
