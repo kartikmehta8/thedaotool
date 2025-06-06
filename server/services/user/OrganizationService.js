@@ -112,7 +112,7 @@ class OrganizationService {
         bountyTitle: bounty.name || 'Untitled',
         amount: bounty.amount || 0,
         date: bounty.updatedAt || bounty.createdAt || '',
-        status: bounty.status === 'closed' ? 'Success' : 'Pending',
+        status: bounty.status,
       }))
       .sort((a, b) => new Date(b.date) - new Date(a.date));
   }

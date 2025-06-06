@@ -29,11 +29,11 @@ const BountyCard = ({
       return;
     }
     try {
-      await applyToBounty(bounty.id, userId);
+      await applyToBounty(bounty.id);
       onRefetch();
       toast.success('Bounty assigned successfully');
     } catch (err) {
-      toast.error('Failed to apply to bounty');
+      toast.error(err.message || 'Failed to apply to bounty');
     }
   };
 
@@ -43,7 +43,7 @@ const BountyCard = ({
       onRefetch();
       toast.success('Unassigned from bounty successfully');
     } catch (err) {
-      toast.error('Failed to unassign from bounty');
+      toast.error(err.message || 'Failed to unassign from bounty');
     }
   };
 

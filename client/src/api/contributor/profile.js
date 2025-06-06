@@ -3,14 +3,20 @@ import { fetchWithAuth } from '../../utils/fetchWithAuth';
 
 export const fetchContributorProfile = async (uid) => {
   const res = await fetchWithAuth(`${API_URL}/contributor/profile/${uid}`);
-  if (!res.ok) throw new Error('Failed to fetch contributor profile');
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.message || 'Failed to fetch contributor profile');
+  }
   const { profile } = await res.json();
   return profile;
 };
 
 export const getContributorProfile = async (uid) => {
   const res = await fetchWithAuth(`${API_URL}/contributor/profile/${uid}`);
-  if (!res.ok) return null;
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.message || 'Failed to fetch contributor profile');
+  }
   return await res.json();
 };
 
@@ -26,13 +32,19 @@ export const saveContributorProfile = async (
     method: 'PUT',
     body: JSON.stringify(bodyData),
   });
-  if (!res.ok) throw new Error('Failed to save contributor profile');
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.message || 'Failed to save contributor profile');
+  }
   return true;
 };
 
 export const getContributorAnalytics = async (uid) => {
   const res = await fetchWithAuth(`${API_URL}/contributor/analytics/${uid}`);
-  if (!res.ok) throw new Error('Failed to fetch analytics');
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.message || 'Failed to fetch analytics');
+  }
   const data = await res.json();
   return data.analytics || {};
 };

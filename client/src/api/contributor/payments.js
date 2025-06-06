@@ -3,7 +3,10 @@ import { fetchWithAuth } from '../../utils/fetchWithAuth';
 
 export const getContributorPayments = async (uid) => {
   const res = await fetchWithAuth(`${API_URL}/contributor/payments/${uid}`);
-  if (!res.ok) throw new Error('Failed to fetch contributor payments');
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.message || 'Failed to fetch contributor payments');
+  }
   const data = await res.json();
   return data.payments || [];
 };

@@ -4,14 +4,14 @@ const ResponseHelper = require('@utils/ResponseHelper');
 
 class ContributorController {
   async applyToBounty(req, res) {
-    const { bountyId, userId } = req.body;
-    await ContributorService.applyToBounty(bountyId, userId);
+    const { bountyId } = req.body;
+    await ContributorService.applyToBounty(bountyId, req.user.uid);
     return ResponseHelper.success(res, 'Applied successfully');
   }
 
   async submitWork(req, res) {
     const { bountyId, submittedLink } = req.body;
-    await ContributorService.submitWork(bountyId, submittedLink);
+    await ContributorService.submitWork(bountyId, req.user.uid, submittedLink);
     return ResponseHelper.success(res, 'Work submitted');
   }
 
@@ -40,7 +40,7 @@ class ContributorController {
       return ResponseHelper.error(res, 'Bounty ID is required', 400);
     }
 
-    await ContributorService.unassignSelf(bountyId);
+    await ContributorService.unassignSelf(bountyId, req.user.uid);
     return ResponseHelper.success(res, 'Contributor unassigned');
   }
 
