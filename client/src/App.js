@@ -5,11 +5,11 @@ import {
   Route,
   Navigate,
 } from 'react-router-dom';
-import { ConfigProvider, theme } from 'antd';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { routes } from './routes/RoutesConfig';
 
 import { OrganizationPaymentHistory, ContributorPaymentHistory } from './pages';
+import { Suspense } from 'react';
 
 const AppRoutes = () => {
   const { user } = useAuth();
@@ -53,18 +53,13 @@ const AppRoutes = () => {
 
 const App = () => {
   return (
-    <ConfigProvider
-      theme={{
-        algorithm: theme.darkAlgorithm,
-        token: { fontFamily: 'Reddit Sans, sans-serif' },
-      }}
-    >
-      <AuthProvider>
-        <Router>
+    <AuthProvider>
+      <Router>
+        <Suspense fallback={null}>
           <AppRoutes />
-        </Router>
-      </AuthProvider>
-    </ConfigProvider>
+        </Suspense>
+      </Router>
+    </AuthProvider>
   );
 };
 
