@@ -29,3 +29,10 @@ export const saveContributorProfile = async (
   if (!res.ok) throw new Error('Failed to save contributor profile');
   return true;
 };
+
+export const getContributorAnalytics = async (uid) => {
+  const res = await fetchWithAuth(`${API_URL}/contributor/analytics/${uid}`);
+  if (!res.ok) throw new Error('Failed to fetch analytics');
+  const data = await res.json();
+  return data.analytics || {};
+};

@@ -24,5 +24,5 @@ export const routes = [
     element: <ContributorProfile />,
     isPrivate: true,
   },
-  { path: '/payment-history', element: null, isPrivate: true },
+  { path: '/insights', element: null, isPrivate: true },
 ];

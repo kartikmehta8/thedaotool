@@ -17,12 +17,8 @@ const OrganizationProfile = lazy(
 const ContributorProfile = lazy(
   () => import('./contributor/ContributorProfile')
 );
-const OrganizationPaymentHistory = lazy(
-  () => import('./organization/PaymentHistory')
-);
-const ContributorPaymentHistory = lazy(
-  () => import('./contributor/PaymentHistory')
-);
+const OrganizationInsights = lazy(() => import('./organization/Insights'));
+const ContributorInsights = lazy(() => import('./contributor/Insights'));
 
 export {
   Login,
@@ -34,6 +30,6 @@ export {
   ContributorDashboard,
   OrganizationProfile,
   ContributorProfile,
-  OrganizationPaymentHistory,
-  ContributorPaymentHistory,
+  OrganizationInsights,
+  ContributorInsights,
 };

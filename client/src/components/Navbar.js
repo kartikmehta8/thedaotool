@@ -45,8 +45,8 @@ const Navbar = () => {
       </div>
       {screens.md ? (
         <Space>
-          <Button type="default" onClick={() => navigate('/payment-history')}>
-            Payments
+          <Button type="default" onClick={() => navigate('/insights')}>
+            Insights
           </Button>
           <Button type="default" onClick={handleProfile}>
             Profile
@@ -74,11 +74,11 @@ const Navbar = () => {
             block
             style={{ marginBottom: 8 }}
             onClick={() => {
-              navigate('/payment-history');
+              navigate('/insights');
               setDrawerOpen(false);
             }}
           >
-            Payments
+            Insights
           </Button>
           <Button
             type="default"

@@ -74,6 +74,12 @@ class OrganizationRoutes extends IRoute {
       catchAsync(OrganizationController.getOrganizationPayments)
     );
 
+    router.get(
+      '/analytics/:uid',
+      ValidationMiddleware.use(organizationValidator.uidParamSchema),
+      catchAsync(OrganizationController.getOrganizationAnalytics)
+    );
+
     app.use('/api/organization', router);
   }
 }
