@@ -1,5 +1,6 @@
-module.exports = {
-  githubSyncQueue: require('./githubSyncWorker'),
-  otpCleanupQueue: require('./otpCleanupWorker'),
-  emailQueue: require('./emailWorker'),
-};
+const QueueManager = require('./QueueManager');
+
+const manager = new QueueManager();
+manager.initialize();
+
+module.exports = manager.getQueues();

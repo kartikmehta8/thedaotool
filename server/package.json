@@ -47,7 +47,8 @@
     "morgan": "^1.10.0",
     "node-cron": "^3.0.3",
     "nodemailer": "^6.10.0",
-    "socket.io": "^4.8.1"
+    "socket.io": "^4.8.1",
+    "redis": "^4.6.7"
   },
   "_moduleAliases": {
     "@controllers": "./controllers",
