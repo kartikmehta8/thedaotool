@@ -1,6 +1,7 @@
 const FirestoreService = require('@services/database/FirestoreService');
 const GithubService = require('@services/integrations/GithubService');
 const postToDiscord = require('@utils/postToDiscord');
+const CacheService = require('@services/misc/CacheService');
 
 async function syncGitHubIssues() {
   try {
@@ -30,6 +31,7 @@ async function syncGitHubIssues() {
         }));
 
         await FirestoreService.addDocumentsBatch('bounties', bountyDocs);
+        await CacheService.del('GET:*bounties*');
 
         await Promise.all(
           issues.map((issue) => {

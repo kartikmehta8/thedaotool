@@ -1,6 +1,7 @@
 const FirestoreService = require('@services/database/FirestoreService');
 const RealtimeDatabaseService = require('@services/database/RealtimeDatabaseService');
 const EmailService = require('@services/misc/EmailService');
+const CacheService = require('@services/misc/CacheService');
 
 class ContributorService {
   async applyToBounty(bountyId, userId) {
@@ -13,6 +14,8 @@ class ContributorService {
       status: 'assigned',
       contributorId: userId,
     });
+
+    await CacheService.del('GET:*bounties*');
 
     await EmailService.sendBountyAssignedToOrganization({
       bountyId,
@@ -31,6 +34,8 @@ class ContributorService {
       status: 'pending_payment',
       submittedLink,
     });
+
+    await CacheService.del('GET:*payments*');
 
     await EmailService.sendSubmissionNotificationToOrganization({
       bountyId,
@@ -71,7 +76,13 @@ class ContributorService {
   }
 
   async saveProfile(uid, profileData) {
-    return FirestoreService.setDocument('contributors', uid, profileData);
+    const res = await FirestoreService.setDocument(
+      'contributors',
+      uid,
+      profileData
+    );
+    await CacheService.del(`GET:/api/contributor/profile/${uid}`);
+    return res;
   }
 
   async unassignSelf(bountyId, userId) {
@@ -88,6 +99,8 @@ class ContributorService {
     });
 
     await RealtimeDatabaseService.removeData(`chats/${bountyId}`);
+    await CacheService.del('GET:*bounties*');
+    await CacheService.del('GET:*payments*');
   }
 
   async getContributorPayments(uid) {

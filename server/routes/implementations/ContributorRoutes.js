@@ -5,6 +5,7 @@ const ValidationMiddleware = require('@middlewares/implementations/validation/Va
 const contributorValidator = require('@validators/contributorValidators');
 const EmailVerifiedMiddleware = require('@middlewares/implementations/auth/EmailVerifiedMiddleware');
 const OwnershipMiddleware = require('@middlewares/implementations/auth/OwnershipMiddleware');
+const CacheMiddleware = require('@middlewares/implementations/cache/CacheMiddleware');
 const catchAsync = require('@utils/catchAsync');
 const IRoute = require('../IRoute');
 
@@ -32,6 +33,7 @@ class ContributorRoutes extends IRoute {
       '/bounties/:uid',
       ValidationMiddleware.use(contributorValidator.uidParamSchema),
       OwnershipMiddleware.verifyParamUid('uid'),
+      CacheMiddleware.use(300),
       catchAsync(ContributorController.fetchBounties)
     );
 
@@ -39,6 +41,7 @@ class ContributorRoutes extends IRoute {
       '/profile/:uid',
       ValidationMiddleware.use(contributorValidator.getProfileOrPaymentsSchema),
       OwnershipMiddleware.verifyParamUid('uid'),
+      CacheMiddleware.use(300),
       catchAsync(ContributorController.getProfile)
     );
 
@@ -59,6 +62,7 @@ class ContributorRoutes extends IRoute {
       '/payments/:uid',
       ValidationMiddleware.use(contributorValidator.getProfileOrPaymentsSchema),
       OwnershipMiddleware.verifyParamUid('uid'),
+      CacheMiddleware.use(300),
       catchAsync(ContributorController.getContributorPayments)
     );
 
