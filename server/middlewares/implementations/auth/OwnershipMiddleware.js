@@ -10,7 +10,7 @@ class OwnershipMiddleware {
     };
   }
 
-  static apply(app) {}
+  apply(app) {}
 }
 
 module.exports = OwnershipMiddleware;
