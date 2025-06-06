@@ -8,6 +8,8 @@ const app = express();
 const server = http.createServer(app);
 const initSocket = require('./sockets/chat');
 
+app.set('trust proxy', true);
+
 const MiddlewareManager = require('@middlewares/MiddlewareManager');
 const RouteManager = require('@routes/RouteManager');
 const CronManager = require('@cron/CronManager');
