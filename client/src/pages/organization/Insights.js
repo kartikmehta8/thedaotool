@@ -50,7 +50,13 @@ const columns = [
     render: (status) => (
       <Tag
         color={
-          status === 'Success' ? 'green' : status === 'Pending' ? 'gold' : 'red'
+          status === 'closed'
+            ? 'green'
+            : status === 'pending_payment'
+              ? 'gold'
+              : status === 'assigned'
+                ? 'blue'
+                : 'default'
         }
       >
         {status}
@@ -111,7 +117,7 @@ const OrganizationInsights = ({ user }) => {
       <ResponsiveContainer width="100%" height={400}>
         <PieChart>
           <Pie
-            data={statusData.filter((entry) => entry.value > 0)}
+            data={statusData}
             dataKey="value"
             nameKey="name"
             cx="50%"
@@ -122,14 +128,12 @@ const OrganizationInsights = ({ user }) => {
             }
             labelLine={false}
           >
-            {statusData
-              .filter((entry) => entry.value > 0)
-              .map((entry, index) => (
-                <Cell
-                  key={`cell-${index}`}
-                  fill={COLORS[index % COLORS.length]}
-                />
-              ))}
+            {statusData.map((entry, index) => (
+              <Cell
+                key={`cell-${index}`}
+                fill={COLORS[index % COLORS.length]}
+              />
+            ))}
           </Pie>
           <Tooltip />
           <Legend layout="horizontal" verticalAlign="top" align="center" />

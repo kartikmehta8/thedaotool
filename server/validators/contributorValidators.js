@@ -3,7 +3,6 @@ const Joi = require('joi');
 const applyToBountySchema = {
   body: Joi.object({
     bountyId: Joi.string().required(),
-    userId: Joi.string().required(),
   }),
 };
 

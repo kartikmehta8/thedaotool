@@ -20,7 +20,10 @@ export const deleteBounty = async (bountyId) => {
       method: 'DELETE',
     }
   );
-  if (!res.ok) throw new Error('Failed to delete bounty');
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.message || 'Failed to delete bounty');
+  }
   return true;
 };
 
@@ -32,13 +35,19 @@ export const updateBounty = async (bounty) => {
       body: JSON.stringify(bounty),
     }
   );
-  if (!res.ok) throw new Error('Error saving bounty changes');
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.message || 'Error saving bounty changes');
+  }
   return true;
 };
 
 export const getBountysForOrganization = async (uid) => {
   const res = await fetchWithAuth(`${API_URL}/organization/bounties/${uid}`);
-  if (!res.ok) throw new Error('Error fetching bounties');
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.message || 'Error fetching bounties');
+  }
   const data = await res.json();
   return data.bounties || [];
 };
@@ -50,6 +59,9 @@ export const unassignContributor = async (bountyId) => {
       method: 'PUT',
     }
   );
-  if (!res.ok) throw new Error('Failed to unassign contributor');
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.message || 'Failed to unassign contributor');
+  }
   return true;
 };

@@ -2,6 +2,7 @@ const express = require('express');
 const OrganizationController = require('@controllers/organizationController');
 const AuthMiddleware = require('@middlewares/implementations/auth/AuthMiddleware');
 const EmailVerifiedMiddleware = require('@middlewares/implementations/auth/EmailVerifiedMiddleware');
+const OwnershipMiddleware = require('@middlewares/implementations/auth/OwnershipMiddleware');
 const ValidationMiddleware = require('@middlewares/implementations/validation/ValidationMiddleware');
 const organizationValidator = require('@validators/organizationValidators');
 const catchAsync = require('@utils/catchAsync');
@@ -35,6 +36,7 @@ class OrganizationRoutes extends IRoute {
     router.get(
       '/bounties/:uid',
       ValidationMiddleware.use(organizationValidator.uidParamSchema),
+      OwnershipMiddleware.verifyParamUid('uid'),
       catchAsync(OrganizationController.getBounties)
     );
 
@@ -59,24 +61,28 @@ class OrganizationRoutes extends IRoute {
     router.get(
       '/profile/:uid',
       ValidationMiddleware.use(organizationValidator.uidParamSchema),
+      OwnershipMiddleware.verifyParamUid('uid'),
       catchAsync(OrganizationController.getProfile)
     );
 
     router.put(
       '/profile/:uid',
       ValidationMiddleware.use(organizationValidator.uidAndBodySchema),
+      OwnershipMiddleware.verifyParamUid('uid'),
       catchAsync(OrganizationController.saveProfile)
     );
 
     router.get(
       '/payments/:uid',
       ValidationMiddleware.use(organizationValidator.uidParamSchema),
+      OwnershipMiddleware.verifyParamUid('uid'),
       catchAsync(OrganizationController.getOrganizationPayments)
     );
 
     router.get(
       '/analytics/:uid',
       ValidationMiddleware.use(organizationValidator.uidParamSchema),
+      OwnershipMiddleware.verifyParamUid('uid'),
       catchAsync(OrganizationController.getOrganizationAnalytics)
     );
 

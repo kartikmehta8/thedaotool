@@ -4,6 +4,11 @@ const EmailService = require('@services/misc/EmailService');
 
 class ContributorService {
   async applyToBounty(bountyId, userId) {
+    const bounty = await FirestoreService.getDocument('bounties', bountyId);
+
+    if (!bounty) throw new Error('Bounty not found');
+    if (bounty.status !== 'open') throw new Error('Bounty not open');
+
     await FirestoreService.updateDocument('bounties', bountyId, {
       status: 'assigned',
       contributorId: userId,
@@ -15,7 +20,13 @@ class ContributorService {
     });
   }
 
-  async submitWork(bountyId, submittedLink) {
+  async submitWork(bountyId, userId, submittedLink) {
+    const bounty = await FirestoreService.getDocument('bounties', bountyId);
+
+    if (!bounty) throw new Error('Bounty not found');
+    if (bounty.contributorId !== userId)
+      throw new Error('Not assigned to this bounty');
+
     await FirestoreService.updateDocument('bounties', bountyId, {
       status: 'pending_payment',
       submittedLink,
@@ -63,7 +74,13 @@ class ContributorService {
     return FirestoreService.setDocument('contributors', uid, profileData);
   }
 
-  async unassignSelf(bountyId) {
+  async unassignSelf(bountyId, userId) {
+    const bounty = await FirestoreService.getDocument('bounties', bountyId);
+
+    if (!bounty) throw new Error('Bounty not found');
+    if (bounty.contributorId !== userId)
+      throw new Error('Not assigned to this bounty');
+
     await FirestoreService.updateDocument('bounties', bountyId, {
       contributorId: null,
       status: 'open',
@@ -113,7 +130,7 @@ class ContributorService {
           bountyTitle: bounty.name || 'Untitled',
           amount: bounty.amount || 0,
           date: bounty.updatedAt || bounty.createdAt || '',
-          status: bounty.status === 'closed' ? 'Success' : 'Pending',
+          status: bounty.status,
         };
       })
     );

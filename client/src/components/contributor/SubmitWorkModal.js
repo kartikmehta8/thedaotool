@@ -21,7 +21,7 @@ const SubmitWorkModal = ({ visible, bountyId, onCancel, onSubmitSuccess }) => {
       toast.success('Work submitted successfully');
       setSubmission('');
     } catch (err) {
-      toast.error('Failed to submit work');
+      toast.error(err.message || 'Failed to submit work');
     }
   };
 

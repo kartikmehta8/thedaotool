@@ -4,7 +4,10 @@ import { saveOrganizationProfile } from './profile';
 
 export const fetchGitHubRepos = async (uid) => {
   const res = await fetchWithAuth(`${API_URL}/github/repos/${uid}`);
-  if (!res.ok) throw new Error('Failed to fetch GitHub repos');
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.message || 'Failed to fetch GitHub repos');
+  }
   const data = await res.json();
   return data.repos || [];
 };
@@ -14,7 +17,10 @@ export const saveGitHubRepo = async (uid, repo) => {
     method: 'POST',
     body: JSON.stringify({ repo }),
   });
-  if (!res.ok) throw new Error('Could not save GitHub repo');
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.message || 'Could not save GitHub repo');
+  }
   return true;
 };
 
@@ -33,7 +39,10 @@ export const disconnectGitHub = async (uid, profile) => {
 
 export const handleAuth = async (uid) => {
   const res = await fetch(`${API_URL}/github/auth?userId=${uid}`);
-  if (!res.ok) throw new Error('Failed to initiate GitHub OAuth');
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.message || 'Failed to initiate GitHub OAuth');
+  }
   const { redirectUrl } = await res.json();
   return redirectUrl;
 };
