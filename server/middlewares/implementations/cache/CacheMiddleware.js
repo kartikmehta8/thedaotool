@@ -27,6 +27,8 @@ class CacheMiddleware {
       next();
     };
   }
+
+  apply(app) {}
 }
 
 module.exports = CacheMiddleware;
