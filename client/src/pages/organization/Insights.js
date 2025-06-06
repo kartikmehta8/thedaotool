@@ -108,23 +108,31 @@ const OrganizationInsights = ({ user }) => {
       <Title level={4} style={{ color: '#fff' }}>
         Bounty Status Distribution
       </Title>
-      <ResponsiveContainer width="100%" height={300}>
+      <ResponsiveContainer width="100%" height={400}>
         <PieChart>
           <Pie
-            data={statusData}
+            data={statusData.filter((entry) => entry.value > 0)}
             dataKey="value"
             nameKey="name"
             cx="50%"
             cy="50%"
-            outerRadius={120}
-            label
+            outerRadius={140}
+            label={({ name, percent }) =>
+              `${name} (${(percent * 100).toFixed(0)}%)`
+            }
+            labelLine={false}
           >
-            {statusData.map((entry, index) => (
-              <Cell key={index} fill={COLORS[index % COLORS.length]} />
-            ))}
+            {statusData
+              .filter((entry) => entry.value > 0)
+              .map((entry, index) => (
+                <Cell
+                  key={`cell-${index}`}
+                  fill={COLORS[index % COLORS.length]}
+                />
+              ))}
           </Pie>
           <Tooltip />
-          <Legend />
+          <Legend layout="horizontal" verticalAlign="top" align="center" />
         </PieChart>
       </ResponsiveContainer>
     </Card>
