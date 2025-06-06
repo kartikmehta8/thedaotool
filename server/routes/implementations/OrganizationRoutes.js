@@ -5,6 +5,7 @@ const EmailVerifiedMiddleware = require('@middlewares/implementations/auth/Email
 const OwnershipMiddleware = require('@middlewares/implementations/auth/OwnershipMiddleware');
 const ValidationMiddleware = require('@middlewares/implementations/validation/ValidationMiddleware');
 const organizationValidator = require('@validators/organizationValidators');
+const CacheMiddleware = require('@middlewares/implementations/cache/CacheMiddleware');
 const catchAsync = require('@utils/catchAsync');
 const IRoute = require('../IRoute');
 
@@ -37,12 +38,14 @@ class OrganizationRoutes extends IRoute {
       '/bounties/:uid',
       ValidationMiddleware.use(organizationValidator.uidParamSchema),
       OwnershipMiddleware.verifyParamUid('uid'),
+      CacheMiddleware.use(300),
       catchAsync(OrganizationController.getBounties)
     );
 
     router.get(
       '/contributor/:id',
       ValidationMiddleware.use(organizationValidator.contributorIdParamSchema),
+      CacheMiddleware.use(300),
       catchAsync(OrganizationController.getContributor)
     );
 
@@ -62,6 +65,7 @@ class OrganizationRoutes extends IRoute {
       '/profile/:uid',
       ValidationMiddleware.use(organizationValidator.uidParamSchema),
       OwnershipMiddleware.verifyParamUid('uid'),
+      CacheMiddleware.use(300),
       catchAsync(OrganizationController.getProfile)
     );
 
@@ -76,6 +80,7 @@ class OrganizationRoutes extends IRoute {
       '/payments/:uid',
       ValidationMiddleware.use(organizationValidator.uidParamSchema),
       OwnershipMiddleware.verifyParamUid('uid'),
+      CacheMiddleware.use(300),
       catchAsync(OrganizationController.getOrganizationPayments)
     );
 

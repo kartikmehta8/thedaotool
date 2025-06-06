@@ -1,6 +1,7 @@
 const FirestoreService = require('@services/database/FirestoreService');
 const RealtimeDatabaseService = require('@services/database/RealtimeDatabaseService');
 const postToDiscord = require('@utils/postToDiscord');
+const CacheService = require('@services/misc/CacheService');
 
 class OrganizationService {
   async createBounty(values, userId) {
@@ -18,16 +19,27 @@ class OrganizationService {
     };
 
     await FirestoreService.addDocument('bounties', bounty);
+    await CacheService.del('GET:*bounties*');
     await postToDiscord(bounty);
     return bounty;
   }
 
   async deleteBounty(bountyId) {
-    return FirestoreService.deleteDocument('bounties', bountyId);
+    const res = await FirestoreService.deleteDocument('bounties', bountyId);
+    await CacheService.del('GET:*bounties*');
+    await CacheService.del('GET:*payments*');
+    return res;
   }
 
   async updateBounty(bountyId, updateData) {
-    return FirestoreService.updateDocument('bounties', bountyId, updateData);
+    const res = await FirestoreService.updateDocument(
+      'bounties',
+      bountyId,
+      updateData
+    );
+    await CacheService.del('GET:*bounties*');
+    await CacheService.del('GET:*payments*');
+    return res;
   }
 
   async getBounties(organizationId) {
@@ -76,11 +88,13 @@ class OrganizationService {
   }
 
   async saveProfile(organizationId, profileData) {
-    return FirestoreService.setDocument(
+    const res = await FirestoreService.setDocument(
       'organizations',
       organizationId,
       profileData
     );
+    await CacheService.del(`GET:/api/organization/profile/${organizationId}`);
+    return res;
   }
 
   async unassignContributor(bountyId) {
@@ -91,6 +105,8 @@ class OrganizationService {
     });
 
     await RealtimeDatabaseService.removeData(`chats/${bountyId}`);
+    await CacheService.del('GET:*bounties*');
+    await CacheService.del('GET:*payments*');
   }
 
   async getOrganizationPayments(organizationId) {
