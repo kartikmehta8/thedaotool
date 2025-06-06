@@ -9,9 +9,13 @@ class EmailQueue extends IQueue {
 
   initialize(queueService) {
     this.queue = queueService.getQueue('email');
-    queueService.process('email', async (options) => {
-      await sendMail(options);
-    });
+    queueService.process(
+      'email',
+      async (options) => {
+        await sendMail(options);
+      },
+      3
+    );
   }
 }
 

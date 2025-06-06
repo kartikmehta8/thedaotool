@@ -32,6 +32,7 @@ class QueueService {
         throw err;
       }
     });
+    console.info(`Queue '${name}' started with concurrency ${concurrency}`);
   }
 }
 

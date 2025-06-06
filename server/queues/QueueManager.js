@@ -21,6 +21,9 @@ class QueueManager {
   initialize() {
     this.instances.forEach((queue) => {
       queue.initialize(QueueService);
+      if (queue.name) {
+        console.info(`Initialized queue '${queue.name}'`);
+      }
     });
   }
 
