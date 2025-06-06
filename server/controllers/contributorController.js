@@ -1,4 +1,5 @@
 const ContributorService = require('@services/user/ContributorService');
+const AnalyticsService = require('@services/misc/AnalyticsService');
 const ResponseHelper = require('@utils/ResponseHelper');
 
 class ContributorController {
@@ -48,6 +49,13 @@ class ContributorController {
       req.params.uid
     );
     return ResponseHelper.success(res, 'Payments fetched', { payments });
+  }
+
+  async getContributorAnalytics(req, res) {
+    const analytics = await AnalyticsService.getContributorAnalytics(
+      req.params.uid
+    );
+    return ResponseHelper.success(res, 'Analytics fetched', { analytics });
   }
 }
 

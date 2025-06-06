@@ -36,3 +36,10 @@ export const updateContributorData = async (contributorId, data) => {
   if (!res.ok) throw new Error('Failed to update contributor');
   return true;
 };
+
+export const getOrganizationAnalytics = async (uid) => {
+  const res = await fetchWithAuth(`${API_URL}/organization/analytics/${uid}`);
+  if (!res.ok) throw new Error('Failed to fetch analytics');
+  const data = await res.json();
+  return data.analytics || {};
+};

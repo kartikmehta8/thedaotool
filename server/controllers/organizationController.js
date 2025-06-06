@@ -1,4 +1,5 @@
 const OrganizationService = require('@services/user/OrganizationService');
+const AnalyticsService = require('@services/misc/AnalyticsService');
 const ResponseHelper = require('@utils/ResponseHelper');
 
 class OrganizationController {
@@ -63,6 +64,13 @@ class OrganizationController {
       req.params.uid
     );
     return ResponseHelper.success(res, 'Payments fetched', { payments });
+  }
+
+  async getOrganizationAnalytics(req, res) {
+    const analytics = await AnalyticsService.getOrganizationAnalytics(
+      req.params.uid
+    );
+    return ResponseHelper.success(res, 'Analytics fetched', { analytics });
   }
 }
 

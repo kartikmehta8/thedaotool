@@ -57,6 +57,12 @@ class ContributorRoutes extends IRoute {
       catchAsync(ContributorController.getContributorPayments)
     );
 
+    router.get(
+      '/analytics/:uid',
+      ValidationMiddleware.use(contributorValidator.getProfileOrPaymentsSchema),
+      catchAsync(ContributorController.getContributorAnalytics)
+    );
+
     app.use('/api/contributor', router);
   }
 }

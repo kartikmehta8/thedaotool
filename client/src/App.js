@@ -8,7 +8,7 @@ import {
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { routes } from './routes/RoutesConfig';
 
-import { OrganizationPaymentHistory, ContributorPaymentHistory } from './pages';
+import { OrganizationInsights, ContributorInsights } from './pages';
 import { Suspense } from 'react';
 
 const AppRoutes = () => {
@@ -17,7 +17,7 @@ const AppRoutes = () => {
   return (
     <Routes>
       {routes.map(({ path, element, isPrivate }) => {
-        if (path === '/payment-history') {
+        if (path === '/insights') {
           return (
             <Route
               key={path}
@@ -25,9 +25,9 @@ const AppRoutes = () => {
               element={
                 user ? (
                   user.role === 'organization' ? (
-                    <OrganizationPaymentHistory user={user} />
+                    <OrganizationInsights user={user} />
                   ) : (
-                    <ContributorPaymentHistory user={user} />
+                    <ContributorInsights user={user} />
                   )
                 ) : (
                   <Navigate to="/login" />
