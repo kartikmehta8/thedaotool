@@ -9,6 +9,8 @@ class OwnershipMiddleware {
       next();
     };
   }
+
+  static apply(app) {}
 }
 
 module.exports = OwnershipMiddleware;

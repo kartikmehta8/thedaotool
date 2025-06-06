@@ -123,8 +123,8 @@ const ContributorInsights = ({ user }) => {
             cx="50%"
             cy="50%"
             outerRadius={140}
-            label={({ name, percent }) =>
-              `${name} (${(percent * 100).toFixed(0)}%)`
+            label={({ name, percent, value }) =>
+              value > 0 ? `${name} (${(percent * 100).toFixed(0)}%)` : ''
             }
             labelLine={false}
           >
