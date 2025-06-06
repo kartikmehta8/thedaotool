@@ -16,7 +16,6 @@ import {
 import {
   GitHubIntegration,
   DiscordIntegration,
-  // PaymanIntegration,
 } from '../../components/organization';
 import toast from '../../utils/toast';
 import { useAuth } from '../../context/AuthContext';
@@ -161,14 +160,6 @@ const OrganizationProfile = () => {
               Save
             </Button>
           </Form>
-        </Card>
-        <Card
-          className="form-card"
-          style={{ backgroundColor: '#1f1f1f', marginBottom: 20 }}
-          loading={loading}
-          bodyStyle={{ padding: '1rem' }}
-        >
-          {/* <PaymanIntegration user={user} /> */}
         </Card>
         <Card
           style={{ width: 500, backgroundColor: '#1f1f1f', marginBottom: 20 }}
