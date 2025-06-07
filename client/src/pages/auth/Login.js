@@ -29,7 +29,7 @@ const Login = () => {
   };
 
   return (
-    <Layout style={{ minHeight: '100vh', backgroundColor: '#141414' }}>
+    <Layout style={{ minHeight: '100vh' }}>
       <Content
         style={{
           display: 'flex',
@@ -39,10 +39,10 @@ const Login = () => {
       >
         <Card
           className="form-card"
-          style={{ backgroundColor: '#1f1f1f', color: '#fff', marginTop: 100 }}
+          style={{ marginTop: 100 }}
           bodyStyle={{ padding: '1rem' }}
         >
-          <Title level={3} style={{ color: '#fff', textAlign: 'center' }}>
+          <Title level={3} style={{ textAlign: 'center' }}>
             Log In
           </Title>
           <Input

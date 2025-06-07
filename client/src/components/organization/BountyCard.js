@@ -30,7 +30,6 @@ const BountyCard = ({ bounty, onView, onChatOpen, onRefetch }) => {
     <Col xs={24} sm={12} md={8}>
       <Card
         hoverable
-        style={{ backgroundColor: '#1f1f1f' }}
         onClick={onView}
         title={<Text strong>{bounty.name}</Text>}
         extra={<Tag color={statusColors[bounty.status]}>{bounty.status}</Tag>}

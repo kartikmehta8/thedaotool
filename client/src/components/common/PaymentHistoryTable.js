@@ -20,12 +20,7 @@ const PaymentHistoryTable = React.memo(
     return (
       <div className="page-container">
         <Card
-          title={
-            <Title level={4} style={{ color: '#fff' }}>
-              {title}
-            </Title>
-          }
-          style={{ backgroundColor: '#1f1f1f' }}
+          title={<Title level={4}>{title}</Title>}
           bodyStyle={{ padding: '1rem' }}
         >
           <Table

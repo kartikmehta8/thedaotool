@@ -6,9 +6,19 @@
 
 body,
 html {
-  background-color: #141414;
-  color: #fff;
   margin: 0;
+  font-family: 'Inter', sans-serif;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+body.light {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+body.dark {
+  background-color: #141414;
+  color: #ffffff;
 }
 
 .page-container {

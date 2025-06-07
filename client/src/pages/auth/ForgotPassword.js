@@ -45,7 +45,7 @@ const ForgotPassword = () => {
   };
 
   return (
-    <Layout style={{ minHeight: '100vh', backgroundColor: '#141414' }}>
+    <Layout style={{ minHeight: '100vh' }}>
       <Content
         style={{
           display: 'flex',
@@ -56,12 +56,10 @@ const ForgotPassword = () => {
         <Card
           style={{
             width: 400,
-            backgroundColor: '#1f1f1f',
-            color: '#fff',
             marginTop: 100,
           }}
         >
-          <Title level={3} style={{ color: '#fff', textAlign: 'center' }}>
+          <Title level={3} style={{ textAlign: 'center' }}>
             Forgot Password
           </Title>
 

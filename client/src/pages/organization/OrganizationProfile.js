@@ -83,7 +83,7 @@ const OrganizationProfile = () => {
   }, []);
 
   return (
-    <Layout style={{ minHeight: '100vh', backgroundColor: '#141414' }}>
+    <Layout style={{ minHeight: '100vh' }}>
       <Content
         className="page-container"
         style={{
@@ -95,11 +95,11 @@ const OrganizationProfile = () => {
       >
         <Card
           className="form-card"
-          style={{ backgroundColor: '#1f1f1f', marginBottom: 20 }}
+          style={{ marginBottom: 20 }}
           loading={loading}
           bodyStyle={{ padding: '1rem' }}
         >
-          <Title level={3} style={{ color: '#fff', textAlign: 'center' }}>
+          <Title level={3} style={{ textAlign: 'center' }}>
             Organization Profile
           </Title>
           <Form form={form} layout="vertical" onFinish={handleSubmit}>
@@ -113,7 +113,7 @@ const OrganizationProfile = () => {
               <Input placeholder="Example Inc." />
             </Form.Item>
             <Form.Item name="email" label="Email">
-              <Input value={email} disabled style={{ color: '#ccc' }} />
+              <Input value={email} disabled />
             </Form.Item>
             {!emailVerified ? (
               <>
@@ -143,7 +143,7 @@ const OrganizationProfile = () => {
             )}
             <Form.Item
               name="description"
-              label={<Text style={{ color: '#ddd' }}>Company Description</Text>}
+              label={<Text>Company Description</Text>}
             >
               <Input.TextArea
                 rows={4}
@@ -161,10 +161,7 @@ const OrganizationProfile = () => {
             </Button>
           </Form>
         </Card>
-        <Card
-          style={{ width: 500, backgroundColor: '#1f1f1f', marginBottom: 20 }}
-          loading={loading}
-        >
+        <Card style={{ width: 500, marginBottom: 20 }} loading={loading}>
           <GitHubIntegration
             uid={uid}
             profile={profile}
@@ -173,7 +170,6 @@ const OrganizationProfile = () => {
         </Card>
         <Card
           className="form-card"
-          style={{ backgroundColor: '#1f1f1f' }}
           loading={loading}
           bodyStyle={{ padding: '1rem' }}
         >

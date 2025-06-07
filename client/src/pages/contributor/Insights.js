@@ -84,13 +84,8 @@ const ContributorInsights = ({ user }) => {
     .sort((a, b) => a.date.localeCompare(b.date));
 
   const lineChart = (
-    <Card
-      style={{ backgroundColor: '#1f1f1f' }}
-      bodyStyle={{ padding: '1rem' }}
-    >
-      <Title level={4} style={{ color: '#fff' }}>
-        Bounties Submitted
-      </Title>
+    <Card bodyStyle={{ padding: '1rem' }}>
+      <Title level={4}>Bounties Submitted</Title>
       <ResponsiveContainer width="100%" height={300}>
         <LineChart
           data={monthlyData}
@@ -107,13 +102,8 @@ const ContributorInsights = ({ user }) => {
   );
 
   const pieChart = (
-    <Card
-      style={{ backgroundColor: '#1f1f1f' }}
-      bodyStyle={{ padding: '1rem' }}
-    >
-      <Title level={4} style={{ color: '#fff' }}>
-        Bounty Status Distribution
-      </Title>
+    <Card bodyStyle={{ padding: '1rem' }}>
+      <Title level={4}>Bounty Status Distribution</Title>
       <ResponsiveContainer width="100%" height={400}>
         <PieChart>
           <Pie

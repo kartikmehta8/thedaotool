@@ -12,15 +12,13 @@ const Dashboard = () => {
   const role = user.role;
 
   return (
-    <Layout style={{ minHeight: '100vh', backgroundColor: '#141414' }}>
+    <Layout style={{ minHeight: '100vh' }}>
       <Navbar />
       <Content className="page-container">
         {role === 'organization' && <OrganizationDashboard />}
         {role === 'contributor' && <ContributorDashboard />}
         {!role && (
-          <div style={{ color: '#fff' }}>
-            Unable to determine your role. Please contact support.
-          </div>
+          <div>Unable to determine your role. Please contact support.</div>
         )}
       </Content>
     </Layout>

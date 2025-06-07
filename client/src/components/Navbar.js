@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Layout, Button, Space, Drawer, Grid } from 'antd';
-import { MenuOutlined } from '@ant-design/icons';
+import { MenuOutlined, BulbOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 
 const { Header } = Layout;
 
@@ -10,6 +11,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const { user, setUser } = useAuth();
   const role = user?.role;
+  const { darkMode, toggleTheme } = useTheme();
 
   const [drawerOpen, setDrawerOpen] = useState(false);
   const screens = Grid.useBreakpoint();
@@ -31,17 +33,14 @@ const Navbar = () => {
   return (
     <Header
       style={{
-        backgroundColor: '#1f1f1f',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
       }}
     >
-      <div style={{ color: '#fff', fontSize: '18px', fontWeight: 'bold' }}>
+      <div style={{ fontSize: '18px', fontWeight: 'bold' }}>
         DAO{' '}
-        <span style={{ fontWeight: 'normal', fontSize: '14px', color: '#aaa' }}>
-          [{role}]
-        </span>
+        <span style={{ fontWeight: 'normal', fontSize: '14px' }}>[{role}]</span>
       </div>
       {screens.md ? (
         <Space>
@@ -54,11 +53,12 @@ const Navbar = () => {
           <Button type="primary" onClick={handleLogout}>
             Logout
           </Button>
+          <Button type="text" icon={<BulbOutlined />} onClick={toggleTheme} />
         </Space>
       ) : (
         <Button
           type="text"
-          icon={<MenuOutlined style={{ color: '#fff' }} />}
+          icon={<MenuOutlined />}
           onClick={() => setDrawerOpen(true)}
         />
       )}
@@ -93,6 +93,17 @@ const Navbar = () => {
           </Button>
           <Button type="primary" block onClick={handleLogout}>
             Logout
+          </Button>
+          <Button
+            style={{ marginTop: 8 }}
+            block
+            icon={<BulbOutlined />}
+            onClick={() => {
+              toggleTheme();
+              setDrawerOpen(false);
+            }}
+          >
+            Toggle Theme
           </Button>
         </div>
       </Drawer>
