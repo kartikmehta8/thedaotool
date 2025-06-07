@@ -33,6 +33,7 @@ const SubmitWorkModal = ({ visible, bountyId, onCancel, onSubmitSuccess }) => {
       title="Submit Work"
       onClose={onCancel}
       placement="right"
+      className="drawer-right"
       width={screens.xs ? '100%' : 500}
       bodyStyle={{ padding: 24 }}
     >

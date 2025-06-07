@@ -71,6 +71,7 @@ const ViewBountyModal = ({
         </Button>
       }
       placement="right"
+      className="drawer-right"
       width={screens.xs ? '100%' : 600}
       bodyStyle={{ padding: 24 }}
     >

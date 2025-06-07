@@ -34,6 +34,7 @@ const ChatModal = ({ visible, bounty, userId, onCancel }) => {
       title={`Chat with ${bounty?.organizationInfo?.companyName || 'Organization'}`}
       onClose={onCancel}
       placement="right"
+      className="drawer-right"
       width={screens.xs ? '100%' : 500}
       bodyStyle={{ padding: 24 }}
     >

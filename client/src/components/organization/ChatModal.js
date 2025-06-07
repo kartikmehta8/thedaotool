@@ -39,6 +39,7 @@ const ChatModal = ({ visible, bountyId, userId, onClose }) => {
       onClose={handleModalClose}
       title="Chat with Contributor"
       placement="right"
+      className="drawer-right"
       width={screens.xs ? '100%' : 500}
       bodyStyle={{ padding: 24 }}
     >

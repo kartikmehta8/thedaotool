@@ -64,6 +64,7 @@ const Navbar = () => {
       )}
       <Drawer
         placement="right"
+        className="drawer-right"
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}
         bodyStyle={{ padding: 0 }}

@@ -35,3 +35,17 @@ body.dark {
   max-width: 800px;
   margin: 0 auto 1.5rem;
 }
+.drawer-right .ant-drawer-content-wrapper {
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}

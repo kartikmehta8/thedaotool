@@ -34,6 +34,7 @@ const CreateBountyModal = ({ visible, onCancel, onCreateSuccess, userId }) => {
       open={visible}
       onClose={onCancel}
       placement="right"
+      className="drawer-right"
       closeIcon={<span style={{ fontSize: '16px' }}>×</span>}
       width={screens.xs ? '100%' : 600}
       bodyStyle={{ padding: 24 }}
