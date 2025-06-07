@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Modal,
+  Drawer,
   Divider,
   Select,
   Button,
@@ -61,14 +61,18 @@ const ViewBountyModal = ({
   const screens = Grid.useBreakpoint();
 
   return (
-    <Modal
+    <Drawer
       title="Edit Bounty"
       open={visible}
-      onCancel={onCancel}
-      onOk={handleSaveUpdate}
-      okText="Save Changes"
+      onClose={onCancel}
+      extra={
+        <Button type="primary" onClick={handleSaveUpdate}>
+          Save Changes
+        </Button>
+      }
+      placement="right"
       width={screens.xs ? '100%' : 600}
-      bodyStyle={{ maxHeight: '60vh', overflowY: 'auto' }}
+      bodyStyle={{ padding: 24 }}
     >
       <Row gutter={[16, 16]}>
         <Col span={24}>
@@ -192,7 +196,7 @@ const ViewBountyModal = ({
           </>
         )}
       </Row>
-    </Modal>
+    </Drawer>
   );
 };
 

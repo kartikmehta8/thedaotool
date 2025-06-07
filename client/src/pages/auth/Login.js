@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Input, Typography, Card, Layout, Flex } from 'antd';
+import { Navbar } from '../../components';
 import { useNavigate } from 'react-router-dom';
 import { loginUser } from '../../api/auth';
 import { saveUserToStorage } from '../../utils/localStorage';
@@ -30,6 +31,7 @@ const Login = () => {
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
+      <Navbar />
       <Content
         style={{
           display: 'flex',

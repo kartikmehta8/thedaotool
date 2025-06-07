@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Form, Input, DatePicker, Button, Tooltip, Grid } from 'antd';
+import { Drawer, Form, Input, DatePicker, Button, Tooltip, Grid } from 'antd';
 import { createBounty } from '../../api/organization/bounties';
 import toast from '../../utils/toast';
 import { useAuth } from '../../context/AuthContext';
@@ -29,14 +29,14 @@ const CreateBountyModal = ({ visible, onCancel, onCreateSuccess, userId }) => {
   const screens = Grid.useBreakpoint();
 
   return (
-    <Modal
+    <Drawer
       title="Create New Bounty"
       open={visible}
-      onCancel={onCancel}
-      footer={null}
+      onClose={onCancel}
+      placement="right"
       closeIcon={<span style={{ fontSize: '16px' }}>×</span>}
       width={screens.xs ? '100%' : 600}
-      bodyStyle={{ maxHeight: '60vh', overflowY: 'auto' }}
+      bodyStyle={{ padding: 24 }}
     >
       <Form layout="vertical" form={form}>
         <Form.Item
@@ -86,7 +86,7 @@ const CreateBountyModal = ({ visible, onCancel, onCreateSuccess, userId }) => {
           Create
         </Button>
       </Form>
-    </Modal>
+    </Drawer>
   );
 };
 

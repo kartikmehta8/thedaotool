@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Typography, Tag, Tabs } from 'antd';
+import { Card, Typography, Tag, Tabs, Layout } from 'antd';
+import { Navbar } from '../../components';
+const { Content } = Layout;
 import {
   LineChart,
   Line,
@@ -148,9 +150,12 @@ const OrganizationInsights = ({ user }) => {
   ];
 
   return (
-    <div className="page-container">
-      <Tabs defaultActiveKey="line" items={items} />
-    </div>
+    <Layout style={{ minHeight: '100vh' }}>
+      <Navbar />
+      <Content className="page-container" style={{ padding: '2rem' }}>
+        <Tabs defaultActiveKey="line" items={items} />
+      </Content>
+    </Layout>
   );
 };
 

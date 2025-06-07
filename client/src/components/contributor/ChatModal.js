@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Input, Button, List, Grid } from 'antd';
+import { Drawer, Input, Button, List, Grid } from 'antd';
 import { listenToMessages, sendMessage } from '../../realtime/chat';
 
 const ChatModal = ({ visible, bounty, userId, onCancel }) => {
@@ -29,13 +29,13 @@ const ChatModal = ({ visible, bounty, userId, onCancel }) => {
   const screens = Grid.useBreakpoint();
 
   return (
-    <Modal
+    <Drawer
       open={visible}
       title={`Chat with ${bounty?.organizationInfo?.companyName || 'Organization'}`}
-      onCancel={onCancel}
-      footer={null}
-      width={screens.xs ? '100%' : 600}
-      bodyStyle={{ maxHeight: '60vh', overflowY: 'auto' }}
+      onClose={onCancel}
+      placement="right"
+      width={screens.xs ? '100%' : 500}
+      bodyStyle={{ padding: 24 }}
     >
       <List
         size="small"
@@ -62,7 +62,7 @@ const ChatModal = ({ visible, bounty, userId, onCancel }) => {
       >
         Send
       </Button>
-    </Modal>
+    </Drawer>
   );
 };
 

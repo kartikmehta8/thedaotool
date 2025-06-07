@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Modal, Input, Grid } from 'antd';
+import { Drawer, Input, Grid, Button } from 'antd';
 import { submitWork } from '../../api/contributor/bounties';
 import toast from '../../utils/toast';
 import { useAuth } from '../../context/AuthContext';
@@ -28,21 +28,28 @@ const SubmitWorkModal = ({ visible, bountyId, onCancel, onSubmitSuccess }) => {
   const screens = Grid.useBreakpoint();
 
   return (
-    <Modal
+    <Drawer
       open={visible}
       title="Submit Work"
-      onCancel={onCancel}
-      onOk={handleSubmitWork}
-      okText="Submit"
+      onClose={onCancel}
+      placement="right"
       width={screens.xs ? '100%' : 500}
-      bodyStyle={{ maxHeight: '60vh', overflowY: 'auto' }}
+      bodyStyle={{ padding: 24 }}
     >
       <Input
         placeholder="Enter delivery link (GitHub, site, etc.)"
         value={submission}
         onChange={(e) => setSubmission(e.target.value)}
       />
-    </Modal>
+      <Button
+        type="primary"
+        block
+        style={{ marginTop: 8 }}
+        onClick={handleSubmitWork}
+      >
+        Submit
+      </Button>
+    </Drawer>
   );
 };
 

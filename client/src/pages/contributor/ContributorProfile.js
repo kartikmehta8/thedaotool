@@ -9,6 +9,7 @@ import {
   Space,
   Tag,
 } from 'antd';
+import { Navbar } from '../../components';
 import {
   fetchContributorProfile,
   saveContributorProfile,
@@ -76,16 +77,11 @@ const ContributorProfile = () => {
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
-      <Content
-        className="page-container"
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
+      <Navbar />
+      <Content className="page-container" style={{ padding: '2rem' }}>
         <Card
           className="form-card"
+          style={{ maxWidth: 800, margin: '0 auto' }}
           loading={loading}
           bodyStyle={{ padding: '1rem' }}
         >

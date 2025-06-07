@@ -9,6 +9,7 @@ import {
   Space,
   Tag,
 } from 'antd';
+import { Navbar } from '../../components';
 import {
   getOrganizationProfile,
   saveOrganizationProfile,
@@ -84,14 +85,10 @@ const OrganizationProfile = () => {
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
+      <Navbar />
       <Content
         className="page-container"
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          flexDirection: 'column',
-        }}
+        style={{ padding: '2rem', maxWidth: 800, margin: '0 auto' }}
       >
         <Card
           className="form-card"

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Input, Typography, Card, Layout } from 'antd';
+import { Navbar } from '../../components';
 import { useNavigate } from 'react-router-dom';
 import toast from '../../utils/toast';
 import {
@@ -46,6 +47,7 @@ const ForgotPassword = () => {
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
+      <Navbar />
       <Content
         style={{
           display: 'flex',
