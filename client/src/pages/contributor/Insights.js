@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Typography, Tag, Tabs, Layout } from 'antd';
-const { Content } = Layout;
 import { Navbar } from '../../components';
 import {
   LineChart,
@@ -19,6 +18,7 @@ import { getContributorPayments } from '../../api/contributor/payments';
 import { getContributorAnalytics } from '../../api/contributor/profile';
 import formatDate from '../../utils/formatDate';
 import { PaymentHistoryTable } from '../../components';
+const { Content } = Layout;
 
 const { Title } = Typography;
 const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#d0ed57'];
