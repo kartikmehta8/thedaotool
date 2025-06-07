@@ -9,6 +9,7 @@ import {
   Space,
   Tag,
 } from 'antd';
+import { motion } from 'framer-motion';
 import { Navbar } from '../../components';
 import {
   fetchContributorProfile,
@@ -79,71 +80,90 @@ const ContributorProfile = () => {
     <Layout style={{ minHeight: '100vh' }}>
       <Navbar />
       <Content className="page-container" style={{ padding: '2rem' }}>
-        <Card
-          className="form-card"
-          style={{ maxWidth: 800, margin: '0 auto' }}
-          loading={loading}
-          bodyStyle={{ padding: '1rem' }}
-        >
-          <Title level={3} style={{ textAlign: 'center' }}>
-            Contributor Profile
-          </Title>
-          <Form form={form} layout="vertical" onFinish={handleSubmit}>
-            <Form.Item name="name" label="Full Name">
-              <Input placeholder="John Doe" />
-            </Form.Item>
-            <Form.Item name="email" label="Email">
-              <Input value={email} disabled />
-            </Form.Item>
-            {!emailVerified ? (
-              <>
-                <Space style={{ marginBottom: 10 }}>
-                  <Tag color="red">Email not verified</Tag>
-                  <Button size="small" onClick={handleSendVerification}>
-                    Send Verification OTP
-                  </Button>
-                </Space>
-                {otpSent && (
-                  <Space direction="vertical" style={{ width: '100%' }}>
-                    <Input
-                      placeholder="Enter OTP"
-                      value={token}
-                      onChange={(e) => setToken(e.target.value)}
-                    />
-                    <Button block type="primary" onClick={handleVerifyToken}>
-                      Verify Email
+        <Title level={3} style={{ textAlign: 'center', marginBottom: '1rem' }}>
+          Contributor Profile
+        </Title>
+        <Form form={form} layout="vertical" onFinish={handleSubmit}>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <Card
+              className="section-card"
+              title="Basic Information"
+              loading={loading}
+            >
+              <Form.Item name="name" label="Full Name">
+                <Input placeholder="John Doe" />
+              </Form.Item>
+              <Form.Item name="email" label="Email">
+                <Input value={email} disabled />
+              </Form.Item>
+              {!emailVerified ? (
+                <>
+                  <Space style={{ marginBottom: 10 }}>
+                    <Tag color="red">Email not verified</Tag>
+                    <Button size="small" onClick={handleSendVerification}>
+                      Send Verification OTP
                     </Button>
                   </Space>
-                )}
-              </>
-            ) : (
-              <Tag color="green" style={{ marginBottom: 10 }}>
-                Email Verified
-              </Tag>
-            )}
-            <Form.Item name="roleTitle" label="Your Role / Title">
-              <Input placeholder="Frontend Engineer, Designer, etc." />
-            </Form.Item>
-            <Form.Item name="skills" label="Skills (comma separated)">
-              <Input placeholder="React, Figma, Node.js" />
-            </Form.Item>
-            <Form.Item name="portfolio" label="Portfolio URL or GitHub">
-              <Input placeholder="https://yourportfolio.com" />
-            </Form.Item>
-            <Form.Item name="linkedin" label="LinkedIn Profile">
-              <Input placeholder="https://linkedin.com/in/yourprofile" />
-            </Form.Item>
-            <Form.Item name="accountNumber" label="Bank Account Number">
-              <Input placeholder="1234567890" />
-            </Form.Item>
-            <Form.Item name="routingNumber" label="Bank Routing Number">
-              <Input placeholder="1234567890" />
-            </Form.Item>
-            <Button type="primary" htmlType="submit" block>
-              Save
-            </Button>
-          </Form>
-        </Card>
+                  {otpSent && (
+                    <Space direction="vertical" style={{ width: '100%' }}>
+                      <Input
+                        placeholder="Enter OTP"
+                        value={token}
+                        onChange={(e) => setToken(e.target.value)}
+                      />
+                      <Button block type="primary" onClick={handleVerifyToken}>
+                        Verify Email
+                      </Button>
+                    </Space>
+                  )}
+                </>
+              ) : (
+                <Tag color="green" style={{ marginBottom: 10 }}>
+                  Email Verified
+                </Tag>
+              )}
+              <Form.Item name="roleTitle" label="Your Role / Title">
+                <Input placeholder="Frontend Engineer, Designer, etc." />
+              </Form.Item>
+              <Form.Item name="skills" label="Skills (comma separated)">
+                <Input placeholder="React, Figma, Node.js" />
+              </Form.Item>
+              <Form.Item name="portfolio" label="Portfolio URL or GitHub">
+                <Input placeholder="https://yourportfolio.com" />
+              </Form.Item>
+              <Form.Item name="linkedin" label="LinkedIn Profile">
+                <Input placeholder="https://linkedin.com/in/yourprofile" />
+              </Form.Item>
+            </Card>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.1 }}
+          >
+            <Card
+              className="section-card"
+              title="Payment Details"
+              loading={loading}
+            >
+              <Form.Item name="accountNumber" label="Bank Account Number">
+                <Input placeholder="1234567890" />
+              </Form.Item>
+              <Form.Item name="routingNumber" label="Bank Routing Number">
+                <Input placeholder="1234567890" />
+              </Form.Item>
+            </Card>
+          </motion.div>
+
+          <Button type="primary" htmlType="submit" block>
+            Save
+          </Button>
+        </Form>
       </Content>
     </Layout>
   );

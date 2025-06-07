@@ -9,6 +9,7 @@ import {
   Space,
   Tag,
 } from 'antd';
+import { motion } from 'framer-motion';
 import { Navbar } from '../../components';
 import {
   getOrganizationProfile,
@@ -90,92 +91,116 @@ const OrganizationProfile = () => {
         className="page-container"
         style={{ padding: '2rem', maxWidth: 800, margin: '0 auto' }}
       >
-        <Card
-          className="form-card"
-          style={{ marginBottom: 20 }}
-          loading={loading}
-          bodyStyle={{ padding: '1rem' }}
-        >
-          <Title level={3} style={{ textAlign: 'center' }}>
-            Organization Profile
-          </Title>
-          <Form form={form} layout="vertical" onFinish={handleSubmit}>
-            <Form.Item
-              name="companyName"
-              label="Company Name"
-              rules={[
-                { required: true, message: 'Please enter your company name' },
-              ]}
+        <Title level={3} style={{ textAlign: 'center', marginBottom: '1rem' }}>
+          Organization Profile
+        </Title>
+        <Form form={form} layout="vertical" onFinish={handleSubmit}>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <Card
+              className="section-card"
+              title="Organization Info"
+              loading={loading}
             >
-              <Input placeholder="Example Inc." />
-            </Form.Item>
-            <Form.Item name="email" label="Email">
-              <Input value={email} disabled />
-            </Form.Item>
-            {!emailVerified ? (
-              <>
-                <Space style={{ marginBottom: 10 }}>
-                  <Tag color="red">Email not verified</Tag>
-                  <Button size="small" onClick={handleSendVerification}>
-                    Send Verification OTP
-                  </Button>
-                </Space>
-                {otpSent && (
-                  <Space direction="vertical" style={{ width: '100%' }}>
-                    <Input
-                      placeholder="Enter OTP"
-                      value={token}
-                      onChange={(e) => setToken(e.target.value)}
-                    />
-                    <Button block type="primary" onClick={handleVerifyToken}>
-                      Verify Email
+              <Form.Item
+                name="companyName"
+                label="Company Name"
+                rules={[
+                  { required: true, message: 'Please enter your company name' },
+                ]}
+              >
+                <Input placeholder="Example Inc." />
+              </Form.Item>
+              <Form.Item name="email" label="Email">
+                <Input value={email} disabled />
+              </Form.Item>
+              {!emailVerified ? (
+                <>
+                  <Space style={{ marginBottom: 10 }}>
+                    <Tag color="red">Email not verified</Tag>
+                    <Button size="small" onClick={handleSendVerification}>
+                      Send Verification OTP
                     </Button>
                   </Space>
-                )}
-              </>
-            ) : (
-              <Tag color="green" style={{ marginBottom: 10 }}>
-                Email Verified
-              </Tag>
-            )}
-            <Form.Item
-              name="description"
-              label={<Text>Company Description</Text>}
+                  {otpSent && (
+                    <Space direction="vertical" style={{ width: '100%' }}>
+                      <Input
+                        placeholder="Enter OTP"
+                        value={token}
+                        onChange={(e) => setToken(e.target.value)}
+                      />
+                      <Button block type="primary" onClick={handleVerifyToken}>
+                        Verify Email
+                      </Button>
+                    </Space>
+                  )}
+                </>
+              ) : (
+                <Tag color="green" style={{ marginBottom: 10 }}>
+                  Email Verified
+                </Tag>
+              )}
+              <Form.Item
+                name="description"
+                label={<Text>Company Description</Text>}
+              >
+                <Input.TextArea
+                  rows={4}
+                  placeholder="Tell us about your organization..."
+                />
+              </Form.Item>
+              <Form.Item name="industry" label="Industry">
+                <Input placeholder="Tech / Finance / Healthcare etc." />
+              </Form.Item>
+              <Form.Item name="website" label="Website URL">
+                <Input placeholder="https://yourcompany.com" />
+              </Form.Item>
+            </Card>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.1 }}
+          >
+            <Card
+              className="section-card"
+              title="GitHub Integration"
+              loading={loading}
             >
-              <Input.TextArea
-                rows={4}
-                placeholder="Tell us about your organization..."
+              <GitHubIntegration
+                uid={uid}
+                profile={profile}
+                setProfile={setProfile}
               />
-            </Form.Item>
-            <Form.Item name="industry" label="Industry">
-              <Input placeholder="Tech / Finance / Healthcare etc." />
-            </Form.Item>
-            <Form.Item name="website" label="Website URL">
-              <Input placeholder="https://yourcompany.com" />
-            </Form.Item>
-            <Button type="primary" htmlType="submit" block>
-              Save
-            </Button>
-          </Form>
-        </Card>
-        <Card style={{ width: 500, marginBottom: 20 }} loading={loading}>
-          <GitHubIntegration
-            uid={uid}
-            profile={profile}
-            setProfile={setProfile}
-          />
-        </Card>
-        <Card
-          className="form-card"
-          loading={loading}
-          bodyStyle={{ padding: '1rem' }}
-        >
-          <DiscordIntegration
-            uid={uid}
-            profile={profile}
-            setProfile={setProfile}
-          />
-        </Card>
+            </Card>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.2 }}
+          >
+            <Card
+              className="section-card"
+              title="Discord Integration"
+              loading={loading}
+            >
+              <DiscordIntegration
+                uid={uid}
+                profile={profile}
+                setProfile={setProfile}
+              />
+            </Card>
+          </motion.div>
+
+          <Button type="primary" htmlType="submit" block>
+            Save
+          </Button>
+        </Form>
       </Content>
     </Layout>
   );
