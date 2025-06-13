@@ -17,6 +17,7 @@ import { getContributorPayments } from '../../api/contributor/payments';
 import { getContributorAnalytics } from '../../api/contributor/profile';
 import formatDate from '../../utils/formatDate';
 import { PaymentHistoryTable } from '../../components';
+import AppLayout from '../../components/AppLayout';
 
 const { Title } = Typography;
 const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#d0ed57'];
@@ -148,9 +149,9 @@ const ContributorInsights = ({ user }) => {
   ];
 
   return (
-    <div className="page-container">
+    <AppLayout>
       <Tabs defaultActiveKey="line" items={items} />
-    </div>
+    </AppLayout>
   );
 };
 

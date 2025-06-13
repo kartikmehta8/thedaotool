@@ -17,6 +17,7 @@ import { getOrganizationPayments } from '../../api/organization/payments';
 import { getOrganizationAnalytics } from '../../api/organization/profile';
 import formatDate from '../../utils/formatDate';
 import { PaymentHistoryTable } from '../../components';
+import AppLayout from '../../components/AppLayout';
 
 const { Title } = Typography;
 const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#d0ed57'];
@@ -148,9 +149,9 @@ const OrganizationInsights = ({ user }) => {
   ];
 
   return (
-    <div className="page-container">
+    <AppLayout>
       <Tabs defaultActiveKey="line" items={items} />
-    </div>
+    </AppLayout>
   );
 };
 
