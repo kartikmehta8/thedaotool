@@ -39,11 +39,13 @@ body.dark {
 }
 
 /* Right aligned drawer-style modal */
+/* Right aligned drawer-style modal */
 .modal-right {
   display: flex;
   align-items: stretch;
   justify-content: flex-end;
   height: 100vh;
+  padding: 0;
 }
 
 .modal-right .ant-modal {
@@ -52,12 +54,18 @@ body.dark {
   top: 0;
   transform: none;
   height: 100vh;
+  display: flex;
 }
 
 .modal-right .ant-modal-content {
   height: 100%;
   display: flex;
   flex-direction: column;
+}
+
+.modal-right .ant-modal-body {
+  flex: 1;
+  overflow-y: auto;
 }
 
 @media (max-width: 768px) {

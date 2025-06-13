@@ -1,6 +1,6 @@
 import React from 'react';
 import { Modal, Form, Input, DatePicker, Button, Tooltip, Grid } from 'antd';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { createBounty } from '../../api/organization/bounties';
 import toast from '../../utils/toast';
 import { useAuth } from '../../context/AuthContext';
@@ -30,77 +30,83 @@ const CreateBountyModal = ({ visible, onCancel, onCreateSuccess, userId }) => {
   const screens = Grid.useBreakpoint();
 
   return (
-    <Modal
-      title="Create New Bounty"
-      open={visible}
-      onCancel={onCancel}
-      footer={null}
-      closeIcon={
-        <span style={{ color: 'var(--text-color)', fontSize: '16px' }}>×</span>
-      }
-      width={screens.xs ? '100%' : 600}
-      bodyStyle={{ flex: 1, overflowY: 'auto' }}
-      wrapClassName="modal-right"
-      modalRender={(modal) => (
-        <motion.div
-          initial={{ x: '100%', opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          exit={{ x: '100%', opacity: 0 }}
-          transition={{ type: 'spring', stiffness: 260, damping: 20 }}
-        >
-          {modal}
-        </motion.div>
-      )}
-    >
-      <Form layout="vertical" form={form}>
-        <Form.Item
-          name="name"
-          label="Task Name"
-          rules={[{ required: true, message: 'Please enter Task Name' }]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          name="description"
-          label="Description"
-          rules={[{ required: true, message: 'Please enter Description' }]}
-        >
-          <Input.TextArea rows={3} />
-        </Form.Item>
-        <Form.Item
-          name="deadline"
-          label="Deadline"
-          rules={[{ required: true, message: 'Please enter Deadline' }]}
-        >
-          <DatePicker style={{ width: '100%' }} />
-        </Form.Item>
-        <Form.Item
-          name="amount"
-          label="Amount ($)"
-          rules={[{ required: true, message: 'Please enter Amount ($)' }]}
-        >
-          <Input type="number" />
-        </Form.Item>
-        <Form.Item
-          name="tags"
-          label={
-            <span>
-              Tags (comma separated)
-              <Tooltip title="Used for skill matching" placement="right">
-                <span style={{ marginLeft: 4, cursor: 'help' }}>?</span>
-              </Tooltip>
+    <AnimatePresence>
+      {visible && (
+        <Modal
+          title="Create New Bounty"
+          open
+          onCancel={onCancel}
+          footer={null}
+          closeIcon={
+            <span style={{ color: 'var(--text-color)', fontSize: '16px' }}>
+              ×
             </span>
           }
-          rules={[{ required: false }]}
+          width={screens.xs ? '100%' : 600}
+          bodyStyle={{ flex: 1, overflowY: 'auto' }}
+          wrapClassName="modal-right"
+          modalRender={(modal) => (
+            <motion.div
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ type: 'spring', stiffness: 260, damping: 20 }}
+            >
+              {modal}
+            </motion.div>
+          )}
         >
-          <Input />
-        </Form.Item>
+          <Form layout="vertical" form={form}>
+            <Form.Item
+              name="name"
+              label="Task Name"
+              rules={[{ required: true, message: 'Please enter Task Name' }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              name="description"
+              label="Description"
+              rules={[{ required: true, message: 'Please enter Description' }]}
+            >
+              <Input.TextArea rows={3} />
+            </Form.Item>
+            <Form.Item
+              name="deadline"
+              label="Deadline"
+              rules={[{ required: true, message: 'Please enter Deadline' }]}
+            >
+              <DatePicker style={{ width: '100%' }} />
+            </Form.Item>
+            <Form.Item
+              name="amount"
+              label="Amount ($)"
+              rules={[{ required: true, message: 'Please enter Amount ($)' }]}
+            >
+              <Input type="number" />
+            </Form.Item>
+            <Form.Item
+              name="tags"
+              label={
+                <span>
+                  Tags (comma separated)
+                  <Tooltip title="Used for skill matching" placement="right">
+                    <span style={{ marginLeft: 4, cursor: 'help' }}>?</span>
+                  </Tooltip>
+                </span>
+              }
+              rules={[{ required: false }]}
+            >
+              <Input />
+            </Form.Item>
 
-        <Button type="primary" block onClick={handleCreate}>
-          Create
-        </Button>
-      </Form>
-    </Modal>
+            <Button type="primary" block onClick={handleCreate}>
+              Create
+            </Button>
+          </Form>
+        </Modal>
+      )}
+    </AnimatePresence>
   );
 };
 
