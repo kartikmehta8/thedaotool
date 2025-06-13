@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Modal, Input, Grid } from 'antd';
+import { motion } from 'framer-motion';
 import { submitWork } from '../../api/contributor/bounties';
 import toast from '../../utils/toast';
 import { useAuth } from '../../context/AuthContext';
@@ -37,6 +38,16 @@ const SubmitWorkModal = ({ visible, bountyId, onCancel, onSubmitSuccess }) => {
       okText="Submit"
       width={screens.xs ? '100%' : 500}
       bodyStyle={{ maxHeight: '60vh', overflowY: 'auto' }}
+      wrapClassName="modal-right"
+      modalRender={(modal) => (
+        <motion.div
+          initial={{ x: 100, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ type: 'spring', stiffness: 260, damping: 20 }}
+        >
+          {modal}
+        </motion.div>
+      )}
     >
       <Input
         placeholder="Enter delivery link (GitHub, site, etc.)"

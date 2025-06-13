@@ -37,3 +37,23 @@ body.dark {
 .card-theme {
   background-color: var(--card-bg);
 }
+
+/* Position modals on the right side */
+.modal-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.modal-right .ant-modal {
+  margin: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+@media (max-width: 768px) {
+  .modal-right {
+    justify-content: center;
+  }
+}

@@ -12,6 +12,7 @@ import {
   Col,
   Grid,
 } from 'antd';
+import { motion } from 'framer-motion';
 import {
   updateBounty,
   unassignContributor,
@@ -69,6 +70,16 @@ const ViewBountyModal = ({
       okText="Save Changes"
       width={screens.xs ? '100%' : 600}
       bodyStyle={{ maxHeight: '60vh', overflowY: 'auto' }}
+      wrapClassName="modal-right"
+      modalRender={(modal) => (
+        <motion.div
+          initial={{ x: 100, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ type: 'spring', stiffness: 260, damping: 20 }}
+        >
+          {modal}
+        </motion.div>
+      )}
     >
       <Row gutter={[16, 16]}>
         <Col span={24}>

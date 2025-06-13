@@ -1,5 +1,6 @@
 import React from 'react';
 import { Modal, Form, Input, DatePicker, Button, Tooltip, Grid } from 'antd';
+import { motion } from 'framer-motion';
 import { createBounty } from '../../api/organization/bounties';
 import toast from '../../utils/toast';
 import { useAuth } from '../../context/AuthContext';
@@ -39,6 +40,16 @@ const CreateBountyModal = ({ visible, onCancel, onCreateSuccess, userId }) => {
       }
       width={screens.xs ? '100%' : 600}
       bodyStyle={{ maxHeight: '60vh', overflowY: 'auto' }}
+      wrapClassName="modal-right"
+      modalRender={(modal) => (
+        <motion.div
+          initial={{ x: 100, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ type: 'spring', stiffness: 260, damping: 20 }}
+        >
+          {modal}
+        </motion.div>
+      )}
     >
       <Form layout="vertical" form={form}>
         <Form.Item

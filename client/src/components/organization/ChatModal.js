@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Modal, Input, List, Grid } from 'antd';
+import { motion } from 'framer-motion';
 import { listenToMessages, sendMessage } from '../../realtime/chat';
 
 const ChatModal = ({ visible, bountyId, userId, onClose }) => {
@@ -42,6 +43,16 @@ const ChatModal = ({ visible, bountyId, userId, onClose }) => {
       footer={null}
       width={screens.xs ? '100%' : 600}
       bodyStyle={{ maxHeight: '60vh', overflowY: 'auto' }}
+      wrapClassName="modal-right"
+      modalRender={(modal) => (
+        <motion.div
+          initial={{ x: 100, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ type: 'spring', stiffness: 260, damping: 20 }}
+        >
+          {modal}
+        </motion.div>
+      )}
     >
       <div
         style={{
