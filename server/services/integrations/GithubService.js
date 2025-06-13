@@ -1,6 +1,7 @@
 const axios = require('axios');
 const FirestoreService = require('@services/database/FirestoreService');
 const crypto = require('crypto');
+const CacheService = require('@services/misc/CacheService');
 
 const CLIENT_ID = process.env.GITHUB_CLIENT_ID;
 const CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
@@ -63,6 +64,7 @@ class GithubService {
     await FirestoreService.updateDocument('organizations', uid, {
       githubToken: accessToken,
     });
+    await CacheService.del(`GET:/api/organization/profile/${uid}`);
   }
 
   async listRepos(uid) {
@@ -105,6 +107,7 @@ class GithubService {
     await FirestoreService.updateDocument('organizations', uid, {
       repo: repoName,
     });
+    await CacheService.del(`GET:/api/organization/profile/${uid}`);
   }
 
   async fetchOpenIssues(repo, token) {

@@ -1,6 +1,7 @@
 const axios = require('axios');
 const FirestoreService = require('@services/database/FirestoreService');
 const crypto = require('crypto');
+const CacheService = require('@services/misc/CacheService');
 
 const CLIENT_ID = process.env.DISCORD_CLIENT_ID;
 const CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET;
@@ -50,10 +51,11 @@ class DiscordService {
   }
 
   async saveAccessTokenToOrganization(uid, accessToken) {
-    return FirestoreService.updateDocument('organizations', uid, {
+    await FirestoreService.updateDocument('organizations', uid, {
       discordAccessToken: accessToken,
       discordEnabled: true,
     });
+    await CacheService.del(`GET:/api/organization/profile/${uid}`);
   }
 
   async fetchMutualGuildChannels(uid) {
@@ -109,9 +111,10 @@ class DiscordService {
   }
 
   async saveDiscordChannel(uid, channelId) {
-    return FirestoreService.updateDocument('organizations', uid, {
+    await FirestoreService.updateDocument('organizations', uid, {
       discordChannel: channelId,
     });
+    await CacheService.del(`GET:/api/organization/profile/${uid}`);
   }
 }
 
