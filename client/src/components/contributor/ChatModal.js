@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { Modal, Input, Button, List, Grid } from 'antd';
 import { listenToMessages, sendMessage } from '../../realtime/chat';
 
@@ -64,6 +65,13 @@ const ChatModal = ({ visible, bounty, userId, onCancel }) => {
       </Button>
     </Modal>
   );
+};
+
+ChatModal.propTypes = {
+  visible: PropTypes.bool.isRequired,
+  bounty: PropTypes.object,
+  userId: PropTypes.string.isRequired,
+  onCancel: PropTypes.func.isRequired,
 };
 
 export default ChatModal;

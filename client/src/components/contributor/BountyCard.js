@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Card, Typography, Tag, Button, Col } from 'antd';
 import { applyToBounty, unassignSelf } from '../../api/contributor/bounties';
 import toast from '../../utils/toast';
@@ -51,7 +52,7 @@ const BountyCard = ({
     <Col xs={24} sm={12} md={8}>
       <Card
         hoverable
-        style={{ backgroundColor: '#1f1f1f' }}
+        className="card-theme"
         title={<Text strong>{bounty.name}</Text>}
         extra={<Tag color={statusColors[bounty.status]}>{bounty.status}</Tag>}
       >
@@ -136,6 +137,14 @@ const BountyCard = ({
       </Card>
     </Col>
   );
+};
+
+BountyCard.propTypes = {
+  bounty: PropTypes.object.isRequired,
+  userId: PropTypes.string.isRequired,
+  onRefetch: PropTypes.func.isRequired,
+  onOpenSubmitModal: PropTypes.func,
+  onOpenChat: PropTypes.func,
 };
 
 export default BountyCard;

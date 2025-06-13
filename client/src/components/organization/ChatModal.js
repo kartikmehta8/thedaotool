@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { Modal, Input, List, Grid } from 'antd';
 import { listenToMessages, sendMessage } from '../../realtime/chat';
 
@@ -46,7 +47,8 @@ const ChatModal = ({ visible, bountyId, userId, onClose }) => {
         style={{
           maxHeight: '300px',
           overflowY: 'auto',
-          backgroundColor: '#111',
+          backgroundColor: 'var(--card-bg)',
+          color: 'var(--text-color)',
           padding: '1rem',
           marginBottom: '1rem',
           borderRadius: '8px',
@@ -70,6 +72,13 @@ const ChatModal = ({ visible, bountyId, userId, onClose }) => {
       />
     </Modal>
   );
+};
+
+ChatModal.propTypes = {
+  visible: PropTypes.bool.isRequired,
+  bountyId: PropTypes.string,
+  userId: PropTypes.string.isRequired,
+  onClose: PropTypes.func.isRequired,
 };
 
 export default ChatModal;

@@ -17,6 +17,7 @@ import { getOrganizationPayments } from '../../api/organization/payments';
 import { getOrganizationAnalytics } from '../../api/organization/profile';
 import formatDate from '../../utils/formatDate';
 import { PaymentHistoryTable } from '../../components';
+import AppLayout from '../../components/AppLayout';
 
 const { Title } = Typography;
 const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#d0ed57'];
@@ -84,13 +85,8 @@ const OrganizationInsights = ({ user }) => {
     .sort((a, b) => a.date.localeCompare(b.date));
 
   const lineChart = (
-    <Card
-      style={{ backgroundColor: '#1f1f1f' }}
-      bodyStyle={{ padding: '1rem' }}
-    >
-      <Title level={4} style={{ color: '#fff' }}>
-        Bounties Created
-      </Title>
+    <Card className="card-theme" bodyStyle={{ padding: '1rem' }}>
+      <Title level={4}>Bounties Created</Title>
       <ResponsiveContainer width="100%" height={300}>
         <LineChart
           data={monthlyData}
@@ -107,13 +103,8 @@ const OrganizationInsights = ({ user }) => {
   );
 
   const pieChart = (
-    <Card
-      style={{ backgroundColor: '#1f1f1f' }}
-      bodyStyle={{ padding: '1rem' }}
-    >
-      <Title level={4} style={{ color: '#fff' }}>
-        Bounty Status Distribution
-      </Title>
+    <Card className="card-theme" bodyStyle={{ padding: '1rem' }}>
+      <Title level={4}>Bounty Status Distribution</Title>
       <ResponsiveContainer width="100%" height={400}>
         <PieChart>
           <Pie
@@ -158,9 +149,9 @@ const OrganizationInsights = ({ user }) => {
   ];
 
   return (
-    <div className="page-container">
+    <AppLayout>
       <Tabs defaultActiveKey="line" items={items} />
-    </div>
+    </AppLayout>
   );
 };
 

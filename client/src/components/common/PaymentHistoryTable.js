@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import { Card, Table, Typography } from 'antd';
 
 const { Title } = Typography;
@@ -20,12 +21,8 @@ const PaymentHistoryTable = React.memo(
     return (
       <div className="page-container">
         <Card
-          title={
-            <Title level={4} style={{ color: '#fff' }}>
-              {title}
-            </Title>
-          }
-          style={{ backgroundColor: '#1f1f1f' }}
+          title={<Title level={4}>{title}</Title>}
+          className="card-theme"
           bodyStyle={{ padding: '1rem' }}
         >
           <Table
@@ -41,5 +38,12 @@ const PaymentHistoryTable = React.memo(
     );
   }
 );
+
+PaymentHistoryTable.propTypes = {
+  fetchPayments: PropTypes.func.isRequired,
+  userId: PropTypes.string.isRequired,
+  columns: PropTypes.array.isRequired,
+  title: PropTypes.string.isRequired,
+};
 
 export default PaymentHistoryTable;

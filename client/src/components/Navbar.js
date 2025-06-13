@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
-import { Layout, Button, Space, Drawer, Grid } from 'antd';
-import { MenuOutlined } from '@ant-design/icons';
+import { Layout, Button, Space, Drawer, Grid, Switch } from 'antd';
+import { MenuOutlined, BulbOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 
 const { Header } = Layout;
 
 const Navbar = () => {
   const navigate = useNavigate();
   const { user, setUser } = useAuth();
+  const { dark, toggleTheme } = useTheme();
   const role = user?.role;
 
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -30,14 +32,14 @@ const Navbar = () => {
 
   return (
     <Header
+      className="card-theme"
       style={{
-        backgroundColor: '#1f1f1f',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
       }}
     >
-      <div style={{ color: '#fff', fontSize: '18px', fontWeight: 'bold' }}>
+      <div style={{ fontSize: '18px', fontWeight: 'bold' }}>
         DAO{' '}
         <span style={{ fontWeight: 'normal', fontSize: '14px', color: '#aaa' }}>
           [{role}]
@@ -51,6 +53,12 @@ const Navbar = () => {
           <Button type="default" onClick={handleProfile}>
             Profile
           </Button>
+          <Switch
+            checked={dark}
+            onChange={toggleTheme}
+            checkedChildren={<BulbOutlined />}
+            unCheckedChildren={<BulbOutlined />}
+          />
           <Button type="primary" onClick={handleLogout}>
             Logout
           </Button>
@@ -58,7 +66,7 @@ const Navbar = () => {
       ) : (
         <Button
           type="text"
-          icon={<MenuOutlined style={{ color: '#fff' }} />}
+          icon={<MenuOutlined style={{ color: 'var(--text-color)' }} />}
           onClick={() => setDrawerOpen(true)}
         />
       )}
@@ -91,6 +99,14 @@ const Navbar = () => {
           >
             Profile
           </Button>
+          <div style={{ marginBottom: 8, textAlign: 'center' }}>
+            <Switch
+              checked={dark}
+              onChange={toggleTheme}
+              checkedChildren={<BulbOutlined />}
+              unCheckedChildren={<BulbOutlined />}
+            />
+          </div>
           <Button type="primary" block onClick={handleLogout}>
             Logout
           </Button>

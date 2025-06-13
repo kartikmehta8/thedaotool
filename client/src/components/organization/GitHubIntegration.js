@@ -51,7 +51,7 @@ const GitHubIntegration = ({ uid, profile, setProfile }) => {
 
   return (
     <>
-      <Paragraph style={{ color: '#fff', marginTop: '1rem' }}>
+      <Paragraph style={{ marginTop: '1rem' }}>
         Link a GitHub repo to sync issues labeled <code>dao</code> as bounties.
       </Paragraph>
 
