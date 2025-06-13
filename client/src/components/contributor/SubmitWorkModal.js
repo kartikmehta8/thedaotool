@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { Modal, Input, Grid } from 'antd';
 import { submitWork } from '../../api/contributor/bounties';
 import toast from '../../utils/toast';
@@ -44,6 +45,13 @@ const SubmitWorkModal = ({ visible, bountyId, onCancel, onSubmitSuccess }) => {
       />
     </Modal>
   );
+};
+
+SubmitWorkModal.propTypes = {
+  visible: PropTypes.bool.isRequired,
+  bountyId: PropTypes.string.isRequired,
+  onCancel: PropTypes.func.isRequired,
+  onSubmitSuccess: PropTypes.func.isRequired,
 };
 
 export default SubmitWorkModal;

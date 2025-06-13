@@ -44,9 +44,7 @@ const OrganizationDashboard = () => {
 
   return (
     <div className="page-container">
-      <Title level={3} style={{ color: '#fff' }}>
-        My Bounties
-      </Title>
+      <Title level={3}>My Bounties</Title>
       {!emailVerified && <EmailVerificationBanner email={user.email} />}
       <Button
         icon={<PlusOutlined />}

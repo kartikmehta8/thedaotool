@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Card, Typography, Tag, Button, Col } from 'antd';
 import { MessageOutlined } from '@ant-design/icons';
 import { deleteBounty } from '../../api/organization/bounties';
@@ -30,7 +31,7 @@ const BountyCard = ({ bounty, onView, onChatOpen, onRefetch }) => {
     <Col xs={24} sm={12} md={8}>
       <Card
         hoverable
-        style={{ backgroundColor: '#1f1f1f' }}
+        className="card-theme"
         onClick={onView}
         title={<Text strong>{bounty.name}</Text>}
         extra={<Tag color={statusColors[bounty.status]}>{bounty.status}</Tag>}
@@ -78,6 +79,13 @@ const BountyCard = ({ bounty, onView, onChatOpen, onRefetch }) => {
       </Card>
     </Col>
   );
+};
+
+BountyCard.propTypes = {
+  bounty: PropTypes.object.isRequired,
+  onView: PropTypes.func.isRequired,
+  onChatOpen: PropTypes.func,
+  onRefetch: PropTypes.func.isRequired,
 };
 
 export default BountyCard;

@@ -58,15 +58,11 @@ const ContributorDashboard = () => {
 
   return (
     <div className="page-container">
-      <Title level={3} style={{ color: '#fff' }}>
-        Available Bounties
-      </Title>
+      <Title level={3}>Available Bounties</Title>
       {!emailVerified && <EmailVerificationBanner email={user.email} />}
 
       <div style={{ marginBottom: '1rem' }}>
-        <span style={{ color: '#fff', marginRight: '0.5rem' }}>
-          Filter by Matching Skills
-        </span>
+        <span style={{ marginRight: '0.5rem' }}>Filter by Matching Skills</span>
         <Switch
           checked={filterBySkills}
           onChange={(checked) => setFilterBySkills(checked)}

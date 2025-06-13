@@ -83,7 +83,7 @@ const OrganizationProfile = () => {
   }, []);
 
   return (
-    <Layout style={{ minHeight: '100vh', backgroundColor: '#141414' }}>
+    <Layout style={{ minHeight: '100vh' }}>
       <Content
         className="page-container"
         style={{
@@ -94,12 +94,12 @@ const OrganizationProfile = () => {
         }}
       >
         <Card
-          className="form-card"
-          style={{ backgroundColor: '#1f1f1f', marginBottom: 20 }}
+          className="form-card card-theme"
+          style={{ marginBottom: 20 }}
           loading={loading}
           bodyStyle={{ padding: '1rem' }}
         >
-          <Title level={3} style={{ color: '#fff', textAlign: 'center' }}>
+          <Title level={3} style={{ textAlign: 'center' }}>
             Organization Profile
           </Title>
           <Form form={form} layout="vertical" onFinish={handleSubmit}>
@@ -162,7 +162,8 @@ const OrganizationProfile = () => {
           </Form>
         </Card>
         <Card
-          style={{ width: 500, backgroundColor: '#1f1f1f', marginBottom: 20 }}
+          className="card-theme"
+          style={{ width: 500, marginBottom: 20 }}
           loading={loading}
         >
           <GitHubIntegration
@@ -172,8 +173,7 @@ const OrganizationProfile = () => {
           />
         </Card>
         <Card
-          className="form-card"
-          style={{ backgroundColor: '#1f1f1f' }}
+          className="form-card card-theme"
           loading={loading}
           bodyStyle={{ padding: '1rem' }}
         >

@@ -75,7 +75,7 @@ const ContributorProfile = () => {
   };
 
   return (
-    <Layout style={{ minHeight: '100vh', backgroundColor: '#141414' }}>
+    <Layout style={{ minHeight: '100vh' }}>
       <Content
         className="page-container"
         style={{
@@ -85,12 +85,11 @@ const ContributorProfile = () => {
         }}
       >
         <Card
-          className="form-card"
-          style={{ backgroundColor: '#1f1f1f' }}
+          className="form-card card-theme"
           loading={loading}
           bodyStyle={{ padding: '1rem' }}
         >
-          <Title level={3} style={{ color: '#fff', textAlign: 'center' }}>
+          <Title level={3} style={{ textAlign: 'center' }}>
             Contributor Profile
           </Title>
           <Form form={form} layout="vertical" onFinish={handleSubmit}>

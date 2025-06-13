@@ -6,9 +6,23 @@
 
 body,
 html {
-  background-color: #141414;
-  color: #fff;
   margin: 0;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  font-family: 'Inter', sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body.light {
+  --background-color: #ffffff;
+  --text-color: #000000;
+  --card-bg: #ffffff;
+}
+
+body.dark {
+  --background-color: #141414;
+  --text-color: #ffffff;
+  --card-bg: #1f1f1f;
 }
 
 .page-container {
@@ -18,4 +32,8 @@ html {
 .form-card {
   width: 100%;
   max-width: 500px;
+}
+
+.card-theme {
+  background-color: var(--card-bg);
 }

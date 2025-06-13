@@ -34,7 +34,9 @@ const CreateBountyModal = ({ visible, onCancel, onCreateSuccess, userId }) => {
       open={visible}
       onCancel={onCancel}
       footer={null}
-      closeIcon={<span style={{ color: '#fff', fontSize: '16px' }}>×</span>}
+      closeIcon={
+        <span style={{ color: 'var(--text-color)', fontSize: '16px' }}>×</span>
+      }
       width={screens.xs ? '100%' : 600}
       bodyStyle={{ maxHeight: '60vh', overflowY: 'auto' }}
     >

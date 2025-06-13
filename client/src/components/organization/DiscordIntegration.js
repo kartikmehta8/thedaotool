@@ -66,7 +66,7 @@ const DiscordIntegration = ({ uid, profile, setProfile }) => {
 
   return (
     <>
-      <Paragraph style={{ color: '#fff', marginTop: '1rem' }}>
+      <Paragraph style={{ marginTop: '1rem' }}>
         Connect Discord to post new bounties automatically to your channel.
       </Paragraph>
 
@@ -75,7 +75,7 @@ const DiscordIntegration = ({ uid, profile, setProfile }) => {
           <Text style={{ color: '#52c41a' }}>Discord connected</Text>
 
           <Space>
-            <Text style={{ color: '#fff' }}>Enable Posting:</Text>
+            <Text>Enable Posting:</Text>
             <Switch
               checked={profile.discordEnabled}
               onChange={handleSwitchChange}
@@ -83,7 +83,7 @@ const DiscordIntegration = ({ uid, profile, setProfile }) => {
           </Space>
 
           <Space>
-            <Text style={{ color: '#fff' }}>Send:</Text>
+            <Text>Send:</Text>
             <Select
               value={profile.discordSendMode || 'own'}
               onChange={handleSendModeChange}
@@ -95,7 +95,7 @@ const DiscordIntegration = ({ uid, profile, setProfile }) => {
           </Space>
 
           <Space>
-            <Text style={{ color: '#fff' }}>Channel:</Text>
+            <Text>Channel:</Text>
             <Select
               value={profile.discordChannel || undefined}
               onChange={handleChannelSelect}
