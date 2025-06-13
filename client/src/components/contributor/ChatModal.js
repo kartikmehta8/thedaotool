@@ -37,12 +37,13 @@ const ChatModal = ({ visible, bounty, userId, onCancel }) => {
       onCancel={onCancel}
       footer={null}
       width={screens.xs ? '100%' : 600}
-      bodyStyle={{ maxHeight: '60vh', overflowY: 'auto' }}
+      bodyStyle={{ flex: 1, overflowY: 'auto' }}
       wrapClassName="modal-right"
       modalRender={(modal) => (
         <motion.div
-          initial={{ x: 100, opacity: 0 }}
+          initial={{ x: '100%', opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
+          exit={{ x: '100%', opacity: 0 }}
           transition={{ type: 'spring', stiffness: 260, damping: 20 }}
         >
           {modal}

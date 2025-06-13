@@ -38,18 +38,26 @@ body.dark {
   background-color: var(--card-bg);
 }
 
-/* Position modals on the right side */
+/* Right aligned drawer-style modal */
 .modal-right {
   display: flex;
-  align-items: center;
+  align-items: stretch;
   justify-content: flex-end;
+  height: 100vh;
 }
 
 .modal-right .ant-modal {
   margin: 0;
   right: 0;
-  top: 50%;
-  transform: translateY(-50%);
+  top: 0;
+  transform: none;
+  height: 100vh;
+}
+
+.modal-right .ant-modal-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 @media (max-width: 768px) {
