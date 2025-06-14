@@ -34,6 +34,7 @@ const ContributorProfile = () => {
     email: email,
     accountNumber: '',
     routingNumber: '',
+    walletAddress: user.walletAddress,
   };
 
   useEffect(() => {
@@ -88,6 +89,13 @@ const ContributorProfile = () => {
           </Form.Item>
           <Form.Item name="email" label="Email">
             <Input value={email} disabled style={{ color: '#ccc' }} />
+          </Form.Item>
+          <Form.Item name="walletAddress" label="Wallet Address">
+            <Input
+              value={user.walletAddress}
+              disabled
+              style={{ color: '#ccc' }}
+            />
           </Form.Item>
           {!emailVerified ? (
             <>

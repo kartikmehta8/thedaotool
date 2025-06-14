@@ -10,6 +10,7 @@
     "react-router-dom": "^7.4.0",
     "react-scripts": "5.0.1",
     "socket.io-client": "^4.8.1",
+    "@privy-io/react-auth": "^0.16.1",
     "recharts": "^2.8.0"
   },
   "scripts": {

@@ -37,6 +37,7 @@ const OrganizationProfile = () => {
     website: '',
     email: email,
     apiKey: '',
+    walletAddress: user.walletAddress,
   };
 
   const fetchProfile = async () => {
@@ -104,6 +105,13 @@ const OrganizationProfile = () => {
           </Form.Item>
           <Form.Item name="email" label="Email">
             <Input value={email} disabled style={{ color: '#ccc' }} />
+          </Form.Item>
+          <Form.Item name="walletAddress" label="Wallet Address">
+            <Input
+              value={user.walletAddress}
+              disabled
+              style={{ color: '#ccc' }}
+            />
           </Form.Item>
           {!emailVerified ? (
             <>
