@@ -6,7 +6,7 @@ const createBountySchema = {
       name: Joi.string().min(3).max(100).required(),
       description: Joi.string().min(10).max(2000).required(),
       deadline: Joi.date().required(),
-      amount: Joi.number().min(1).required(),
+      amount: Joi.number().min(0.3).required(),
       tags: Joi.string().optional(),
     }).required(),
     userId: Joi.string().required(),
