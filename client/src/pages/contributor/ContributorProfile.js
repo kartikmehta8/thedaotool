@@ -135,12 +135,6 @@ const ContributorProfile = () => {
           <Form.Item name="linkedin" label="LinkedIn Profile">
             <Input placeholder="https://linkedin.com/in/yourprofile" />
           </Form.Item>
-          <Form.Item name="accountNumber" label="Bank Account Number">
-            <Input placeholder="1234567890" />
-          </Form.Item>
-          <Form.Item name="routingNumber" label="Bank Routing Number">
-            <Input placeholder="1234567890" />
-          </Form.Item>
           <Button type="primary" htmlType="submit" block>
             Save
           </Button>

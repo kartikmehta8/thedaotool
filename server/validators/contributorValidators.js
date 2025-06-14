@@ -29,12 +29,6 @@ const saveProfileSchema = {
     linkedin: Joi.string().uri().optional(),
     portfolio: Joi.string().uri().optional(),
     roleTitle: Joi.string().optional(),
-    accountNumber: Joi.string()
-      .pattern(/^\d{10}$/)
-      .optional(),
-    routingNumber: Joi.string()
-      .pattern(/^\d{10}$/)
-      .optional(),
     skills: Joi.string().optional(),
   }),
 };
