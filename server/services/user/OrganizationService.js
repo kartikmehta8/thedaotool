@@ -2,6 +2,8 @@ const FirestoreService = require('@services/database/FirestoreService');
 const RealtimeDatabaseService = require('@services/database/RealtimeDatabaseService');
 const postToDiscord = require('@utils/postToDiscord');
 const CacheService = require('@services/misc/CacheService');
+const PrivyService = require('@services/integrations/PrivyService');
+const EncryptionService = require('@services/misc/EncryptionService');
 
 class OrganizationService {
   async createBounty(values, userId) {
@@ -107,6 +109,59 @@ class OrganizationService {
     await RealtimeDatabaseService.removeData(`chats/${bountyId}`);
     await CacheService.del('GET:*bounties*');
     await CacheService.del('GET:*payments*');
+  }
+  async payContributor(bountyId, organizationId) {
+    const bounty = await FirestoreService.getDocument('bounties', bountyId);
+    if (!bounty) throw new Error('Bounty not found');
+    if (bounty.status !== 'pending_payment')
+      throw new Error('Not ready for payment');
+    const org = await FirestoreService.getDocument(
+      'organizations',
+      organizationId
+    );
+    if (!org) throw new Error('Organization not found');
+    let orgPk = org.walletPrivateKey
+      ? EncryptionService.decrypt(org.walletPrivateKey)
+      : null;
+    let orgAddress = org.walletAddress;
+    if (!orgPk || !orgAddress) {
+      const wallet = PrivyService.createWallet();
+      orgPk = wallet.privateKey;
+      orgAddress = wallet.address;
+      await FirestoreService.updateDocument('organizations', organizationId, {
+        walletAddress: orgAddress,
+        walletPrivateKey: EncryptionService.encrypt(orgPk),
+      });
+    }
+    const contributor = await FirestoreService.getDocument(
+      'contributors',
+      bounty.contributorId
+    );
+    if (!contributor) throw new Error('Contributor not found');
+    let contribPk = contributor.walletPrivateKey
+      ? EncryptionService.decrypt(contributor.walletPrivateKey)
+      : null;
+    let contribAddress = contributor.walletAddress;
+    if (!contribPk || !contribAddress) {
+      const w = PrivyService.createWallet();
+      contribPk = w.privateKey;
+      contribAddress = w.address;
+      await FirestoreService.updateDocument(
+        'contributors',
+        bounty.contributorId,
+        {
+          walletAddress: contribAddress,
+          walletPrivateKey: EncryptionService.encrypt(contribPk),
+        }
+      );
+    }
+    await PrivyService.sendPayment(orgPk, contribAddress, bounty.amount);
+    await FirestoreService.updateDocument('bounties', bountyId, {
+      status: 'closed',
+      updatedAt: new Date().toISOString(),
+    });
+    await CacheService.del('GET:*payments*');
+    return true;
   }
 
   async getOrganizationPayments(organizationId) {

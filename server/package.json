@@ -48,7 +48,8 @@
     "node-cron": "^3.0.3",
     "nodemailer": "^6.10.0",
     "socket.io": "^4.8.1",
-    "redis": "^4.6.7"
+    "redis": "^4.6.7",
+    "ethers": "^6.12.0"
   },
   "_moduleAliases": {
     "@controllers": "./controllers",

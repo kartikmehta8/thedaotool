@@ -60,6 +60,11 @@ class OrganizationRoutes extends IRoute {
       ValidationMiddleware.use(organizationValidator.bountyIdParamSchema),
       catchAsync(OrganizationController.unassignContributor)
     );
+    router.post(
+      '/bounties/:bountyId/pay',
+      ValidationMiddleware.use(organizationValidator.bountyIdParamSchema),
+      catchAsync(OrganizationController.payContributor)
+    );
 
     router.get(
       '/profile/:uid',

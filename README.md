@@ -44,7 +44,14 @@ npm start
 - React + Ant Design (Frontend)
 - Node.js + Express (Backend)
 - Firebase (Database, Misc)
-- Solana + Payman (Wallets & Payouts)
+- Privy + Web3Auth (Wallets & Payouts)
+
+## Privy Setup
+
+1. Add `REACT_APP_PRIVY_APP_ID` to `client/.env` with your Privy application ID.
+2. Add `PRIVY_RPC_URL` to `server/.env` pointing to your blockchain RPC endpoint.
+3. Install dependencies with `npm install` in both `client/` and `server/`.
+4. Start the backend with `npm run dev` and frontend with `npm start`.
 
 ## License
 

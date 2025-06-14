@@ -1,4 +1,5 @@
 import React from 'react';
+import { PrivyProvider } from '@privy-io/react-auth';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import { ConfigProvider } from 'antd';
@@ -23,12 +24,21 @@ const Root = () => {
     </ConfigProvider>
   );
 };
-
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <ThemeProvider>
-      <Root />
+      <PrivyProvider
+        appId={process.env.REACT_APP_PRIVY_APP_ID}
+        config={{
+          embeddedWallets: {
+            createOnLogin: 'users',
+            provider: 'web3auth',
+          },
+        }}
+      >
+        <Root />
+      </PrivyProvider>
     </ThemeProvider>
   </React.StrictMode>
 );
