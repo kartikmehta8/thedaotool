@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@privy-io/react-auth": "^2.14.2",
     "antd": "^5.24.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

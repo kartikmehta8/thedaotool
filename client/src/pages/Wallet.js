@@ -3,7 +3,6 @@ import { Card, Typography, Input, Button, Space } from 'antd';
 import { useAuth } from '../context/AuthContext';
 import { getBalance, sendFunds } from '../api/wallet';
 import toast from '../utils/toast';
-import { usePrivy } from '@privy-io/react-auth';
 import AppLayout from '../components/AppLayout';
 
 const { Title } = Typography;
@@ -13,7 +12,6 @@ const Wallet = () => {
   const [balance, setBalance] = useState(0);
   const [toAddress, setToAddress] = useState('');
   const [amount, setAmount] = useState('');
-  const { exportWallet } = usePrivy();
 
   const load = async () => {
     try {
@@ -60,9 +58,6 @@ const Wallet = () => {
         <p>
           <strong>Balance:</strong> {balance} SOL
         </p>
-        <Button onClick={() => exportWallet({ address: user.walletAddress })}>
-          Export Wallet
-        </Button>
       </Card>
       <Card className="form-card card-theme" bodyStyle={{ padding: '1rem' }}>
         <Title level={4}>Send Funds</Title>
