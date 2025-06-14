@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const LoginThrottleService = require('@services/misc/LoginThrottleService');
 const OTPService = require('@services/misc/OTPTokenService');
 const EmailService = require('@services/misc/EmailService');
+const PrivyService = require('@services/integrations/PrivyService');
 
 const MAX_ATTEMPTS = Number(process.env.MAX_LOGIN_ATTEMPTS || 3);
 const SALT_ROUNDS = 10;
@@ -37,12 +38,16 @@ class UserService {
 
     const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
 
+    const wallet = await PrivyService.createWallet();
+
     const userDoc = await FirestoreService.addDocument('users', {
       email,
       role,
       passwordHash,
       emailVerified: false,
       createdAt: new Date().toISOString(),
+      walletId: wallet.id,
+      walletAddress: wallet.address,
     });
 
     return {
@@ -50,6 +55,7 @@ class UserService {
       email,
       emailVerified: false,
       role,
+      walletAddress: wallet.address,
     };
   }
 
@@ -87,6 +93,7 @@ class UserService {
       email: user.email,
       emailVerified: user.emailVerified || false,
       role: user.role,
+      walletAddress: user.walletAddress,
     };
   }
 

@@ -2,6 +2,8 @@ const FirestoreService = require('@services/database/FirestoreService');
 const RealtimeDatabaseService = require('@services/database/RealtimeDatabaseService');
 const postToDiscord = require('@utils/postToDiscord');
 const CacheService = require('@services/misc/CacheService');
+const EmailService = require('@services/misc/EmailService');
+const PrivyService = require('@services/integrations/PrivyService');
 
 class OrganizationService {
   async createBounty(values, userId) {
@@ -109,6 +111,50 @@ class OrganizationService {
     await CacheService.del('GET:*payments*');
   }
 
+  async payBounty(bountyId, organizationId) {
+    const bounty = await FirestoreService.getDocument('bounties', bountyId);
+    if (!bounty) throw new Error('Bounty not found');
+    if (bounty.organizationId !== organizationId)
+      throw new Error('Unauthorized');
+    if (bounty.status !== 'pending_payment')
+      throw new Error('Bounty not ready for payment');
+
+    const orgUser = await FirestoreService.getDocument('users', organizationId);
+    const contributorUser = await FirestoreService.getDocument(
+      'users',
+      bounty.contributorId
+    );
+
+    if (!orgUser?.walletId || !orgUser?.walletAddress)
+      throw new Error('Organization wallet missing');
+    if (!contributorUser?.walletAddress)
+      throw new Error('Contributor wallet missing');
+
+    const lamports = Math.round(Number(bounty.amount) * 1e9);
+    const txHash = await PrivyService.sendSol(
+      orgUser.walletId,
+      orgUser.walletAddress,
+      contributorUser.walletAddress,
+      lamports
+    );
+
+    await FirestoreService.updateDocument('bounties', bountyId, {
+      status: 'paid',
+      updatedAt: new Date().toISOString(),
+      txHash,
+    });
+
+    await CacheService.del('GET:*bounties*');
+    await CacheService.del('GET:*payments*');
+
+    await EmailService.sendPaymentSentToContributor({
+      bountyId,
+      amount: bounty.amount,
+    });
+
+    return txHash;
+  }
+
   async getOrganizationPayments(organizationId) {
     const bountyList = await FirestoreService.queryDocuments(
       'bounties',
@@ -118,7 +164,7 @@ class OrganizationService {
     );
 
     return bountyList
-      .filter((bounty) => ['closed', 'pending_payment'].includes(bounty.status))
+      .filter((bounty) => ['paid', 'pending_payment'].includes(bounty.status))
       .map((bounty) => ({
         id: bounty.id,
         contributor:

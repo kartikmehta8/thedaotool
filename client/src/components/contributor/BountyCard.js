@@ -12,6 +12,7 @@ const statusColors = {
   open: 'green',
   assigned: 'gold',
   pending_payment: 'blue',
+  paid: 'purple',
   closed: 'red',
 };
 
@@ -72,7 +73,7 @@ const BountyCard = ({
               {formatDateBounty(bounty.deadline)}
             </p>
             <p>
-              <Tag color="purple">Amount</Tag> ${bounty.amount}
+              <Tag color="purple">Amount</Tag> {bounty.amount} SOL
             </p>
           </>
         )}

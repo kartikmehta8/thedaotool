@@ -6,6 +6,7 @@ import {
   Landing,
   OrganizationProfile,
   ContributorProfile,
+  Wallet,
 } from '../pages';
 
 export const routes = [
@@ -24,5 +25,6 @@ export const routes = [
     element: <ContributorProfile />,
     isPrivate: true,
   },
+  { path: '/wallet', element: <Wallet />, isPrivate: true },
   { path: '/insights', element: null, isPrivate: true },
 ];

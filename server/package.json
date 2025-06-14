@@ -31,6 +31,8 @@
     "prettier": "^3.5.3"
   },
   "dependencies": {
+    "@privy-io/server-auth": "^1.27.1",
+    "@solana/web3.js": "^1.91.9",
     "axios": "^1.8.4",
     "bcryptjs": "^3.0.2",
     "bull": "^4.10.0",
@@ -47,8 +49,8 @@
     "morgan": "^1.10.0",
     "node-cron": "^3.0.3",
     "nodemailer": "^6.10.0",
-    "socket.io": "^4.8.1",
-    "redis": "^4.6.7"
+    "redis": "^4.6.7",
+    "socket.io": "^4.8.1"
   },
   "_moduleAliases": {
     "@controllers": "./controllers",

@@ -48,7 +48,7 @@ class ContributorService {
       'bounties',
       'status',
       '!=',
-      'closed'
+      'paid'
     );
 
     const bounties = await Promise.all(
@@ -112,7 +112,7 @@ class ContributorService {
     );
 
     const filteredBounties = bountyList.filter((bounty) =>
-      ['closed', 'pending_payment'].includes(bounty.status)
+      ['paid', 'pending_payment'].includes(bounty.status)
     );
 
     const payments = await Promise.all(

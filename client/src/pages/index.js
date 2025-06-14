@@ -19,6 +19,7 @@ const ContributorProfile = lazy(
 );
 const OrganizationInsights = lazy(() => import('./organization/Insights'));
 const ContributorInsights = lazy(() => import('./contributor/Insights'));
+const Wallet = lazy(() => import('./Wallet'));
 
 export {
   Login,
@@ -32,4 +33,5 @@ export {
   ContributorProfile,
   OrganizationInsights,
   ContributorInsights,
+  Wallet,
 };

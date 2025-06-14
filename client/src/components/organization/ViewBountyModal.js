@@ -15,6 +15,7 @@ import {
 import {
   updateBounty,
   unassignContributor,
+  payBounty,
 } from '../../api/organization/bounties';
 import toast from '../../utils/toast';
 import dayjs from 'dayjs';
@@ -55,6 +56,17 @@ const ViewBountyModal = ({
       onUpdateSuccess();
     } catch {
       toast.error('Failed to unassign contributor');
+    }
+  };
+
+  const handlePay = async () => {
+    try {
+      await payBounty(bounty.id);
+      toast.success('Payment sent');
+      onUpdateSuccess();
+      onCancel();
+    } catch {
+      toast.error('Failed to send payment');
     }
   };
 
@@ -119,8 +131,8 @@ const ViewBountyModal = ({
               setSelectedBounty({ ...bounty, amount: Number(val) })
             }
             style={{ width: '100%' }}
-            prefix="$"
-            placeholder="Amount"
+            prefix="◎"
+            placeholder="Amount (SOL)"
           />
         </Col>
         <Col span={12}>
@@ -132,6 +144,7 @@ const ViewBountyModal = ({
             <Option value="open">Open</Option>
             <Option value="assigned">Assigned</Option>
             <Option value="pending_payment">Pending Payment</Option>
+            <Option value="paid">Paid</Option>
             <Option value="closed">Closed</Option>
           </Select>
         </Col>
@@ -188,6 +201,16 @@ const ViewBountyModal = ({
               <Button danger onClick={handleUnassign} block>
                 Unassign Contributor
               </Button>
+              {bounty.status === 'pending_payment' && (
+                <Button
+                  type="primary"
+                  onClick={handlePay}
+                  block
+                  style={{ marginTop: 8 }}
+                >
+                  Pay Contributor
+                </Button>
+              )}
             </Col>
           </>
         )}

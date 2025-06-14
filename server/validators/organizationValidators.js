@@ -6,7 +6,7 @@ const createBountySchema = {
       name: Joi.string().min(3).max(100).required(),
       description: Joi.string().min(10).max(2000).required(),
       deadline: Joi.date().required(),
-      amount: Joi.number().min(1).required(),
+      amount: Joi.number().min(0.3).required(),
       tags: Joi.string().optional(),
     }).required(),
     userId: Joi.string().required(),
@@ -23,7 +23,7 @@ const updateBountySchema = {
     deadline: Joi.date().allow('').optional(),
     amount: Joi.number().min(1).optional(),
     status: Joi.string()
-      .valid('open', 'assigned', 'pending_payment', 'closed')
+      .valid('open', 'assigned', 'pending_payment', 'paid', 'closed')
       .optional(),
     submittedLink: Joi.string().uri().allow('').optional(),
     contributorId: Joi.string().allow(null).optional(),

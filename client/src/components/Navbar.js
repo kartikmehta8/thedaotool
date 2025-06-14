@@ -50,6 +50,9 @@ const Navbar = () => {
           <Button type="default" onClick={() => navigate('/insights')}>
             Insights
           </Button>
+          <Button type="default" onClick={() => navigate('/wallet')}>
+            Wallet
+          </Button>
           <Button type="default" onClick={handleProfile}>
             Profile
           </Button>
@@ -87,6 +90,17 @@ const Navbar = () => {
             }}
           >
             Insights
+          </Button>
+          <Button
+            type="default"
+            block
+            style={{ marginBottom: 8 }}
+            onClick={() => {
+              navigate('/wallet');
+              setDrawerOpen(false);
+            }}
+          >
+            Wallet
           </Button>
           <Button
             type="default"

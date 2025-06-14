@@ -59,6 +59,14 @@ class OrganizationController {
     return ResponseHelper.success(res, 'Contributor unassigned');
   }
 
+  async payBounty(req, res) {
+    const txHash = await OrganizationService.payBounty(
+      req.params.bountyId,
+      req.user.uid
+    );
+    return ResponseHelper.success(res, 'Payment sent', { txHash });
+  }
+
   async getOrganizationPayments(req, res) {
     const payments = await OrganizationService.getOrganizationPayments(
       req.params.uid

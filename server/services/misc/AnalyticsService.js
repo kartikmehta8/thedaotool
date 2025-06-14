@@ -13,6 +13,7 @@ class AnalyticsService {
       open: 0,
       assigned: 0,
       pending_payment: 0,
+      paid: 0,
       closed: 0,
     };
     const monthlyCounts = {};
@@ -54,6 +55,7 @@ class AnalyticsService {
       open: 0,
       assigned: 0,
       pending_payment: 0,
+      paid: 0,
       closed: 0,
     };
     const monthlyCounts = {};
