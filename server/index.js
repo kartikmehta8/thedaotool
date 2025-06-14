@@ -1,4 +1,5 @@
 require('dotenv').config();
+process.env.CSRF_SECRET = process.env.CSRF_SECRET || 'default_csrf_secret';
 require('module-alias/register');
 const express = require('express');
 const http = require('http');

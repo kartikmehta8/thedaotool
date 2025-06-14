@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Typography, Input, Button, Space } from 'antd';
+import { Card, Typography, Input, Button, Space, Table } from 'antd';
 import { useAuth } from '../context/AuthContext';
-import { getBalance, sendFunds } from '../api/wallet';
+import { getBalance, sendFunds, getPortfolio } from '../api/wallet';
 import toast from '../utils/toast';
 import AppLayout from '../components/AppLayout';
 
@@ -10,6 +10,7 @@ const { Title } = Typography;
 const Wallet = () => {
   const { user } = useAuth();
   const [balance, setBalance] = useState(0);
+  const [assets, setAssets] = useState([]);
   const [toAddress, setToAddress] = useState('');
   const [amount, setAmount] = useState('');
 
@@ -17,6 +18,8 @@ const Wallet = () => {
     try {
       const b = await getBalance();
       setBalance(b);
+      const p = await getPortfolio();
+      setAssets(p);
     } catch (err) {
       toast.error('Failed to load balance');
     }
@@ -58,6 +61,18 @@ const Wallet = () => {
         <p>
           <strong>Balance:</strong> {balance} SOL
         </p>
+      </Card>
+      <Card className="card-theme" style={{ marginBottom: 20, width: '100%' }}>
+        <Title level={4}>Portfolio</Title>
+        <Table
+          pagination={false}
+          dataSource={assets}
+          rowKey="mint"
+          columns={[
+            { title: 'Token', dataIndex: 'mint', key: 'mint' },
+            { title: 'Amount', dataIndex: 'amount', key: 'amount' },
+          ]}
+        />
       </Card>
       <Card className="form-card card-theme" bodyStyle={{ padding: '1rem' }}>
         <Title level={4}>Send Funds</Title>

@@ -23,3 +23,13 @@ export const sendFunds = async (toAddress, amount) => {
   const data = await res.json();
   return data.txHash;
 };
+
+export const getPortfolio = async () => {
+  const res = await fetchWithAuth(`${API_URL}/wallet/portfolio`);
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.message || 'Failed to fetch portfolio');
+  }
+  const data = await res.json();
+  return data.assets;
+};

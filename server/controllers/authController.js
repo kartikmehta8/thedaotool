@@ -51,6 +51,12 @@ class AuthController {
     await UserService.resetPassword(email, token, newPassword);
     return ResponseHelper.success(res, 'Password reset successful');
   }
+
+  async getCsrfToken(req, res) {
+    return ResponseHelper.success(res, 'CSRF token issued', {
+      token: process.env.CSRF_SECRET,
+    });
+  }
 }
 
 module.exports = new AuthController();

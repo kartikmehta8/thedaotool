@@ -23,6 +23,7 @@ class EncryptionService {
 
   static decrypt(encryptedText) {
     try {
+      if (!encryptedText.includes(':')) return null;
       const [ivHex, encrypted] = encryptedText.split(':');
       const iv = Buffer.from(ivHex, 'hex');
       const decipher = crypto.createDecipheriv(

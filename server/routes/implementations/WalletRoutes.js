@@ -14,6 +14,8 @@ class WalletRoutes extends IRoute {
 
     router.get('/balance', catchAsync(WalletController.getBalance));
 
+    router.get('/portfolio', catchAsync(WalletController.getPortfolio));
+
     router.post(
       '/send',
       ValidationMiddleware.use(walletValidator.sendSchema),

@@ -41,6 +41,8 @@ class AuthRoutes extends IRoute {
       catchAsync(AuthController.verifyOTPToken)
     );
 
+    router.get('/csrf-token', catchAsync(AuthController.getCsrfToken));
+
     app.use('/api/auth', router);
   }
 }

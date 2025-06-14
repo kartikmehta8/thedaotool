@@ -14,6 +14,12 @@ class WalletController {
     const txHash = await WalletService.send(uid, toAddress, Number(amount));
     return ResponseHelper.success(res, 'Transaction sent', { txHash });
   }
+
+  async getPortfolio(req, res) {
+    const { uid } = req.user;
+    const assets = await WalletService.getPortfolio(uid);
+    return ResponseHelper.success(res, 'Portfolio fetched', { assets });
+  }
 }
 
 module.exports = new WalletController();
