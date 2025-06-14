@@ -109,6 +109,16 @@ class OrganizationService {
     await CacheService.del('GET:*payments*');
   }
 
+  async payBounty(bountyId, txnId) {
+    await FirestoreService.updateDocument('bounties', bountyId, {
+      status: 'closed',
+      paymentTxnId: txnId,
+      paymentDate: new Date().toISOString(),
+    });
+    await CacheService.del('GET:*bounties*');
+    await CacheService.del('GET:*payments*');
+  }
+
   async getOrganizationPayments(organizationId) {
     const bountyList = await FirestoreService.queryDocuments(
       'bounties',

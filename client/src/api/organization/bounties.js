@@ -65,3 +65,18 @@ export const unassignContributor = async (bountyId) => {
   }
   return true;
 };
+
+export const payBounty = async (bountyId, txnId) => {
+  const res = await fetchWithAuth(
+    `${API_URL}/organization/bounties/${bountyId}/pay`,
+    {
+      method: 'PUT',
+      body: JSON.stringify({ txnId }),
+    }
+  );
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.message || 'Failed to pay bounty');
+  }
+  return true;
+};

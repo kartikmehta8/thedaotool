@@ -15,9 +15,11 @@ import {
 import {
   updateBounty,
   unassignContributor,
+  payBounty,
 } from '../../api/organization/bounties';
 import toast from '../../utils/toast';
 import dayjs from 'dayjs';
+import { useWallet } from '../../context/WalletContext';
 
 const { Option } = Select;
 
@@ -28,6 +30,8 @@ const ViewBountyModal = ({
   onUpdateSuccess,
   setSelectedBounty,
 }) => {
+  const { connect, address, sendTransaction } = useWallet();
+  const [paying, setPaying] = React.useState(false);
   const handleSaveUpdate = async () => {
     try {
       await updateBounty({
@@ -55,6 +59,27 @@ const ViewBountyModal = ({
       onUpdateSuccess();
     } catch {
       toast.error('Failed to unassign contributor');
+    }
+  };
+
+  const handlePay = async () => {
+    try {
+      setPaying(true);
+      if (!address) {
+        await connect();
+      }
+      const txn = await sendTransaction(
+        bounty.contributorInfo.walletAddress,
+        bounty.amount
+      );
+      await payBounty(bounty.id, txn);
+      toast.success('Payment sent');
+      onUpdateSuccess();
+      onCancel();
+    } catch (err) {
+      toast.error(err.message || 'Payment failed');
+    } finally {
+      setPaying(false);
     }
   };
 
@@ -188,6 +213,18 @@ const ViewBountyModal = ({
               <Button danger onClick={handleUnassign} block>
                 Unassign Contributor
               </Button>
+              {bounty.status === 'pending_payment' &&
+                bounty.contributorInfo?.walletAddress && (
+                  <Button
+                    type="primary"
+                    onClick={handlePay}
+                    loading={paying}
+                    block
+                    style={{ marginTop: 8 }}
+                  >
+                    Pay ${bounty.amount}
+                  </Button>
+                )}
             </Col>
           </>
         )}

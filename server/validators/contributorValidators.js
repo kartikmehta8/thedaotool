@@ -35,6 +35,7 @@ const saveProfileSchema = {
     routingNumber: Joi.string()
       .pattern(/^\d{10}$/)
       .optional(),
+    walletAddress: Joi.string().optional(),
     skills: Joi.string().optional(),
   }),
 };

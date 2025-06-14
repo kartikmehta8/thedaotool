@@ -59,7 +59,17 @@ const updateContributorSchema = {
     routingNumber: Joi.string()
       .pattern(/^\d{10}$/)
       .optional(),
+    walletAddress: Joi.string().optional(),
     skills: Joi.string().optional(),
+  }),
+};
+
+const payBountySchema = {
+  params: Joi.object({
+    bountyId: Joi.string().required(),
+  }),
+  body: Joi.object({
+    txnId: Joi.string().required(),
   }),
 };
 
@@ -98,4 +108,5 @@ module.exports = {
   updateContributorSchema,
   uidParamSchema,
   uidAndBodySchema,
+  payBountySchema,
 };

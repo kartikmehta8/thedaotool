@@ -46,6 +46,16 @@ npm start
 - Firebase (Database, Misc)
 - Solana + Payman (Wallets & Payouts)
 
+## Web3Auth Setup
+
+Payments are processed using [Web3Auth](https://web3auth.io). Create a Web3Auth project and obtain a client ID. Then set it in `client/.env`:
+
+```bash
+REACT_APP_WEB3AUTH_CLIENT_ID=YOUR_CLIENT_ID
+```
+
+Start the client and server normally after setting up the `.env` files.
+
 ## License
 
 This project is licensed under the [MIT License](LICENSE).

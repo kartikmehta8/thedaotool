@@ -59,6 +59,11 @@ class OrganizationController {
     return ResponseHelper.success(res, 'Contributor unassigned');
   }
 
+  async payBounty(req, res) {
+    await OrganizationService.payBounty(req.params.bountyId, req.body.txnId);
+    return ResponseHelper.success(res, 'Bounty paid');
+  }
+
   async getOrganizationPayments(req, res) {
     const payments = await OrganizationService.getOrganizationPayments(
       req.params.uid

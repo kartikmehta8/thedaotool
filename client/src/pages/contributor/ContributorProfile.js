@@ -32,6 +32,7 @@ const ContributorProfile = () => {
     portfolio: '',
     linkedin: '',
     email: email,
+    walletAddress: '',
     accountNumber: '',
     routingNumber: '',
   };
@@ -126,6 +127,9 @@ const ContributorProfile = () => {
           </Form.Item>
           <Form.Item name="linkedin" label="LinkedIn Profile">
             <Input placeholder="https://linkedin.com/in/yourprofile" />
+          </Form.Item>
+          <Form.Item name="walletAddress" label="Wallet Address">
+            <Input placeholder="0x..." />
           </Form.Item>
           <Form.Item name="accountNumber" label="Bank Account Number">
             <Input placeholder="1234567890" />

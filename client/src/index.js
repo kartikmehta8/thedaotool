@@ -6,6 +6,7 @@ import 'antd/dist/reset.css';
 import './index.css';
 import { Toaster } from 'react-hot-toast';
 import ThemeProvider, { useTheme } from './context/ThemeContext';
+import { WalletProvider } from './context/WalletContext';
 
 const Root = () => {
   const { algorithm } = useTheme();
@@ -28,7 +29,9 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <ThemeProvider>
-      <Root />
+      <WalletProvider>
+        <Root />
+      </WalletProvider>
     </ThemeProvider>
   </React.StrictMode>
 );
