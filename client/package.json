@@ -3,15 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@privy-io/react-auth": "^2.14.2",
     "antd": "^5.24.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hot-toast": "^2.5.2",
     "react-router-dom": "^7.4.0",
     "react-scripts": "5.0.1",
+    "recharts": "^2.8.0",
     "socket.io-client": "^4.8.1",
-    "@privy-io/react-auth": "^0.16.1",
-    "recharts": "^2.8.0"
+    "viem": "^2.31.2"
   },
   "scripts": {
     "start": "react-scripts start",

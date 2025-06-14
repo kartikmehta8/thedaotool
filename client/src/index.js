@@ -7,6 +7,9 @@ import './index.css';
 import { Toaster } from 'react-hot-toast';
 import ThemeProvider, { useTheme } from './context/ThemeContext';
 
+import { PrivyProvider } from '@privy-io/react-auth';
+import { APP_ID, APP_CLIENT_ID } from './constants/constants';
+
 const Root = () => {
   const { algorithm } = useTheme();
   return (
@@ -28,7 +31,19 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <ThemeProvider>
-      <Root />
+      <PrivyProvider
+        appId={APP_ID}
+        clientId={APP_CLIENT_ID}
+        config={{
+          embeddedWallets: {
+            ethereum: {
+              createOnLogin: 'off',
+            },
+          },
+        }}
+      >
+        <Root />
+      </PrivyProvider>
     </ThemeProvider>
   </React.StrictMode>
 );
