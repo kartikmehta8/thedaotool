@@ -1,9 +1,10 @@
 const { PrivyClient } = require('@privy-io/server-auth');
 const {
-  Connection,
   PublicKey,
   SystemProgram,
-  Transaction,
+  VersionedTransaction,
+  TransactionMessage,
+  Connection,
 } = require('@solana/web3.js');
 
 const APP_ID = process.env.PRIVY_APP_ID;
@@ -14,36 +15,46 @@ const RPC_URL = process.env.SOLANA_RPC_URL;
 class PrivyService {
   constructor() {
     this.client = new PrivyClient(APP_ID, APP_SECRET);
-    this.connection = new Connection(RPC_URL, 'confirmed');
+    this.connection = new Connection(RPC_URL, 'recent');
   }
 
   async createWallet() {
-    return this.client.walletsApi.create({ chainType: 'solana' });
+    return this.client.walletApi.createWallet({ chainType: 'solana' });
   }
 
-  async sendSol(walletId, fromAddress, toAddress, lamports) {
-    const latest = await this.connection.getLatestBlockhash();
+  async sendSol(walletId, fromAddress, toAddress, lamports, maxRetries = 3) {
+    console.log({ walletId, fromAddress, toAddress, lamports, maxRetries });
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+      try {
+        const { blockhash } = await this.connection.getLatestBlockhash();
 
-    const tx = new Transaction({
-      feePayer: new PublicKey(fromAddress),
-      recentBlockhash: latest.blockhash,
-    }).add(
-      SystemProgram.transfer({
-        fromPubkey: new PublicKey(fromAddress),
-        toPubkey: new PublicKey(toAddress),
-        lamports,
-      })
-    );
+        const payerKey = new PublicKey(fromAddress);
+        const instruction = SystemProgram.transfer({
+          fromPubkey: payerKey,
+          toPubkey: new PublicKey(toAddress),
+          lamports: 1000,
+        });
 
-    const { hash } = await this.client.walletsApi.solana.signAndSendTransaction(
-      {
-        walletId,
-        caip2: CAIP2,
-        transaction: tx,
+        const message = new TransactionMessage({
+          payerKey,
+          recentBlockhash: blockhash,
+          instructions: [instruction],
+        }).compileToV0Message();
+
+        const transaction = new VersionedTransaction(message);
+
+        const { hash } =
+          await this.client.walletApi.solana.signAndSendTransaction({
+            walletId,
+            caip2: CAIP2,
+            transaction,
+          });
+
+        return hash;
+      } catch (err) {
+        throw err;
       }
-    );
-
-    return hash;
+    }
   }
 }
 
