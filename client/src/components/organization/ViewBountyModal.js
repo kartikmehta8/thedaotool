@@ -131,8 +131,8 @@ const ViewBountyModal = ({
               setSelectedBounty({ ...bounty, amount: Number(val) })
             }
             style={{ width: '100%' }}
-            prefix="$"
-            placeholder="Amount"
+            prefix="◎"
+            placeholder="Amount (SOL)"
           />
         </Col>
         <Col span={12}>
@@ -144,6 +144,7 @@ const ViewBountyModal = ({
             <Option value="open">Open</Option>
             <Option value="assigned">Assigned</Option>
             <Option value="pending_payment">Pending Payment</Option>
+            <Option value="paid">Paid</Option>
             <Option value="closed">Closed</Option>
           </Select>
         </Col>

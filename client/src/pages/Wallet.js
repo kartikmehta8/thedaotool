@@ -58,7 +58,7 @@ const Wallet = () => {
           <strong>Address:</strong> {user.walletAddress}
         </p>
         <p>
-          <strong>Balance:</strong> {balance}
+          <strong>Balance:</strong> {balance} SOL
         </p>
         <Button onClick={() => exportWallet({ address: user.walletAddress })}>
           Export Wallet
@@ -73,7 +73,7 @@ const Wallet = () => {
             onChange={(e) => setToAddress(e.target.value)}
           />
           <Input
-            placeholder="Amount (lamports)"
+            placeholder="Amount (SOL)"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
           />

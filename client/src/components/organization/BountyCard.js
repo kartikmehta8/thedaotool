@@ -12,6 +12,7 @@ const statusColors = {
   open: 'green',
   assigned: 'gold',
   pending_payment: 'blue',
+  paid: 'purple',
   closed: 'red',
 };
 
@@ -47,7 +48,7 @@ const BountyCard = ({ bounty, onView, onChatOpen, onRefetch }) => {
               {formatDateBounty(bounty.deadline) || 'N/A'}
             </p>
             <p>
-              <Tag color="purple">Amount</Tag> ${bounty.amount || 0}
+              <Tag color="purple">Amount</Tag> {bounty.amount || 0} SOL
             </p>
           </>
         )}

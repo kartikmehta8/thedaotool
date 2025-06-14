@@ -130,15 +130,16 @@ class OrganizationService {
     if (!contributorUser?.walletAddress)
       throw new Error('Contributor wallet missing');
 
+    const lamports = Math.round(Number(bounty.amount) * 1e9);
     const txHash = await PrivyService.sendSol(
       orgUser.walletId,
       orgUser.walletAddress,
       contributorUser.walletAddress,
-      Number(bounty.amount)
+      lamports
     );
 
     await FirestoreService.updateDocument('bounties', bountyId, {
-      status: 'closed',
+      status: 'paid',
       updatedAt: new Date().toISOString(),
       txHash,
     });
@@ -163,7 +164,7 @@ class OrganizationService {
     );
 
     return bountyList
-      .filter((bounty) => ['closed', 'pending_payment'].includes(bounty.status))
+      .filter((bounty) => ['paid', 'pending_payment'].includes(bounty.status))
       .map((bounty) => ({
         id: bounty.id,
         contributor:

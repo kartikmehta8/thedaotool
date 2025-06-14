@@ -64,8 +64,8 @@ const CreateBountyModal = ({ visible, onCancel, onCreateSuccess, userId }) => {
         </Form.Item>
         <Form.Item
           name="amount"
-          label="Amount ($)"
-          rules={[{ required: true, message: 'Please enter Amount ($)' }]}
+          label="Amount (SOL)"
+          rules={[{ required: true, message: 'Please enter Amount (SOL)' }]}
         >
           <Input type="number" />
         </Form.Item>

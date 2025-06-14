@@ -9,14 +9,15 @@ class WalletService {
     const balance = await PrivyService.connection.getBalance(
       new PublicKey(user.walletAddress)
     );
-    return balance;
+    return balance / 1e9;
   }
 
-  async send(uid, toAddress, lamports) {
+  async send(uid, toAddress, sol) {
     const user = await FirestoreService.getDocument('users', uid);
     if (!user?.walletId || !user?.walletAddress) {
       throw new Error('Wallet not configured');
     }
+    const lamports = Math.round(sol * 1e9);
     return PrivyService.sendSol(
       user.walletId,
       user.walletAddress,
