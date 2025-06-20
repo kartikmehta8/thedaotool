@@ -37,3 +37,8 @@ body.dark {
 .card-theme {
   background-color: var(--card-bg);
 }
+
+:focus {
+  outline: 2px solid #2684FF;
+  outline-offset: 2px;
+}

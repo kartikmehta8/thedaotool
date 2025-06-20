@@ -39,6 +39,7 @@ const SubmitWorkModal = ({ visible, bountyId, onCancel, onSubmitSuccess }) => {
       bodyStyle={{ maxHeight: '60vh', overflowY: 'auto' }}
     >
       <Input
+        aria-label="Delivery link"
         placeholder="Enter delivery link (GitHub, site, etc.)"
         value={submission}
         onChange={(e) => setSubmission(e.target.value)}

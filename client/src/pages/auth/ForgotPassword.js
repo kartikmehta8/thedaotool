@@ -61,6 +61,7 @@ const ForgotPassword = () => {
           {step === 1 ? (
             <>
               <Input
+                aria-label="Email"
                 placeholder="Enter your email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -79,12 +80,14 @@ const ForgotPassword = () => {
           ) : (
             <>
               <Input
+                aria-label="OTP"
                 placeholder="Enter OTP"
                 value={token}
                 onChange={(e) => setToken(e.target.value)}
                 style={{ marginBottom: 10 }}
               />
               <Input.Password
+                aria-label="New Password"
                 placeholder="New Password"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}

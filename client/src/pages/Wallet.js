@@ -63,11 +63,13 @@ const Wallet = () => {
         <Title level={4}>Send Funds</Title>
         <Space direction="vertical" style={{ width: '100%' }}>
           <Input
+            aria-label="Recipient Address"
             placeholder="Recipient Address"
             value={toAddress}
             onChange={(e) => setToAddress(e.target.value)}
           />
           <Input
+            aria-label="Amount in SOL"
             placeholder="Amount (SOL)"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}

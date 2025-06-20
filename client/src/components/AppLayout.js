@@ -8,8 +8,10 @@ const { Content } = Layout;
 const AppLayout = ({ children, contentProps }) => (
   <Layout style={{ minHeight: '100vh' }}>
     <Navbar />
-    <Content className="page-container" {...contentProps}>
-      {children}
+    <Content {...contentProps}>
+      <main className="page-container" role="main">
+        {children}
+      </main>
     </Content>
   </Layout>
 );

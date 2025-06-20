@@ -32,6 +32,8 @@ const Navbar = () => {
 
   return (
     <Header
+      role="navigation"
+      aria-label="Main navigation"
       className="card-theme"
       style={{
         display: 'flex',
@@ -57,10 +59,11 @@ const Navbar = () => {
             Profile
           </Button>
           <Switch
+            aria-label="Toggle dark mode"
             checked={dark}
             onChange={toggleTheme}
-            checkedChildren={<BulbOutlined />}
-            unCheckedChildren={<BulbOutlined />}
+            checkedChildren={<BulbOutlined aria-hidden="true" />}
+            unCheckedChildren={<BulbOutlined aria-hidden="true" />}
           />
           <Button type="primary" onClick={handleLogout}>
             Logout
@@ -69,12 +72,20 @@ const Navbar = () => {
       ) : (
         <Button
           type="text"
-          icon={<MenuOutlined style={{ color: 'var(--text-color)' }} />}
+          aria-label="Open menu"
+          icon={
+            <MenuOutlined
+              aria-hidden="true"
+              style={{ color: 'var(--text-color)' }}
+            />
+          }
           onClick={() => setDrawerOpen(true)}
         />
       )}
       <Drawer
         placement="right"
+        role="dialog"
+        aria-label="Navigation menu"
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}
         bodyStyle={{ padding: 0 }}
@@ -115,10 +126,11 @@ const Navbar = () => {
           </Button>
           <div style={{ marginBottom: 8, textAlign: 'center' }}>
             <Switch
+              aria-label="Toggle dark mode"
               checked={dark}
               onChange={toggleTheme}
-              checkedChildren={<BulbOutlined />}
-              unCheckedChildren={<BulbOutlined />}
+              checkedChildren={<BulbOutlined aria-hidden="true" />}
+              unCheckedChildren={<BulbOutlined aria-hidden="true" />}
             />
           </div>
           <Button type="primary" block onClick={handleLogout}>
