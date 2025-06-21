@@ -2,6 +2,7 @@ const axios = require('axios');
 const FirestoreService = require('@services/database/FirestoreService');
 const crypto = require('crypto');
 const CacheService = require('@services/misc/CacheService');
+const logger = require('@utils/logger');
 
 const CLIENT_ID = process.env.GITHUB_CLIENT_ID;
 const CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
@@ -14,6 +15,11 @@ class GithubService {
 
   async generateOAuthUrl(userId) {
     const state = this.generateStateToken();
+
+    logger.info(
+      { action: 'github_oauth_start', userId, state },
+      'GitHub OAuth initiated'
+    );
 
     await FirestoreService.setDocument('oauth_states', state, {
       userId,
@@ -40,6 +46,11 @@ class GithubService {
   async exchangeCodeForAccessToken(code, state) {
     const userId = await this.validateOAuthState(state);
 
+    logger.info(
+      { action: 'github_oauth_callback', userId },
+      'GitHub OAuth callback received'
+    );
+
     const response = await axios.post(
       'https://github.com/login/oauth/access_token',
       {
@@ -57,7 +68,12 @@ class GithubService {
       throw new Error('GitHub token exchange failed');
     }
 
-    return { accessToken: response.data.access_token, userId };
+    const result = { accessToken: response.data.access_token, userId };
+    logger.info(
+      { action: 'github_token_exchanged', userId },
+      'GitHub token exchanged'
+    );
+    return result;
   }
 
   async saveAccessToken(uid, accessToken) {
@@ -65,6 +81,7 @@ class GithubService {
       githubToken: accessToken,
     });
     await CacheService.del(`GET:/api/organization/profile/${uid}`);
+    logger.info({ action: 'github_token_saved', uid }, 'GitHub token saved');
   }
 
   async listRepos(uid) {
@@ -108,6 +125,10 @@ class GithubService {
       repo: repoName,
     });
     await CacheService.del(`GET:/api/organization/profile/${uid}`);
+    logger.info(
+      { action: 'github_repo_validated', uid, repo: repoName },
+      'GitHub repo validated'
+    );
   }
 
   async fetchOpenIssues(repo, token) {

@@ -1,6 +1,7 @@
 const FirestoreService = require('@services/database/FirestoreService');
 const PrivyService = require('@services/integrations/PrivyService');
 const { PublicKey } = require('@solana/web3.js');
+const logger = require('@utils/logger');
 
 class WalletService {
   async getBalance(uid) {
@@ -18,12 +19,17 @@ class WalletService {
       throw new Error('Wallet not configured');
     }
     const lamports = Math.round(sol * 1e9);
-    return PrivyService.sendSol(
+    const tx = await PrivyService.sendSol(
       user.walletId,
       user.walletAddress,
       toAddress,
       lamports
     );
+    logger.info(
+      { action: 'payment', user: uid, to: toAddress, lamports, txHash: tx },
+      'Wallet send'
+    );
+    return tx;
   }
 }
 

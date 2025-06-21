@@ -2,9 +2,11 @@ const FirestoreService = require('@services/database/FirestoreService');
 const GithubService = require('@services/integrations/GithubService');
 const postToDiscord = require('@utils/postToDiscord');
 const CacheService = require('@services/misc/CacheService');
+const logger = require('@utils/logger');
 
 async function syncGitHubIssues() {
   try {
+    logger.info({ action: 'github_sync_start' }, 'Starting GitHub issue sync');
     const organizations = await FirestoreService.getCollection('organizations');
 
     for (const organization of organizations) {
@@ -14,6 +16,10 @@ async function syncGitHubIssues() {
       if (!githubToken || !repo) continue;
 
       try {
+        logger.info(
+          { action: 'github_sync_repo', organizationId, repo },
+          'Syncing GitHub issues'
+        );
         const issues = await GithubService.fetchOpenIssues(repo, githubToken);
 
         const bountyDocs = issues.map((issue) => ({
@@ -59,11 +65,21 @@ async function syncGitHubIssues() {
           )
         );
       } catch (err) {
-        console.error(`Error syncing issues for repo ${repo}:`, err.message);
+        logger.error(
+          { action: 'github_sync_error', repo, err: err.message },
+          'Error syncing issues'
+        );
       }
     }
+    logger.info(
+      { action: 'github_sync_complete' },
+      'GitHub issue sync completed'
+    );
   } catch (err) {
-    console.error('Error during GitHub Issue Sync:', err.message);
+    logger.error(
+      { action: 'github_sync_failed', err: err.message },
+      'GitHub issue sync failed'
+    );
   }
 }
 

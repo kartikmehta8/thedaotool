@@ -4,6 +4,7 @@ const postToDiscord = require('@utils/postToDiscord');
 const CacheService = require('@services/misc/CacheService');
 const EmailService = require('@services/misc/EmailService');
 const PrivyService = require('@services/integrations/PrivyService');
+const logger = require('@utils/logger');
 
 class OrganizationService {
   async createBounty(values, userId) {
@@ -20,10 +21,11 @@ class OrganizationService {
       tags: values.tags ? values.tags.split(',') : [],
     };
 
-    await FirestoreService.addDocument('bounties', bounty);
+    const ref = await FirestoreService.addDocument('bounties', bounty);
+    const bountyWithId = { id: ref.id, ...bounty };
     await CacheService.del('GET:*bounties*');
     await postToDiscord(bounty);
-    return bounty;
+    return bountyWithId;
   }
 
   async deleteBounty(bountyId) {

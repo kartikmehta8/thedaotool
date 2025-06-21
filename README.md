@@ -46,6 +46,20 @@ npm start
 - Firebase (Database, Misc)
 - Solana + Payman (Wallets & Payouts)
 
+## Structured Logging
+
+The backend uses **Pino** for JSON-based structured logging. Configure logging
+via environment variables:
+
+- `LOG_LEVEL` - log level (default `info`)
+- `LOG_TO_FILE` - set to `true` to write logs to `LOG_FILE`
+- `LOG_FILE` - path for log file (default `logs/app.log`)
+- `LOG_TO_LOKI` - send logs to a Grafana Loki instance
+- `LOKI_URL` - Loki endpoint URL
+
+All HTTP requests and key system actions are logged with user and IP context for
+auditability.
+
 ## License
 
 This project is licensed under the [MIT License](LICENSE).

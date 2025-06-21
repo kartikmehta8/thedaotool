@@ -50,7 +50,10 @@
     "node-cron": "^3.0.3",
     "nodemailer": "^6.10.0",
     "redis": "^4.6.7",
-    "socket.io": "^4.8.1"
+    "socket.io": "^4.8.1",
+    "pino": "^8.17.0",
+    "pino-http": "^9.2.0",
+    "pino-loki": "^1.0.6"
   },
   "_moduleAliases": {
     "@controllers": "./controllers",

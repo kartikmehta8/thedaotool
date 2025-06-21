@@ -4,6 +4,8 @@ const express = require('express');
 const http = require('http');
 require('@queues');
 
+const logger = require('@utils/logger');
+
 const app = express();
 const server = http.createServer(app);
 const initSocket = require('./sockets/chat');
@@ -29,6 +31,5 @@ cronManager.scheduleJobs();
 initSocket(server);
 
 server.listen(process.env.PORT, () => {
-  // eslint-disable-next-line no-console
-  console.info(`server: ${process.env.PORT}`);
+  logger.info(`server listening on ${process.env.PORT}`);
 });
