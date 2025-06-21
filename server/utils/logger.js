@@ -1,5 +1,5 @@
 const pino = require('pino');
-const lokiStream = require('pino-loki');
+const Loki = require('pino-loki');
 const config = require('../config/loggerConfig');
 
 const streams = [];
@@ -10,7 +10,9 @@ if (config.logToFile) {
 
 if (config.logToLoki && config.lokiUrl) {
   streams.push({
-    stream: lokiStream({ host: config.lokiUrl }),
+    stream: Loki.pinoLoki({
+      host: config.lokiUrl,
+    }),
   });
 }
 
