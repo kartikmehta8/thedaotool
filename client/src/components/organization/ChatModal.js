@@ -64,6 +64,7 @@ const ChatModal = ({ visible, bountyId, userId, onClose }) => {
         />
       </div>
       <Input.Search
+        aria-label="Chat message"
         placeholder="Type a message..."
         enterButton="Send"
         value={newMessage}

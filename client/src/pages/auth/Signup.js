@@ -55,12 +55,14 @@ const Signup = () => {
             Sign Up
           </Title>
           <Input
+            aria-label="Email"
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             style={{ marginBottom: 10 }}
           />
           <Input.Password
+            aria-label="Password"
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}

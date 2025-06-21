@@ -50,6 +50,7 @@ const ChatModal = ({ visible, bounty, userId, onCancel }) => {
         style={{ maxHeight: 300, overflowY: 'auto', marginBottom: 10 }}
       />
       <Input.TextArea
+        aria-label="Chat message"
         value={chatInput}
         onChange={(e) => setChatInput(e.target.value)}
         rows={2}

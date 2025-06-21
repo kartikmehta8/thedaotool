@@ -69,7 +69,7 @@ const BountyCard = ({ bounty, onView, onChatOpen, onRefetch }) => {
           Delete
         </Button>{' '}
         <Button
-          icon={<MessageOutlined />}
+          icon={<MessageOutlined aria-hidden="true" />}
           onClick={(e) => {
             e.stopPropagation();
             onChatOpen();
