@@ -1,21 +1,49 @@
 const OrganizationService = require('@services/user/OrganizationService');
 const AnalyticsService = require('@services/misc/AnalyticsService');
 const ResponseHelper = require('@utils/ResponseHelper');
+const logger = require('@utils/logger');
 
 class OrganizationController {
   async createBounty(req, res) {
     const { values, userId } = req.body;
-    await OrganizationService.createBounty(values, userId);
+    const bounty = await OrganizationService.createBounty(values, userId);
+    logger.info(
+      {
+        action: 'contract_create',
+        user: req.user?.uid,
+        ip: req.ip,
+        bountyId: bounty.id,
+      },
+      'Bounty created'
+    );
     return ResponseHelper.success(res, 'Bounty created');
   }
 
   async deleteBounty(req, res) {
     await OrganizationService.deleteBounty(req.params.id);
+    logger.info(
+      {
+        action: 'contract_delete',
+        user: req.user?.uid,
+        ip: req.ip,
+        bountyId: req.params.id,
+      },
+      'Bounty deleted'
+    );
     return ResponseHelper.success(res, 'Deleted');
   }
 
   async updateBounty(req, res) {
     await OrganizationService.updateBounty(req.params.id, req.body);
+    logger.info(
+      {
+        action: 'contract_edit',
+        user: req.user?.uid,
+        ip: req.ip,
+        bountyId: req.params.id,
+      },
+      'Bounty updated'
+    );
     return ResponseHelper.success(res, 'Updated');
   }
 
@@ -51,11 +79,29 @@ class OrganizationController {
 
   async saveProfile(req, res) {
     await OrganizationService.saveProfile(req.params.uid, req.body);
+    logger.info(
+      {
+        action: 'admin_override',
+        user: req.user?.uid,
+        ip: req.ip,
+        targetUid: req.params.uid,
+      },
+      'Organization profile updated'
+    );
     return ResponseHelper.success(res, 'Profile saved');
   }
 
   async unassignContributor(req, res) {
     await OrganizationService.unassignContributor(req.params.bountyId);
+    logger.info(
+      {
+        action: 'contract_edit',
+        user: req.user?.uid,
+        ip: req.ip,
+        bountyId: req.params.bountyId,
+      },
+      'Contributor unassigned'
+    );
     return ResponseHelper.success(res, 'Contributor unassigned');
   }
 
@@ -63,6 +109,16 @@ class OrganizationController {
     const txHash = await OrganizationService.payBounty(
       req.params.bountyId,
       req.user.uid
+    );
+    logger.info(
+      {
+        action: 'payment',
+        user: req.user?.uid,
+        ip: req.ip,
+        bountyId: req.params.bountyId,
+        txHash,
+      },
+      'Bounty payment sent'
     );
     return ResponseHelper.success(res, 'Payment sent', { txHash });
   }
