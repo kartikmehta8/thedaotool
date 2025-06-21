@@ -4,16 +4,19 @@ const config = require('../config/loggerConfig');
 const logger = pino({
   level: config.logLevel || 'info',
   timestamp: pino.stdTimeFunctions.isoTime,
-  transport: {
-    target: 'pino-loki',
-    options: {
-      host: config.lokiUrl,
-      batching: true,
-      interval: 5,
-      silenceErrors: false,
-      labels: { service: 'bizzy-backend' },
-    },
-  },
+  transport:
+    config.logToLoki && config.lokiUrl
+      ? {
+          target: 'pino-loki',
+          options: {
+            host: config.lokiUrl,
+            batching: true,
+            interval: 5,
+            silenceErrors: false,
+            labels: { service: 'bizzy-backend' },
+          },
+        }
+      : undefined,
 });
 
 module.exports = logger;
