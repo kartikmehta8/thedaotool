@@ -46,19 +46,6 @@ npm start
 - Firebase (Database, Misc)
 - Solana + Payman (Wallets & Payouts)
 
-## Structured Logging
-
-The backend uses **Pino** for JSON-based structured logging. Configure logging via environment variables:
-
-- `LOG_LEVEL` - log level (default `info`)
-- `LOG_TO_FILE` - set to `true` to write logs to `LOG_FILE`
-- `LOG_FILE` - path for log file (default `logs/app.log`)
-
-Metrics are exposed for Prometheus scraping at `/metrics`, and a simple `/health` endpoint reports application status.
-
-All HTTP requests and key system actions are logged with user and IP context for
-auditability.
-
 ## License
 
 This project is licensed under the [MIT License](LICENSE).

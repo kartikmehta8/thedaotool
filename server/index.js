@@ -7,6 +7,8 @@ require('@utils/metrics');
 
 const logger = require('@utils/logger');
 
+const logger = require('@utils/logger');
+
 const app = express();
 const server = http.createServer(app);
 const initSocket = require('./sockets/chat');
