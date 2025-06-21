@@ -21,7 +21,7 @@ const updateBountySchema = {
     name: Joi.string().min(3).max(100).optional(),
     description: Joi.string().min(10).max(2000).optional(),
     deadline: Joi.date().allow('').optional(),
-    amount: Joi.number().min(1).optional(),
+    amount: Joi.number().min(0.3).optional(),
     status: Joi.string()
       .valid('open', 'assigned', 'pending_payment', 'paid', 'closed')
       .optional(),
