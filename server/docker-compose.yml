@@ -25,6 +25,11 @@ services:
       - PRIVY_APP_SECRET=${PRIVY_APP_SECRET}
       - SOLANA_CAIP2=${SOLANA_CAIP2}
       - SOLANA_RPC_URL=${SOLANA_RPC_URL}
+      - LOG_LEVEL=info
+      - LOG_TO_FILE=false
+      - LOG_FILE=logs/app.log
+      - LOG_TO_LOKI=true
+      - LOKI_URL=http://loki:3100
     restart: unless-stopped
     networks:
       - nginx_proxy_net
@@ -32,6 +37,35 @@ services:
   redis:
     image: redis:alpine
     restart: unless-stopped
+    networks:
+      - nginx_proxy_net
+
+  loki:
+    image: grafana/loki:latest
+    container_name: loki
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+    networks:
+      - nginx_proxy_net
+
+  promtail:
+    image: grafana/promtail:latest
+    container_name: promtail
+    volumes:
+      - /var/log:/var/log
+      - /etc/machine-id:/etc/machine-id
+    command: -config.file=/etc/promtail/config.yml
+    networks:
+      - nginx_proxy_net
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "4000:3000"
+    depends_on:
+      - loki
     networks:
       - nginx_proxy_net
 
