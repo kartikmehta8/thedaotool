@@ -1,4 +1,6 @@
 const Queue = require('bull');
+const logger = require('@utils/logger');
+const { jobFailureCounter } = require('@utils/metrics');
 
 class QueueService {
   constructor() {
@@ -26,19 +28,36 @@ class QueueService {
       const start = new Date().toISOString();
       try {
         await handler(job.data);
-        console.info(`[${name}] ${start} succeeded`);
+        logger.info(
+          { action: 'job_success', queue: name },
+          `Job '${name}' succeeded`
+        );
       } catch (err) {
-        console.error(`[${name}] ${start} failed`, err.message);
+        logger.error(
+          { action: 'job_error', queue: name, err: err.message },
+          `Job '${name}' failed`
+        );
+        jobFailureCounter.inc({ queue: name });
         throw err;
       }
     });
     queue.on('failed', (job, err) => {
-      console.error(`Job '${name}' failed`, err.message);
+      logger.error(
+        { action: 'job_failed', queue: name, err: err.message },
+        `Job '${name}' failed`
+      );
+      jobFailureCounter.inc({ queue: name });
     });
     queue.on('completed', () => {
-      console.info(`Job '${name}' completed`);
+      logger.info(
+        { action: 'job_completed', queue: name },
+        `Job '${name}' completed`
+      );
     });
-    console.info(`Queue '${name}' started with concurrency ${concurrency}`);
+    logger.info(
+      { action: 'queue_started', queue: name, concurrency },
+      `Queue '${name}' started`
+    );
   }
 }
 

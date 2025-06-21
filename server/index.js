@@ -3,6 +3,9 @@ require('module-alias/register');
 const express = require('express');
 const http = require('http');
 require('@queues');
+require('@utils/metrics');
+
+const logger = require('@utils/logger');
 
 const app = express();
 const server = http.createServer(app);
@@ -29,6 +32,5 @@ cronManager.scheduleJobs();
 initSocket(server);
 
 server.listen(process.env.PORT, () => {
-  // eslint-disable-next-line no-console
-  console.info(`server: ${process.env.PORT}`);
+  logger.info(`server listening on ${process.env.PORT}`);
 });
