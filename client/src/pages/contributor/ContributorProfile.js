@@ -72,11 +72,13 @@ const ContributorProfile = () => {
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
+          flexDirection: 'column',
         },
       }}
     >
       <Card
         className="form-card card-theme"
+        style={{ width: 500, marginBottom: 20 }}
         loading={loading}
         bodyStyle={{ padding: '1rem' }}
       >

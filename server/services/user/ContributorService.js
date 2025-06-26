@@ -35,6 +35,7 @@ class ContributorService {
       submittedLink,
     });
 
+    await CacheService.del('GET:*bounties*');
     await CacheService.del('GET:*payments*');
 
     await EmailService.sendSubmissionNotificationToOrganization({
@@ -82,6 +83,7 @@ class ContributorService {
       profileData
     );
     await CacheService.del(`GET:/api/contributor/profile/${uid}`);
+    await CacheService.del(`GET:/api/organization/contributor/${uid}`);
     return res;
   }
 
