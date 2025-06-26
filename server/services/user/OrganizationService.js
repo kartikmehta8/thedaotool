@@ -78,11 +78,16 @@ class OrganizationService {
   }
 
   async updateContributor(contributorId, updateData) {
-    return FirestoreService.updateDocument(
+    const res = await FirestoreService.updateDocument(
       'contributors',
       contributorId,
       updateData
     );
+    await CacheService.del(
+      `GET:/api/organization/contributor/${contributorId}`
+    );
+    await CacheService.del(`GET:/api/contributor/profile/${contributorId}`);
+    return res;
   }
 
   async getProfile(organizationId) {
@@ -96,6 +101,7 @@ class OrganizationService {
       profileData
     );
     await CacheService.del(`GET:/api/organization/profile/${organizationId}`);
+    await CacheService.del('GET:*bounties*');
     return res;
   }
 
