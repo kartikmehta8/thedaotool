@@ -101,6 +101,7 @@ class OrganizationService {
       profileData
     );
     await CacheService.del(`GET:/api/organization/profile/${organizationId}`);
+    await CacheService.del('GET:*bounties*');
     return res;
   }
 
