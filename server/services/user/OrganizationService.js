@@ -7,10 +7,11 @@ const PrivyService = require('@services/integrations/PrivyService');
 
 class OrganizationService {
   async createBounty(values, userId) {
-    const now = new Date();
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
     const deadlineDate = new Date(values.deadline);
-    if (deadlineDate <= now) {
-      const err = new Error('Deadline must be in the future');
+    if (deadlineDate < today) {
+      const err = new Error('Deadline cannot be in the past');
       err.status = 400;
       throw err;
     }
@@ -41,6 +42,16 @@ class OrganizationService {
   }
 
   async updateBounty(bountyId, updateData) {
+    if (updateData.deadline) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const deadlineDate = new Date(updateData.deadline);
+      if (deadlineDate < today) {
+        const err = new Error('Deadline cannot be in the past');
+        err.status = 400;
+        throw err;
+      }
+    }
     const res = await FirestoreService.updateDocument(
       'bounties',
       bountyId,

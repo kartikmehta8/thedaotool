@@ -64,7 +64,7 @@ const CreateBountyModal = ({ visible, onCancel, onCreateSuccess, userId }) => {
           <DatePicker
             style={{ width: '100%' }}
             disabledDate={(current) =>
-              current && current <= dayjs().endOf('day')
+              current && current < dayjs().startOf('day')
             }
           />
         </Form.Item>
