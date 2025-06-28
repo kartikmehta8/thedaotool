@@ -61,7 +61,7 @@ const ContributorProfile = () => {
       await saveContributorProfile(uid, values, email, defaultFields);
       toast.success('Profile loaded successfully');
     } catch (err) {
-      toast.error('Failed to save contributor profile');
+      toast.error(err.message || 'Failed to save contributor profile');
     }
   };
 

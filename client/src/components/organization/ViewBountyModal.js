@@ -45,7 +45,7 @@ const ViewBountyModal = ({
       onCancel();
     } catch (err) {
       console.error(err);
-      toast.error('Failed to update bounty');
+      toast.error(err.message || 'Failed to update bounty');
     }
   };
 
@@ -54,8 +54,8 @@ const ViewBountyModal = ({
       await unassignContributor(bounty.id);
       toast.success('Contributor unassigned and chat cleared');
       onUpdateSuccess();
-    } catch {
-      toast.error('Failed to unassign contributor');
+    } catch (err) {
+      toast.error(err.message || 'Failed to unassign contributor');
     }
   };
 
@@ -65,8 +65,8 @@ const ViewBountyModal = ({
       toast.success('Payment sent');
       onUpdateSuccess();
       onCancel();
-    } catch {
-      toast.error('Failed to send payment');
+    } catch (err) {
+      toast.error(err.message || 'Failed to send payment');
     }
   };
 

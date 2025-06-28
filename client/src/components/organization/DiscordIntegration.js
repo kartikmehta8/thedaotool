@@ -38,7 +38,7 @@ const DiscordIntegration = ({ uid, profile, setProfile }) => {
       setProfile((prev) => ({ ...prev, discordChannel: value }));
       toast.success('Discord channel saved successfully');
     } catch (err) {
-      toast.error('Failed to save Discord channel');
+      toast.error(err.message || 'Failed to save Discord channel');
     }
   };
 
@@ -50,7 +50,7 @@ const DiscordIntegration = ({ uid, profile, setProfile }) => {
         `Discord posting ${checked ? 'enabled' : 'disabled'} successfully`
       );
     } catch (err) {
-      toast.error('Failed to update Discord settings');
+      toast.error(err.message || 'Failed to update Discord settings');
     }
   };
 
@@ -60,7 +60,7 @@ const DiscordIntegration = ({ uid, profile, setProfile }) => {
       setProfile((prev) => ({ ...prev, discordSendMode: val }));
       toast.success('Send mode updated successfully');
     } catch (err) {
-      toast.error('Failed to update send mode');
+      toast.error(err.message || 'Failed to update send mode');
     }
   };
 

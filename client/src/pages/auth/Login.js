@@ -23,7 +23,7 @@ const Login = () => {
       navigate('/dashboard', { replace: true });
       navigate(0);
     } catch (err) {
-      toast.error('Login failed');
+      toast.error(err.message || 'Login failed');
     } finally {
       setLoading(false);
     }

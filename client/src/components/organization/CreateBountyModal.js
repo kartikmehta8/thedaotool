@@ -23,7 +23,7 @@ const CreateBountyModal = ({ visible, onCancel, onCreateSuccess, userId }) => {
       onCancel();
       form.resetFields();
     } catch (err) {
-      toast.error('Error creating bounty');
+      toast.error(err.message || 'Error creating bounty');
     }
   };
 

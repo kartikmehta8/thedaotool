@@ -18,7 +18,7 @@ const Wallet = () => {
       const b = await getBalance();
       setBalance(b);
     } catch (err) {
-      toast.error('Failed to load balance');
+      toast.error(err.message || 'Failed to load balance');
     }
   };
 
@@ -30,7 +30,7 @@ const Wallet = () => {
       setAmount('');
       load();
     } catch (err) {
-      toast.error('Failed to send funds');
+      toast.error(err.message || 'Failed to send funds');
     }
   };
 
