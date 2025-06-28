@@ -1,8 +1,11 @@
 # GitHub API
 
-Routes for GitHub repository management and authentication.
+Endpoints for GitHub integration.
 
-- **GET /api/github/auth** - begin OAuth process
-- **GET /api/github/callback** - handle OAuth callback
-- **GET /api/github/list-repos** - list repositories for the authenticated user
-- **POST /api/github/save-repo** - save a repository to the organization
+{% openapi src="./openapi.yaml" path="/api/github/auth" method="get" %}{% endopenapi %}
+
+{% openapi src="./openapi.yaml" path="/api/github/callback" method="get" %}{% endopenapi %}
+
+{% openapi src="./openapi.yaml" path="/api/github/repos/{uid}" method="get" %}{% endopenapi %}
+
+{% openapi src="./openapi.yaml" path="/api/github/repo/{uid}" method="post" %}{% endopenapi %}

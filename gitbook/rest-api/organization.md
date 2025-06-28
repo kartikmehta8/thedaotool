@@ -2,15 +2,26 @@
 
 Endpoints for managing bounties, contributors, and organization profiles.
 
-- **POST /api/organization/create-bounty** - create a new bounty
-- **DELETE /api/organization/delete-bounty** - remove a bounty
-- **PUT /api/organization/update-bounty** - update bounty details
-- **GET /api/organization/list-bounties** - list bounties for an organization
-- **GET /api/organization/get-contributor** - fetch contributor details
-- **PUT /api/organization/update-contributor** - update contributor status
-- **POST /api/organization/unassign-contributor** - unassign a contributor
-- **POST /api/organization/pay-bounty** - send bounty payment
-- **GET /api/organization/get-profile** - get organization profile
-- **POST /api/organization/save-profile** - save organization profile
-- **GET /api/organization/get-payments** - view payment history
-- **GET /api/organization/analytics** - view analytics
+{% openapi src="./openapi.yaml" path="/api/organization/bounty" method="post" %}{% endopenapi %}
+
+{% openapi src="./openapi.yaml" path="/api/organization/bounty/{id}" method="delete" %}{% endopenapi %}
+
+{% openapi src="./openapi.yaml" path="/api/organization/bounty/{id}" method="put" %}{% endopenapi %}
+
+{% openapi src="./openapi.yaml" path="/api/organization/bounties/{uid}" method="get" %}{% endopenapi %}
+
+{% openapi src="./openapi.yaml" path="/api/organization/contributor/{id}" method="get" %}{% endopenapi %}
+
+{% openapi src="./openapi.yaml" path="/api/organization/contributor/{id}" method="put" %}{% endopenapi %}
+
+{% openapi src="./openapi.yaml" path="/api/organization/bounties/{bountyId}/unassign" method="put" %}{% endopenapi %}
+
+{% openapi src="./openapi.yaml" path="/api/organization/bounties/{bountyId}/pay" method="post" %}{% endopenapi %}
+
+{% openapi src="./openapi.yaml" path="/api/organization/profile/{uid}" method="get" %}{% endopenapi %}
+
+{% openapi src="./openapi.yaml" path="/api/organization/profile/{uid}" method="put" %}{% endopenapi %}
+
+{% openapi src="./openapi.yaml" path="/api/organization/payments/{uid}" method="get" %}{% endopenapi %}
+
+{% openapi src="./openapi.yaml" path="/api/organization/analytics/{uid}" method="get" %}{% endopenapi %}

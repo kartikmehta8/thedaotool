@@ -1,8 +1,11 @@
 # Discord API
 
-Endpoints used for Discord integration.
+Integration with Discord.
 
-- **GET /api/discord/oauth** - start OAuth flow
-- **GET /api/discord/callback** - handle OAuth callback
-- **GET /api/discord/get-channels** - list channels from a guild
-- **POST /api/discord/save-channel** - save channel configuration
+{% openapi src="./openapi.yaml" path="/api/discord/oauth" method="get" %}{% endopenapi %}
+
+{% openapi src="./openapi.yaml" path="/api/discord/callback" method="get" %}{% endopenapi %}
+
+{% openapi src="./openapi.yaml" path="/api/discord/channels/{uid}" method="get" %}{% endopenapi %}
+
+{% openapi src="./openapi.yaml" path="/api/discord/channel/{uid}" method="put" %}{% endopenapi %}

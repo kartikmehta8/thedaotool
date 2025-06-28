@@ -1,12 +1,19 @@
 # Contributor API
 
-List of routes for contributor-related operations.
+Endpoints for contributor operations.
 
-- **POST /api/contributor/apply** - apply to a bounty
-- **POST /api/contributor/submit** - submit work
-- **GET /api/contributor/get-bounties** - list available bounties
-- **GET /api/contributor/get-profile** - retrieve contributor profile
-- **POST /api/contributor/update-profile** - update contributor profile
-- **POST /api/contributor/unassign** - unassign from a bounty
-- **GET /api/contributor/payments** - list payments
-- **GET /api/contributor/analytics** - view analytics
+{% openapi src="./openapi.yaml" path="/api/contributor/apply" method="post" %}{% endopenapi %}
+
+{% openapi src="./openapi.yaml" path="/api/contributor/submit" method="post" %}{% endopenapi %}
+
+{% openapi src="./openapi.yaml" path="/api/contributor/bounties/{uid}" method="get" %}{% endopenapi %}
+
+{% openapi src="./openapi.yaml" path="/api/contributor/profile/{uid}" method="get" %}{% endopenapi %}
+
+{% openapi src="./openapi.yaml" path="/api/contributor/profile/{uid}" method="put" %}{% endopenapi %}
+
+{% openapi src="./openapi.yaml" path="/api/contributor/unassign" method="put" %}{% endopenapi %}
+
+{% openapi src="./openapi.yaml" path="/api/contributor/payments/{uid}" method="get" %}{% endopenapi %}
+
+{% openapi src="./openapi.yaml" path="/api/contributor/analytics/{uid}" method="get" %}{% endopenapi %}

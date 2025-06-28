@@ -1,6 +1,7 @@
 # Wallet API
 
-Endpoints for wallet interactions.
+Endpoints for wallet operations.
 
-- **GET /api/wallet/balance** - check wallet balance
-- **POST /api/wallet/send** - send funds
+{% openapi src="./openapi.yaml" path="/api/wallet/balance" method="get" %}{% endopenapi %}
+
+{% openapi src="./openapi.yaml" path="/api/wallet/send" method="post" %}{% endopenapi %}
