@@ -32,7 +32,7 @@ const Signup = () => {
       navigate('/dashboard', { replace: true });
       navigate(0);
     } catch (err) {
-      toast.error('Signup failed');
+      toast.error(err.message || 'Signup failed');
     } finally {
       setLoading(false);
     }

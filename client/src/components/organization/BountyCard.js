@@ -26,7 +26,7 @@ const BountyCard = ({ bounty, onView, onChatOpen, onRefetch }) => {
       toast.success('Bounty deleted successfully');
       onRefetch();
     } catch (err) {
-      toast.error('Failed to delete bounty');
+      toast.error(err.message || 'Failed to delete bounty');
     }
   };
 

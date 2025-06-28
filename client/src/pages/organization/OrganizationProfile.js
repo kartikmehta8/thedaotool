@@ -64,7 +64,7 @@ const OrganizationProfile = () => {
       );
       toast.success('Profile updated successfully');
     } catch (err) {
-      toast.error('Failed to update profile');
+      toast.error(err.message || 'Failed to update profile');
     }
   };
 

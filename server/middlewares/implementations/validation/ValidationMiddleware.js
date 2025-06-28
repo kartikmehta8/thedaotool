@@ -31,7 +31,7 @@ class ValidationMiddleware extends IMiddleware {
 
       if (accumulatedErrors.length > 0) {
         const errorMessages = accumulatedErrors
-          .map((d) => d.message)
+          .map((d) => d.message.replace(/"/g, ''))
           .join(', ');
         return ResponseHelper.error(res, errorMessages, 400);
       }
