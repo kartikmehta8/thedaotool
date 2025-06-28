@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Typography, Switch, Select, Space } from 'antd';
+import { Button, Typography, Switch, Select, Space, Flex } from 'antd';
 import {
   disconnectDiscord,
   updateDiscordSettings,
@@ -74,32 +74,44 @@ const DiscordIntegration = ({ uid, profile, setProfile }) => {
         <Space direction="vertical" size="small" style={{ width: '100%' }}>
           <Text style={{ color: '#52c41a' }}>Discord connected</Text>
 
-          <Space>
+          <Flex
+            align="center"
+            justify="space-between"
+            style={{ width: '100%' }}
+          >
             <Text>Enable Posting:</Text>
             <Switch
               checked={profile.discordEnabled}
               onChange={handleSwitchChange}
             />
-          </Space>
+          </Flex>
 
-          <Space>
+          <Flex
+            align="center"
+            justify="space-between"
+            style={{ width: '100%' }}
+          >
             <Text>Send:</Text>
             <Select
               value={profile.discordSendMode || 'own'}
               onChange={handleSendModeChange}
-              style={{ width: 180 }}
+              style={{ width: '75%' }}
             >
               <Option value="own">Only my bounties</Option>
               <Option value="all">All platform bounties</Option>
             </Select>
-          </Space>
+          </Flex>
 
-          <Space>
+          <Flex
+            align="center"
+            justify="space-between"
+            style={{ width: '100%' }}
+          >
             <Text>Channel:</Text>
             <Select
               value={profile.discordChannel || undefined}
               onChange={handleChannelSelect}
-              style={{ width: 220 }}
+              style={{ width: '75%' }}
               placeholder="Select Discord Channel"
             >
               {channels.map((ch) => (
@@ -108,7 +120,7 @@ const DiscordIntegration = ({ uid, profile, setProfile }) => {
                 </Option>
               ))}
             </Select>
-          </Space>
+          </Flex>
 
           <Button
             danger

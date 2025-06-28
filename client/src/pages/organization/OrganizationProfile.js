@@ -91,7 +91,7 @@ const OrganizationProfile = () => {
         bodyStyle={{ padding: '1rem' }}
       >
         <Title level={3} style={{ textAlign: 'center' }}>
-          Organization Profile
+          Manage Profile
         </Title>
         <Form form={form} layout="vertical" onFinish={handleSubmit}>
           <Form.Item
