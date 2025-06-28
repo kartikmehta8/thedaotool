@@ -4,6 +4,7 @@ import { Card, Typography, Tag, Button, Col } from 'antd';
 import { MessageOutlined } from '@ant-design/icons';
 import { deleteBounty } from '../../api/organization/bounties';
 import formatDateBounty from '../../utils/formatDateBounty';
+import truncateWords from '../../utils/truncateWords';
 import toast from '../../utils/toast';
 
 const { Text } = Typography;
@@ -17,6 +18,7 @@ const statusColors = {
 };
 
 const BountyCard = ({ bounty, onView, onChatOpen, onRefetch }) => {
+  const [expanded, setExpanded] = React.useState(false);
   const handleDelete = async (e) => {
     e.stopPropagation();
     try {
@@ -64,7 +66,20 @@ const BountyCard = ({ bounty, onView, onChatOpen, onRefetch }) => {
             </a>
           </p>
         )}
-        <p>{bounty.description}</p>
+        <p>
+          {expanded ? bounty.description : truncateWords(bounty.description)}
+          {truncateWords(bounty.description) !== bounty.description && (
+            <span
+              onClick={(e) => {
+                e.stopPropagation();
+                setExpanded(!expanded);
+              }}
+              style={{ color: '#1890ff', cursor: 'pointer', marginLeft: 4 }}
+            >
+              {expanded ? 'See Less' : 'See More'}
+            </span>
+          )}
+        </p>
         <Button key="delete" danger onClick={handleDelete}>
           Delete
         </Button>{' '}

@@ -4,6 +4,7 @@ import { Card, Typography, Tag, Button, Col } from 'antd';
 import { applyToBounty, unassignSelf } from '../../api/contributor/bounties';
 import toast from '../../utils/toast';
 import formatDateBounty from '../../utils/formatDateBounty';
+import truncateWords from '../../utils/truncateWords';
 import { useAuth } from '../../context/AuthContext';
 
 const { Text } = Typography;
@@ -25,6 +26,7 @@ const BountyCard = ({
 }) => {
   const { user } = useAuth();
   const emailVerified = user?.emailVerified || false;
+  const [expanded, setExpanded] = React.useState(false);
   const handleApplyToBounty = async () => {
     if (!emailVerified) {
       toast.warning('Please verify your email before applying');
@@ -90,7 +92,17 @@ const BountyCard = ({
           </p>
         )}
 
-        <p>{bounty.description}</p>
+        <p>
+          {expanded ? bounty.description : truncateWords(bounty.description)}
+          {truncateWords(bounty.description) !== bounty.description && (
+            <span
+              onClick={() => setExpanded(!expanded)}
+              style={{ color: '#1890ff', cursor: 'pointer', marginLeft: 4 }}
+            >
+              {expanded ? 'See Less' : 'See More'}
+            </span>
+          )}
+        </p>
 
         {Array.isArray(bounty.tags) && bounty.tags.length > 0 && (
           <div style={{ margin: '8px 0' }}>

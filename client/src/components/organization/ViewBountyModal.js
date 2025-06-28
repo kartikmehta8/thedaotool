@@ -106,6 +106,9 @@ const ViewBountyModal = ({
           <DatePicker
             style={{ width: '100%' }}
             placeholder="Deadline"
+            disabledDate={(current) =>
+              current && current <= dayjs().startOf('day')
+            }
             value={
               bounty.deadline
                 ? dayjs(
