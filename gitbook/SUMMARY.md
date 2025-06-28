@@ -35,60 +35,18 @@
 
 ## REST API
 * [Overview](rest-api/overview.md)
-### Auth
-* [Auth Index](rest-api/auth/index.md)
-* [Login](rest-api/auth/login.md)
-* [Signup](rest-api/auth/signup.md)
-* [Forgot Password](rest-api/auth/forgot-password.md)
-* [Reset Password](rest-api/auth/reset-password.md)
-* [Verify Email](rest-api/auth/verify-email.md)
-* [Verify Token](rest-api/auth/verify-token.md)
-
-### Contributor
-* [Contributor Index](rest-api/contributor/index.md)
-* [Apply](rest-api/contributor/apply.md)
-* [Submit](rest-api/contributor/submit.md)
-* [Get Bounties](rest-api/contributor/get-bounties.md)
-* [Get Profile](rest-api/contributor/get-profile.md)
-* [Update Profile](rest-api/contributor/update-profile.md)
-* [Unassign](rest-api/contributor/unassign.md)
-* [Payments](rest-api/contributor/payments.md)
-* [Analytics](rest-api/contributor/analytics.md)
-
-### Discord
-* [Discord Index](rest-api/discord/index.md)
-* [OAuth](rest-api/discord/oauth.md)
-* [Callback](rest-api/discord/callback.md)
-* [Get Channels](rest-api/discord/get-channels.md)
-* [Save Channel](rest-api/discord/save-channel.md)
-
-### GitHub
-* [GitHub Index](rest-api/github/index.md)
-* [Auth](rest-api/github/auth.md)
-* [Callback](rest-api/github/callback.md)
-* [List Repos](rest-api/github/list-repos.md)
-* [Save Repo](rest-api/github/save-repo.md)
-
-### Organization
-* [Organization Index](rest-api/organization/index.md)
-* [Create Bounty](rest-api/organization/create-bounty.md)
-* [Delete Bounty](rest-api/organization/delete-bounty.md)
-* [Update Bounty](rest-api/organization/update-bounty.md)
-* [List Bounties](rest-api/organization/list-bounties.md)
-* [Get Contributor](rest-api/organization/get-contributor.md)
-* [Update Contributor](rest-api/organization/update-contributor.md)
-* [Unassign Contributor](rest-api/organization/unassign-contributor.md)
-* [Pay Bounty](rest-api/organization/pay-bounty.md)
-* [Get Profile](rest-api/organization/get-profile.md)
-* [Save Profile](rest-api/organization/save-profile.md)
-* [Get Payments](rest-api/organization/get-payments.md)
-* [Analytics](rest-api/organization/analytics.md)
-
-### Wallet
-* [Wallet Index](rest-api/wallet/index.md)
-* [Balance](rest-api/wallet/balance.md)
-* [Send](rest-api/wallet/send.md)
+* [Auth](rest-api/auth.md)
+* [Contributor](rest-api/contributor.md)
+* [Discord](rest-api/discord.md)
+* [GitHub](rest-api/github.md)
+* [Organization](rest-api/organization.md)
+* [Wallet](rest-api/wallet.md)
 
 ## Extras
 * [Troubleshooting](extras/troubleshooting.md)
 * [Deployment](extras/deployment.md)
+
+## Community
+* [Contributing](community/contributing.md)
+* [Code of Conduct](community/code-of-conduct.md)
+* [Security](community/security.md)
