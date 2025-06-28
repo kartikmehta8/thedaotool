@@ -44,7 +44,7 @@ npm start
 - React + Ant Design (Frontend)
 - Node.js + Express (Backend)
 - Firebase (Database, Misc)
-- Solana + Payman (Wallets & Payouts)
+- Solana + Privy (Wallets & Payouts)
 
 ## License
 
