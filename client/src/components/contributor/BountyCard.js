@@ -26,6 +26,7 @@ const BountyCard = ({
 }) => {
   const { user } = useAuth();
   const emailVerified = user?.emailVerified || false;
+  const [expanded, setExpanded] = React.useState(false);
   const handleApplyToBounty = async () => {
     if (!emailVerified) {
       toast.warning('Please verify your email before applying');
@@ -91,7 +92,17 @@ const BountyCard = ({
           </p>
         )}
 
-        <p>{truncateWords(bounty.description)}</p>
+        <p>
+          {expanded ? bounty.description : truncateWords(bounty.description)}
+          {truncateWords(bounty.description) !== bounty.description && (
+            <span
+              onClick={() => setExpanded(!expanded)}
+              style={{ color: '#1890ff', cursor: 'pointer', marginLeft: 4 }}
+            >
+              {expanded ? 'See Less' : 'See More'}
+            </span>
+          )}
+        </p>
 
         {Array.isArray(bounty.tags) && bounty.tags.length > 0 && (
           <div style={{ margin: '8px 0' }}>

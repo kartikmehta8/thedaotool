@@ -107,7 +107,7 @@ const ViewBountyModal = ({
             style={{ width: '100%' }}
             placeholder="Deadline"
             disabledDate={(current) =>
-              current && current < dayjs().startOf('day')
+              current && current <= dayjs().startOf('day')
             }
             value={
               bounty.deadline

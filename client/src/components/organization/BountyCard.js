@@ -18,6 +18,7 @@ const statusColors = {
 };
 
 const BountyCard = ({ bounty, onView, onChatOpen, onRefetch }) => {
+  const [expanded, setExpanded] = React.useState(false);
   const handleDelete = async (e) => {
     e.stopPropagation();
     try {
@@ -65,7 +66,20 @@ const BountyCard = ({ bounty, onView, onChatOpen, onRefetch }) => {
             </a>
           </p>
         )}
-        <p>{truncateWords(bounty.description)}</p>
+        <p>
+          {expanded ? bounty.description : truncateWords(bounty.description)}
+          {truncateWords(bounty.description) !== bounty.description && (
+            <span
+              onClick={(e) => {
+                e.stopPropagation();
+                setExpanded(!expanded);
+              }}
+              style={{ color: '#1890ff', cursor: 'pointer', marginLeft: 4 }}
+            >
+              {expanded ? 'See Less' : 'See More'}
+            </span>
+          )}
+        </p>
         <Button key="delete" danger onClick={handleDelete}>
           Delete
         </Button>{' '}

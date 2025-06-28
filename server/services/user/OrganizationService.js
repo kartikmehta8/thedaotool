@@ -10,7 +10,7 @@ class OrganizationService {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const deadlineDate = new Date(values.deadline);
-    if (deadlineDate < today) {
+    if (deadlineDate <= today) {
       const err = new Error('Deadline cannot be in the past');
       err.status = 400;
       throw err;
@@ -46,7 +46,7 @@ class OrganizationService {
       const today = new Date();
       today.setHours(0, 0, 0, 0);
       const deadlineDate = new Date(updateData.deadline);
-      if (deadlineDate < today) {
+      if (deadlineDate <= today) {
         const err = new Error('Deadline cannot be in the past');
         err.status = 400;
         throw err;
