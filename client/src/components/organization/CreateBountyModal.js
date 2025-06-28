@@ -39,7 +39,7 @@ const CreateBountyModal = ({ visible, onCancel, onCreateSuccess, userId }) => {
         <span style={{ color: 'var(--text-color)', fontSize: '16px' }}>×</span>
       }
       width={screens.xs ? '100%' : 600}
-      bodyStyle={{ maxHeight: '60vh', overflowY: 'auto' }}
+      bodyStyle={{ overflowY: 'auto' }}
     >
       <Form layout="vertical" form={form}>
         <Form.Item
