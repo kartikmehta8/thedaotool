@@ -7,6 +7,13 @@ const PrivyService = require('@services/integrations/PrivyService');
 
 class OrganizationService {
   async createBounty(values, userId) {
+    const now = new Date();
+    const deadlineDate = new Date(values.deadline);
+    if (deadlineDate <= now) {
+      const err = new Error('Deadline must be in the future');
+      err.status = 400;
+      throw err;
+    }
     const bounty = {
       name: values.name || '',
       description: values.description || '',

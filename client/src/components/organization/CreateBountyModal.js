@@ -1,5 +1,6 @@
 import React from 'react';
 import { Modal, Form, Input, DatePicker, Button, Tooltip, Grid } from 'antd';
+import dayjs from 'dayjs';
 import { createBounty } from '../../api/organization/bounties';
 import toast from '../../utils/toast';
 import { useAuth } from '../../context/AuthContext';
@@ -60,7 +61,12 @@ const CreateBountyModal = ({ visible, onCancel, onCreateSuccess, userId }) => {
           label="Deadline"
           rules={[{ required: true, message: 'Please enter Deadline' }]}
         >
-          <DatePicker style={{ width: '100%' }} />
+          <DatePicker
+            style={{ width: '100%' }}
+            disabledDate={(current) =>
+              current && current <= dayjs().endOf('day')
+            }
+          />
         </Form.Item>
         <Form.Item
           name="amount"

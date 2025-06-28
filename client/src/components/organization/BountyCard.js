@@ -4,6 +4,7 @@ import { Card, Typography, Tag, Button, Col } from 'antd';
 import { MessageOutlined } from '@ant-design/icons';
 import { deleteBounty } from '../../api/organization/bounties';
 import formatDateBounty from '../../utils/formatDateBounty';
+import truncateWords from '../../utils/truncateWords';
 import toast from '../../utils/toast';
 
 const { Text } = Typography;
@@ -64,7 +65,7 @@ const BountyCard = ({ bounty, onView, onChatOpen, onRefetch }) => {
             </a>
           </p>
         )}
-        <p>{bounty.description}</p>
+        <p>{truncateWords(bounty.description)}</p>
         <Button key="delete" danger onClick={handleDelete}>
           Delete
         </Button>{' '}

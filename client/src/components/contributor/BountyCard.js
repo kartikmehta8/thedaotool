@@ -4,6 +4,7 @@ import { Card, Typography, Tag, Button, Col } from 'antd';
 import { applyToBounty, unassignSelf } from '../../api/contributor/bounties';
 import toast from '../../utils/toast';
 import formatDateBounty from '../../utils/formatDateBounty';
+import truncateWords from '../../utils/truncateWords';
 import { useAuth } from '../../context/AuthContext';
 
 const { Text } = Typography;
@@ -90,7 +91,7 @@ const BountyCard = ({
           </p>
         )}
 
-        <p>{bounty.description}</p>
+        <p>{truncateWords(bounty.description)}</p>
 
         {Array.isArray(bounty.tags) && bounty.tags.length > 0 && (
           <div style={{ margin: '8px 0' }}>
