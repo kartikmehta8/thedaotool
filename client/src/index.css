@@ -14,9 +14,9 @@ html {
 }
 
 body.light {
-  --background-color: #f5f5dc;
-  --text-color: #333333;
-  --card-bg: #fffaf0;
+  --background-color: #ffffff;
+  --text-color: #000000;
+  --card-bg: #ffffff;
 }
 
 body.dark {
