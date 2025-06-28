@@ -24,12 +24,12 @@ const saveProfileSchema = {
     uid: Joi.string().required(),
   }),
   body: Joi.object({
-    name: Joi.string().min(3).max(100).optional(),
+    name: Joi.string().min(3).max(100).allow('').optional(),
     email: Joi.string().email().optional(),
-    linkedin: Joi.string().uri().optional(),
-    portfolio: Joi.string().uri().optional(),
-    roleTitle: Joi.string().optional(),
-    skills: Joi.string().optional(),
+    linkedin: Joi.string().uri().allow('').optional(),
+    portfolio: Joi.string().uri().allow('').optional(),
+    roleTitle: Joi.string().allow('').optional(),
+    skills: Joi.string().allow('').optional(),
   }),
 };
 

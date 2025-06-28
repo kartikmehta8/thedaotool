@@ -76,17 +76,17 @@ const uidAndBodySchema = {
   body: Joi.object({
     apiKey: Joi.string().allow('').optional(),
     companyName: Joi.string().min(3).max(100).optional(),
-    description: Joi.string().max(2000).optional(),
+    description: Joi.string().max(2000).allow('').optional(),
     discordAccessToken: Joi.string().allow('').optional(),
     discordChannelId: Joi.string().allow('').optional(),
     discordEnabled: Joi.boolean().allow('').optional(),
     discordGuild: Joi.string().allow('').optional(),
     discordSendMode: Joi.string().allow('').optional(),
-    email: Joi.string().email().optional(),
+    email: Joi.string().email().required(),
     githubToken: Joi.string().allow('').optional(),
-    industry: Joi.string().optional(),
+    industry: Joi.string().allow('').optional(),
     repo: Joi.string().allow('').optional(),
-    website: Joi.string().uri().optional(),
+    website: Joi.string().uri().allow('').optional(),
   }),
 };
 
