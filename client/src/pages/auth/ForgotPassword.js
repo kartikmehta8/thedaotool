@@ -6,6 +6,7 @@ import {
   sendResetOTP,
   verifyResetTokenAndChangePassword,
 } from '../../api/auth';
+import AuthHeader from '../../components/AuthHeader';
 
 const { Title } = Typography;
 const { Content } = Layout;
@@ -53,7 +54,8 @@ const ForgotPassword = () => {
           alignItems: 'center',
         }}
       >
-        <Card className="card-theme" style={{ width: 400, marginTop: 100 }}>
+        <Card className="card-theme" style={{ marginTop: 100 }}>
+          <AuthHeader />
           <Title level={3} style={{ textAlign: 'center' }}>
             Forgot Password
           </Title>

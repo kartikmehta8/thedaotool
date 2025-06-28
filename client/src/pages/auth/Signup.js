@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { signupUser } from '../../api/auth';
 import { saveUserToStorage } from '../../utils/localStorage';
 import toast from '../../utils/toast';
+import AuthHeader from '../../components/AuthHeader';
 
 const { Title } = Typography;
 const { Content } = Layout;
@@ -51,6 +52,7 @@ const Signup = () => {
           style={{ marginTop: 100 }}
           bodyStyle={{ padding: '1rem' }}
         >
+          <AuthHeader />
           <Title level={3} style={{ textAlign: 'center' }}>
             Sign Up
           </Title>
