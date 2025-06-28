@@ -1,0 +1,48 @@
+openapi: 3.0.3
+info:
+  title: Wallet API
+  version: 1.0.0
+servers:
+  - url: https://api.example.com
+  - url: http://localhost:3000
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+paths:
+  /api/wallet/balance:
+    get:
+      summary: Get wallet balance
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Current balance
+      tags:
+        - Wallet
+  /api/wallet/send:
+    post:
+      summary: Send funds from wallet
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                toAddress:
+                  type: string
+                amount:
+                  type: number
+                  minimum: 0.3
+              required:
+                - toAddress
+                - amount
+      responses:
+        '200':
+          description: Transaction sent
+      tags:
+        - Wallet

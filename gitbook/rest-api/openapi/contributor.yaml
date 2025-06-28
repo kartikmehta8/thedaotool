@@ -1,0 +1,181 @@
+openapi: 3.0.3
+info:
+  title: Contributor API
+  version: 1.0.0
+servers:
+  - url: https://api.example.com
+  - url: http://localhost:3000
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+paths:
+  /api/contributor/apply:
+    post:
+      summary: Apply to a bounty
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                bountyId:
+                  type: string
+              required:
+                - bountyId
+      responses:
+        '200':
+          description: Application submitted
+      tags:
+        - Contributor
+  /api/contributor/submit:
+    post:
+      summary: Submit work for a bounty
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                bountyId:
+                  type: string
+                submittedLink:
+                  type: string
+                  format: uri
+              required:
+                - bountyId
+                - submittedLink
+      responses:
+        '200':
+          description: Work submitted
+      tags:
+        - Contributor
+  /api/contributor/bounties/{uid}:
+    get:
+      summary: Fetch available bounties
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: uid
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of bounties
+      tags:
+        - Contributor
+  /api/contributor/profile/{uid}:
+    get:
+      summary: Get contributor profile
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: uid
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Contributor profile
+      tags:
+        - Contributor
+    put:
+      summary: Update contributor profile
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: uid
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                linkedin:
+                  type: string
+                  format: uri
+                portfolio:
+                  type: string
+                  format: uri
+                roleTitle:
+                  type: string
+                skills:
+                  type: string
+      responses:
+        '200':
+          description: Profile updated
+      tags:
+        - Contributor
+  /api/contributor/unassign:
+    put:
+      summary: Unassign from a bounty
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                bountyId:
+                  type: string
+              required:
+                - bountyId
+      responses:
+        '200':
+          description: Unassigned
+      tags:
+        - Contributor
+  /api/contributor/payments/{uid}:
+    get:
+      summary: List contributor payments
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: uid
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Payment history
+      tags:
+        - Contributor
+  /api/contributor/analytics/{uid}:
+    get:
+      summary: View contributor analytics
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: uid
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Analytics information
+      tags:
+        - Contributor

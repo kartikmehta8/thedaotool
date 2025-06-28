@@ -1,0 +1,89 @@
+openapi: 3.0.3
+info:
+  title: GitHub API
+  version: 1.0.0
+servers:
+  - url: https://api.example.com
+  - url: http://localhost:3000
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+paths:
+  /api/github/auth:
+    get:
+      summary: Start GitHub OAuth flow
+      parameters:
+        - in: query
+          name: userId
+          required: true
+          schema:
+            type: string
+      responses:
+        '302':
+          description: Redirect to GitHub
+      tags:
+        - GitHub
+  /api/github/callback:
+    get:
+      summary: GitHub OAuth callback
+      parameters:
+        - in: query
+          name: code
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: state
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OAuth complete
+      tags:
+        - GitHub
+  /api/github/repos/{uid}:
+    get:
+      summary: List repositories for organization
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: uid
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Repository list
+      tags:
+        - GitHub
+  /api/github/repo/{uid}:
+    post:
+      summary: Save selected repository
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: uid
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                repo:
+                  type: string
+              required:
+                - repo
+      responses:
+        '200':
+          description: Repository saved
+      tags:
+        - GitHub

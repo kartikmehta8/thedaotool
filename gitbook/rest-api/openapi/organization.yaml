@@ -1,0 +1,316 @@
+openapi: 3.0.3
+info:
+  title: Organization API
+  version: 1.0.0
+servers:
+  - url: https://api.example.com
+  - url: http://localhost:3000
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+paths:
+  /api/organization/bounty:
+    post:
+      summary: Create a new bounty
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                values:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    description:
+                      type: string
+                    deadline:
+                      type: string
+                      format: date-time
+                    amount:
+                      type: number
+                    tags:
+                      type: string
+                  required:
+                    - name
+                    - description
+                    - deadline
+                    - amount
+                userId:
+                  type: string
+              required:
+                - values
+                - userId
+      responses:
+        '200':
+          description: Bounty created
+      tags:
+        - Organization
+  /api/organization/bounty/{id}:
+    delete:
+      summary: Delete a bounty
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Bounty removed
+      tags:
+        - Organization
+    put:
+      summary: Update bounty details
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                deadline:
+                  type: string
+                  format: date-time
+                amount:
+                  type: number
+                status:
+                  type: string
+                  enum: [open, assigned, pending_payment, paid, closed]
+                submittedLink:
+                  type: string
+                  format: uri
+                contributorId:
+                  type: string
+                tags:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: Bounty updated
+      tags:
+        - Organization
+  /api/organization/bounties/{uid}:
+    get:
+      summary: List bounties for an organization
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: uid
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Bounty list
+      tags:
+        - Organization
+  /api/organization/contributor/{id}:
+    get:
+      summary: Get contributor details
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Contributor details
+      tags:
+        - Organization
+    put:
+      summary: Update contributor
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                linkedin:
+                  type: string
+                  format: uri
+                portfolio:
+                  type: string
+                  format: uri
+                roleTitle:
+                  type: string
+                accountNumber:
+                  type: string
+                routingNumber:
+                  type: string
+                skills:
+                  type: string
+      responses:
+        '200':
+          description: Contributor updated
+      tags:
+        - Organization
+  /api/organization/bounties/{bountyId}/unassign:
+    put:
+      summary: Unassign a contributor from bounty
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: bountyId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Contributor unassigned
+      tags:
+        - Organization
+  /api/organization/bounties/{bountyId}/pay:
+    post:
+      summary: Pay bounty reward
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: bountyId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Payment sent
+      tags:
+        - Organization
+  /api/organization/profile/{uid}:
+    get:
+      summary: Get organization profile
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: uid
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Organization profile
+      tags:
+        - Organization
+    put:
+      summary: Save organization profile
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: uid
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                apiKey:
+                  type: string
+                companyName:
+                  type: string
+                description:
+                  type: string
+                discordAccessToken:
+                  type: string
+                discordChannelId:
+                  type: string
+                discordEnabled:
+                  type: boolean
+                discordGuild:
+                  type: string
+                discordSendMode:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                githubToken:
+                  type: string
+                industry:
+                  type: string
+                repo:
+                  type: string
+                website:
+                  type: string
+                  format: uri
+      responses:
+        '200':
+          description: Profile saved
+      tags:
+        - Organization
+  /api/organization/payments/{uid}:
+    get:
+      summary: View payment history
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: uid
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Organization payment history
+      tags:
+        - Organization
+  /api/organization/analytics/{uid}:
+    get:
+      summary: Organization analytics
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: uid
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Analytics information
+      tags:
+        - Organization

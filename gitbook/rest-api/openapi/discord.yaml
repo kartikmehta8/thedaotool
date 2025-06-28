@@ -1,0 +1,89 @@
+openapi: 3.0.3
+info:
+  title: Discord API
+  version: 1.0.0
+servers:
+  - url: https://api.example.com
+  - url: http://localhost:3000
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+paths:
+  /api/discord/oauth:
+    get:
+      summary: Start Discord OAuth flow
+      parameters:
+        - in: query
+          name: userId
+          required: true
+          schema:
+            type: string
+      responses:
+        '302':
+          description: Redirect to Discord
+      tags:
+        - Discord
+  /api/discord/callback:
+    get:
+      summary: Discord OAuth callback
+      parameters:
+        - in: query
+          name: code
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: state
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OAuth complete
+      tags:
+        - Discord
+  /api/discord/channels/{uid}:
+    get:
+      summary: Fetch Discord channels for organization
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: uid
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of channels
+      tags:
+        - Discord
+  /api/discord/channel/{uid}:
+    put:
+      summary: Save selected Discord channel
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: uid
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                channelId:
+                  type: string
+              required:
+                - channelId
+      responses:
+        '200':
+          description: Channel saved
+      tags:
+        - Discord
