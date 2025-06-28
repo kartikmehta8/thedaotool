@@ -1,3 +1,8 @@
 # Project Structure Overview
 
-Understanding the organization of files and folders within the project.
+The repository contains two main folders:
+
+- **client/** – React application.
+- **server/** – Express API server.
+
+Documentation in this section explains what each subfolder is used for.

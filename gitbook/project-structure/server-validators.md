@@ -1,3 +1,3 @@
 # Server Validators (`server/validators`)
 
-Documentation for backend request validators.
+Joi schemas used with `ValidationMiddleware` to validate request bodies, params and query strings for each route group.

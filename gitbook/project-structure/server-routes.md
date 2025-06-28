@@ -1,3 +1,3 @@
 # Server Routes (`server/routes`)
 
-Documentation for backend API routes.
+Routes register Express endpoints. Each file in `implementations/` extends `IRoute` and defines a `register(app)` method to attach routers under `/api`.
