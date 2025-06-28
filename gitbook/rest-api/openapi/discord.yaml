@@ -2,9 +2,6 @@ openapi: 3.0.3
 info:
   title: Discord API
   version: 1.0.0
-servers:
-  - url: https://api.example.com
-  - url: http://localhost:3000
 components:
   securitySchemes:
     BearerAuth:
