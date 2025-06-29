@@ -1,6 +1,7 @@
 const sendMail = require('@utils/mailer');
 const FirestoreService = require('@services/database/FirestoreService');
 const { emailQueue } = require('@queues');
+const ApiError = require('@utils/ApiError');
 
 class EmailService {
   async sendVerificationEmail({ to, token }) {
@@ -36,7 +37,7 @@ class EmailService {
   async sendBountyAssignedToOrganization({ bountyId, contributorId }) {
     try {
       const bounty = await FirestoreService.getDocument('bounties', bountyId);
-      if (!bounty) throw new Error('Bounty not found');
+      if (!bounty) throw new ApiError('Bounty not found', 404);
 
       const contributor =
         contributorId || bounty.contributorId
@@ -54,7 +55,7 @@ class EmailService {
         : {};
 
       const recipient = organization?.email;
-      if (!recipient) throw new Error('No recipient found for email');
+      if (!recipient) throw new ApiError('No recipient found for email', 404);
 
       const html = `
         <p><strong>${contributor.name}</strong> has been assigned to your bounty <strong>${bounty.name}</strong>.</p>
@@ -75,7 +76,7 @@ class EmailService {
   async sendSubmissionNotificationToOrganization({ bountyId, submittedLink }) {
     try {
       const bounty = await FirestoreService.getDocument('bounties', bountyId);
-      if (!bounty) throw new Error('Bounty not found');
+      if (!bounty) throw new ApiError('Bounty not found', 404);
 
       const contributor = bounty.contributorId
         ? await FirestoreService.getDocument(
@@ -92,7 +93,7 @@ class EmailService {
         : {};
 
       const recipient = organization?.email;
-      if (!recipient) throw new Error('No recipient found for email');
+      if (!recipient) throw new ApiError('No recipient found for email', 404);
 
       const html = `
         <p><strong>${contributor.name}</strong> has submitted work for the bounty <strong>${bounty.name}</strong>.</p>
@@ -114,7 +115,7 @@ class EmailService {
   async sendPaymentSentToContributor({ bountyId, amount }) {
     try {
       const bounty = await FirestoreService.getDocument('bounties', bountyId);
-      if (!bounty) throw new Error('Bounty not found');
+      if (!bounty) throw new ApiError('Bounty not found', 404);
 
       const contributor = bounty.contributorId
         ? await FirestoreService.getDocument(
@@ -124,7 +125,7 @@ class EmailService {
         : {};
 
       const recipient = contributor?.email;
-      if (!recipient) throw new Error('No recipient found for email');
+      if (!recipient) throw new ApiError('No recipient found for email', 404);
 
       const html = `
         <p>Hi,</p>

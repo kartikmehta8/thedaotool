@@ -5,6 +5,7 @@ const LoginThrottleService = require('@services/misc/LoginThrottleService');
 const OTPService = require('@services/misc/OTPTokenService');
 const EmailService = require('@services/misc/EmailService');
 const PrivyService = require('@services/integrations/PrivyService');
+const ApiError = require('@utils/ApiError');
 
 const MAX_ATTEMPTS = Number(process.env.MAX_LOGIN_ATTEMPTS || 3);
 const SALT_ROUNDS = 10;
@@ -13,15 +14,15 @@ class UserService {
   async login(email, password) {
     const hasReachedLimit = await this.hasReachedMaxRetries(email);
     if (hasReachedLimit) {
-      throw new Error('Too many login attempts. Try again later.');
+      throw new ApiError('Too many login attempts. Try again later.', 429);
     }
 
     try {
       const user = await this.findUserByEmail(email);
-      if (!user) throw new Error('User not found');
+      if (!user) throw new ApiError('User not found', 404);
 
       const isValid = await bcrypt.compare(password, user.passwordHash);
-      if (!isValid) throw new Error('Invalid email or password');
+      if (!isValid) throw new ApiError('Invalid email or password', 401);
 
       await LoginThrottleService.reset(email);
 
@@ -34,7 +35,7 @@ class UserService {
 
   async signup(email, password, role) {
     const existingUser = await this.findUserByEmail(email);
-    if (existingUser) throw new Error('Email already in use');
+    if (existingUser) throw new ApiError('Email already in use', 409);
 
     const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
 
@@ -71,7 +72,7 @@ class UserService {
 
   async getUserData(uid) {
     const data = await FirestoreService.getDocument('users', uid);
-    if (!data) throw new Error('User profile not found');
+    if (!data) throw new ApiError('User profile not found', 404);
     return data;
   }
 
@@ -104,7 +105,7 @@ class UserService {
 
   async sendOTP(email, type) {
     const user = await this.findUserByEmail(email);
-    if (!user) throw new Error('Email not registered');
+    if (!user) throw new ApiError('Email not registered', 404);
 
     const token = await OTPService.generateOTP(user.uid || user.id, type);
 
@@ -119,14 +120,14 @@ class UserService {
 
   async verifyOTP(email, token) {
     const user = await this.findUserByEmail(email);
-    if (!user) throw new Error('User not found');
+    if (!user) throw new ApiError('User not found', 404);
 
     const isValid = await OTPService.validateOTP(
       user.uid || user.id,
       token,
       'emailVerification'
     );
-    if (!isValid) throw new Error('Invalid or expired token');
+    if (!isValid) throw new ApiError('Invalid or expired token', 400);
 
     await FirestoreService.updateDocument('users', user.uid || user.id, {
       emailVerified: true,
@@ -138,14 +139,14 @@ class UserService {
 
   async resetPassword(email, token, newPassword) {
     const user = await this.findUserByEmail(email);
-    if (!user) throw new Error('User not found');
+    if (!user) throw new ApiError('User not found', 404);
 
     const isValid = await OTPService.validateOTP(
       user.uid || user.id,
       token,
       'passwordReset'
     );
-    if (!isValid) throw new Error('Invalid or expired token');
+    if (!isValid) throw new ApiError('Invalid or expired token', 400);
 
     const passwordHash = await bcrypt.hash(newPassword, SALT_ROUNDS);
     await FirestoreService.updateDocument('users', user.uid || user.id, {

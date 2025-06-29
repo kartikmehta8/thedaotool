@@ -2,13 +2,14 @@ const FirestoreService = require('@services/database/FirestoreService');
 const RealtimeDatabaseService = require('@services/database/RealtimeDatabaseService');
 const EmailService = require('@services/misc/EmailService');
 const CacheService = require('@services/misc/CacheService');
+const ApiError = require('@utils/ApiError');
 
 class ContributorService {
   async applyToBounty(bountyId, userId) {
     const bounty = await FirestoreService.getDocument('bounties', bountyId);
 
-    if (!bounty) throw new Error('Bounty not found');
-    if (bounty.status !== 'open') throw new Error('Bounty not open');
+    if (!bounty) throw new ApiError('Bounty not found', 404);
+    if (bounty.status !== 'open') throw new ApiError('Bounty not open', 400);
 
     await FirestoreService.updateDocument('bounties', bountyId, {
       status: 'assigned',
@@ -26,9 +27,9 @@ class ContributorService {
   async submitWork(bountyId, userId, submittedLink) {
     const bounty = await FirestoreService.getDocument('bounties', bountyId);
 
-    if (!bounty) throw new Error('Bounty not found');
+    if (!bounty) throw new ApiError('Bounty not found', 404);
     if (bounty.contributorId !== userId)
-      throw new Error('Not assigned to this bounty');
+      throw new ApiError('Not assigned to this bounty', 403);
 
     await FirestoreService.updateDocument('bounties', bountyId, {
       status: 'pending_payment',
@@ -90,9 +91,9 @@ class ContributorService {
   async unassignSelf(bountyId, userId) {
     const bounty = await FirestoreService.getDocument('bounties', bountyId);
 
-    if (!bounty) throw new Error('Bounty not found');
+    if (!bounty) throw new ApiError('Bounty not found', 404);
     if (bounty.contributorId !== userId)
-      throw new Error('Not assigned to this bounty');
+      throw new ApiError('Not assigned to this bounty', 403);
 
     await FirestoreService.updateDocument('bounties', bountyId, {
       contributorId: null,

@@ -2,6 +2,7 @@ const axios = require('axios');
 const FirestoreService = require('@services/database/FirestoreService');
 const crypto = require('crypto');
 const CacheService = require('@services/misc/CacheService');
+const ApiError = require('@utils/ApiError');
 
 const CLIENT_ID = process.env.DISCORD_CLIENT_ID;
 const CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET;
@@ -32,7 +33,7 @@ class DiscordService {
 
   async exchangeCodeForToken(code, redirectUri) {
     if (!this.validateRedirectUri(redirectUri)) {
-      throw new Error('Invalid redirect URI');
+      throw new ApiError('Invalid redirect URI', 400);
     }
 
     const response = await axios.post(
@@ -65,7 +66,7 @@ class DiscordService {
     );
 
     if (!organizationData?.discordAccessToken) {
-      throw new Error('Unauthorized');
+      throw new ApiError('Unauthorized', 401);
     }
 
     const { discordAccessToken } = organizationData;

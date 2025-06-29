@@ -4,6 +4,7 @@ const postToDiscord = require('@utils/postToDiscord');
 const CacheService = require('@services/misc/CacheService');
 const EmailService = require('@services/misc/EmailService');
 const PrivyService = require('@services/integrations/PrivyService');
+const ApiError = require('@utils/ApiError');
 
 class OrganizationService {
   async createBounty(values, userId) {
@@ -11,9 +12,7 @@ class OrganizationService {
     today.setHours(0, 0, 0, 0);
     const deadlineDate = new Date(values.deadline);
     if (deadlineDate <= today) {
-      const err = new Error('Deadline cannot be in the past');
-      err.status = 400;
-      throw err;
+      throw new ApiError('Deadline cannot be in the past', 400);
     }
     const bounty = {
       name: values.name || '',
@@ -36,6 +35,7 @@ class OrganizationService {
 
   async deleteBounty(bountyId) {
     const res = await FirestoreService.deleteDocument('bounties', bountyId);
+    await RealtimeDatabaseService.removeData(`chats/${bountyId}`);
     await CacheService.del('GET:*bounties*');
     await CacheService.del('GET:*payments*');
     return res;
@@ -47,9 +47,7 @@ class OrganizationService {
       today.setHours(0, 0, 0, 0);
       const deadlineDate = new Date(updateData.deadline);
       if (deadlineDate <= today) {
-        const err = new Error('Deadline cannot be in the past');
-        err.status = 400;
-        throw err;
+        throw new ApiError('Deadline cannot be in the past', 400);
       }
     }
     const res = await FirestoreService.updateDocument(
@@ -137,11 +135,11 @@ class OrganizationService {
 
   async payBounty(bountyId, organizationId) {
     const bounty = await FirestoreService.getDocument('bounties', bountyId);
-    if (!bounty) throw new Error('Bounty not found');
+    if (!bounty) throw new ApiError('Bounty not found', 404);
     if (bounty.organizationId !== organizationId)
-      throw new Error('Unauthorized');
+      throw new ApiError('Unauthorized', 403);
     if (bounty.status !== 'pending_payment')
-      throw new Error('Bounty not ready for payment');
+      throw new ApiError('Bounty not ready for payment', 400);
 
     const orgUser = await FirestoreService.getDocument('users', organizationId);
     const contributorUser = await FirestoreService.getDocument(
@@ -150,9 +148,9 @@ class OrganizationService {
     );
 
     if (!orgUser?.walletId || !orgUser?.walletAddress)
-      throw new Error('Organization wallet missing');
+      throw new ApiError('Organization wallet missing', 400);
     if (!contributorUser?.walletAddress)
-      throw new Error('Contributor wallet missing');
+      throw new ApiError('Contributor wallet missing', 400);
 
     const lamports = Math.round(Number(bounty.amount) * 1e9);
     const txHash = await PrivyService.sendSol(
