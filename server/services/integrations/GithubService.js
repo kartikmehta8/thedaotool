@@ -2,6 +2,7 @@ const axios = require('axios');
 const FirestoreService = require('@services/database/FirestoreService');
 const crypto = require('crypto');
 const CacheService = require('@services/misc/CacheService');
+const ApiError = require('@utils/ApiError');
 
 const CLIENT_ID = process.env.GITHUB_CLIENT_ID;
 const CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
@@ -30,7 +31,7 @@ class GithubService {
     const stored = await FirestoreService.getDocument('oauth_states', state);
 
     if (!stored) {
-      throw new Error('Invalid or expired OAuth state');
+      throw new ApiError('Invalid or expired OAuth state', 401);
     }
 
     await FirestoreService.deleteDocument('oauth_states', state);
@@ -54,7 +55,7 @@ class GithubService {
     );
 
     if (!response.data.access_token) {
-      throw new Error('GitHub token exchange failed');
+      throw new ApiError('GitHub token exchange failed', 400);
     }
 
     return { accessToken: response.data.access_token, userId };
@@ -75,9 +76,7 @@ class GithubService {
     const { githubToken } = organizationData || {};
 
     if (!githubToken) {
-      const err = new Error('GitHub not authorized');
-      err.status = 401;
-      throw err;
+      throw new ApiError('GitHub not authorized', 401);
     }
 
     const response = await axios.get('https://api.github.com/user/repos', {
@@ -95,9 +94,7 @@ class GithubService {
     const { githubToken } = organizationData || {};
 
     if (!githubToken) {
-      const err = new Error('GitHub not authorized');
-      err.status = 401;
-      throw err;
+      throw new ApiError('GitHub not authorized', 401);
     }
 
     await axios.get(`https://api.github.com/repos/${repoName}`, {
