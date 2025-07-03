@@ -4,8 +4,16 @@
 
 ## Getting Started
 * [Overview](getting-started/overview.md)
-* [Running with Docker](getting-started/docker.md)
-* [Local Setup](getting-started/local-setup.md)
+* [Quickstart](getting-started/quickstart.md)
+
+## Local Setup
+* [Overview](local-setup/overview.md)
+* [Running with Docker](local-setup/docker.md)
+* [GitHub](local-setup/github.md)
+* [Discord Bot](local-setup/discord-bot.md)
+* [Firebase](local-setup/firebase.md)
+* [Privy](local-setup/privy.md)
+* [Mail Setup](local-setup/mail-setup.md)
 
 ## Project Structure
 * [Overview](project-structure/overview.md)
@@ -28,11 +36,6 @@
 * [Cron Jobs](backend/cron.md)
 * [Sockets](backend/sockets.md)
 
-## Configuration
-* [Environment Variables](configuration/env.md)
-* [Docker](configuration/docker.md)
-* [Scripts](configuration/scripts.md)
-
 ## REST API
 * [Overview](rest-api/overview.md)
 * [Auth](rest-api/auth.md)
@@ -44,7 +47,6 @@
 
 ## Extras
 * [Troubleshooting](extras/troubleshooting.md)
-* [Deployment](extras/deployment.md)
 
 ## Community
 * [Contributing](community/contributing.md)
