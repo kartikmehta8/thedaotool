@@ -4,13 +4,13 @@
 
 We're here to help you troubleshoot The DAO Tool! Below are quick tips and resources for resolving common problems.
 
-## Where to get help
+## Where to get help?
 
 - **Telegram:** [t.me/thedaotool](https://t.me/thedaotool)
 - **Discord:** [Join the Community](https://discord.gg/VsyDp52Saq)
 - **Email:** [kartikmehta202@gmail.com](mailto:kartikmehta202@gmail.com)
 
-## Documentation references
+## Documentation References
 
 - **Local Setup Docs**
   - [GitHub](../local-setup/github.md) – configure GitHub OAuth.
@@ -26,24 +26,24 @@ We're here to help you troubleshoot The DAO Tool! Below are quick tips and resou
   - [Privy Docs](https://docs.privy.io)
   - [npm Docs](https://docs.npmjs.com)
 
-## Common issues and fixes
+## Common Issues
 
-### Discord integration
+### Discord Integration
 - **OAuth not redirecting?** Ensure the callback URL in your Discord app matches `/api/discord/callback`.
 - **Channels not showing up?** Check that your bot has permission to view channels in your Discord guild.
 
-### GitHub integration
+### GitHub Integration
 - **Repo list empty?** Confirm your GitHub token scopes include `repo`.
 - **Webhook errors?** Verify the webhook URL and secret in your GitHub settings.
 
 ### Firebase
 - **Cannot connect to database?** Make sure your Firebase service account credentials are correct and environment variables are loaded.
 
-### Privy wallets
+### Privy Wallet
 - **Balance shows 0?** The wallet might be on the wrong network. Check your network configuration.
 - **Transaction failures?** Verify you have enough SOL for fees and that the Privy API keys are set.
 
-### Packages and setup
+### Packages & Setup
 - Run `npm install` inside both `client/` and `server/` to install all packages.
 - If a package is missing or outdated, delete `node_modules` and reinstall.
 
