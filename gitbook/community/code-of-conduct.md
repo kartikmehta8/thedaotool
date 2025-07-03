@@ -1,6 +1,6 @@
 # Code of Conduct
 
-![SECURITY](../.gitbook/assets/code-of-conduct.png)
+![CODE OF CONDUCT](../.gitbook/assets/code-of-conduct.png)
 
 ## Our Commitment
 
