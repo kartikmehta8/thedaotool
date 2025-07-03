@@ -47,6 +47,6 @@
 * [Deployment](extras/deployment.md)
 
 ## Community
-* [Contribution Guidelines](community/contributing.md)
+* [Contributing](community/contributing.md)
 * [Code of Conduct](community/code-of-conduct.md)
 * [Security Policy](community/security.md)
