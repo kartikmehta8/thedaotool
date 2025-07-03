@@ -1,61 +1,68 @@
-# Contributing to The DAO Tool
+# Contribution Guidelines
 
-## Welcome!
-
-We're thrilled that you're interested in contributing to our project. This document provides guidelines for contributing to our repository.
+Thank you for your interest in contributing to The DAO Tool! We appreciate your time and effort in helping improve this project. Please take a moment to review these guidelines before making contributions.
 
 ## Code of Conduct
 
-Please be respectful and considerate of others. We are committed to providing a welcoming and inspiring community for all.
+All contributors must adhere to our [Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code.
 
 ## Getting Started
 
-### Prerequisites
-- Node.js (version 20.0 or later)
-- npm
-- Git
+1. **Fork** the repository on GitHub
+2. **Clone** your forked repository to your local machine
+3. Create a new **feature branch** for your changes
+4. Make your changes following our coding standards
+5. **Test** your changes thoroughly
+6. **Commit** your changes with clear, descriptive messages
+7. **Push** your changes to your fork
+8. Open a **Pull Request** against the main repository
 
-### Local Development Setup
+## How to Contribute
 
-1. Fork the repository
-2. Clone your forked repository
-   ```bash
-   git clone https://github.com/kartikmehta8/thedaotool.git
-   cd thedaotool
-   ```
-3. Install dependencies (Client & Server)
-   ```bash
-   npm install
-   ```
-4. Create a new branch for your feature
-   ```bash
-   git checkout -b feature/your-feature-name
-   ```
+### Reporting Issues
+When submitting bug reports:
+- Check existing issues to avoid duplicates
+- Use a clear, descriptive title
+- Include steps to reproduce the issue
+- Specify expected vs. actual behavior
+- Provide environment
 
-## Contribution Process
+### Feature Requests
+For new feature suggestions:
+- Explain the problem it would solve
+- Provide use cases and context
+- Outline potential implementation approaches
+- Reference similar features in other projects if applicable
 
-### Reporting Bugs
-- Use GitHub Issues
-- Provide a clear and descriptive title
-- Describe the exact steps to reproduce the problem
-- Include your environment details (OS, Node version, etc.)
+### Pull Requests
+To submit code contributions:
+- Keep PRs focused on a single feature/bug/fix
+- Reference related issues in your description
+- Include tests for new functionality
+- Update documentation as needed
+- Follow our coding style guidelines
 
-### Suggesting Enhancements
-- Open a GitHub Issue
-- Clearly describe the enhancement
-- Provide context and potential implementation ideas
+## Code Quality Standards
 
-### Pull Request Process
-1. Update documentation if needed
-2. Add description of changes in PR
-3. Your PR will be reviewed by maintainers
+- Maintain consistent style with existing code
+- Write clear, self-documenting code
+- Include appropriate comments for complex logic
+- Keep commits atomic and well-described
+- Ensure all tests pass before submitting
 
-## Code Style Guidelines
-- Format code with Prettier
-- Write meaningful commit messages
+## Review Process
 
-## Questions?
-If you have questions, please open an issue or reach out to the maintainers.
+- All PRs will be reviewed by maintainers
+- Reviewers may request changes or clarification
+- Be responsive to feedback on your PR
+- PRs must pass CI checks before merging
+- Maintainers reserve the right to reject contributions that don't align with project goals
 
-## Thank You!
-Your contributions make open source amazing. Thank you for your help!
+## Need Help?
+
+If you have questions about contributing:
+- Search existing issues and documentation first
+- Open a new issue for clarification
+- Reach out to maintainers through designated channels
+
+We appreciate your contributions and look forward to collaborating with you!
