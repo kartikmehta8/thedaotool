@@ -17,7 +17,7 @@ We take security seriously and appreciate researchers who responsibly disclose v
 Please submit vulnerability reports to our security team via:
 
 **Preferred Method**:  
-- **Email:** kartikmehta202@gmail.com
+- **Email:** [kartikmehta202@gmail.com](mailto:kartikmehta202@gmail.com)
 - **X (Twitter):** [kartik_mehta8](https://x.com/kartik_mehta8)
 - **Subject:** "Security Vulnerability Report: [Brief Description]"
 
