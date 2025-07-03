@@ -1,3 +1,3 @@
 # Discord Bot
 
-Setup instructions for the Discord bot.
+Instructions for the Discord bot.
