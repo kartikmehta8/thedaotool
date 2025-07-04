@@ -36,7 +36,7 @@ We’re friendly. Probably.
 
 Like what you're seeing? Toss us a star — it costs you nothing and helps others discover the project:
 
-[**Star https://github.com/kartikmehta8/thedaotool**](https://github.com/kartikmehta8/thedaotool)
+[**Star github.com/kartikmehta8/thedaotool**](https://github.com/kartikmehta8/thedaotool)
 
 **Bonus:** Stargazers get good karma and slightly better local dev speeds. Probably.
 
