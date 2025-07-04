@@ -30,10 +30,6 @@ Join our builders' Telegram group and hang out with other curious humans:&#x20;
 TELEGRAM
 {% endembed %}
 
-{% embed url="https://discord.gg/VsyDp52Saq" %}
-DISCORD
-{% endembed %}
-
 We’re friendly. Probably.
 
 ## Star the GitHub Repository
