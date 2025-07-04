@@ -1,18 +1,27 @@
+---
+icon: rocket
+---
+
 # Overview
+
+<figure><img src="../.gitbook/assets/overview.png" alt=""><figcaption><p>OVERVIEW</p></figcaption></figure>
 
 Before we dive into setup steps or explore the internals of the platform, this section will give you a clear, high-level understanding of what The DAO Tool is, why it was built, and what it enables. Whether you're a developer, contributor, or someone managing people inside a DAO, open-source project, or protocol team — this is the perfect place to begin.
 
 ## What is The DAO Tool?
 
-<iframe src="https://youtu.be/eG6GO4EMYjc" frameborder="0" allowfullscreen></iframe>
+{% embed url="https://youtu.be/eG6GO4EMYjc" %}
+AS OF JULY 2025
+{% endembed %}
 
 The DAO Tool is a modular, open-source coordination system designed to help decentralized teams work more efficiently. Instead of relying on multiple disconnected platforms, it brings everything together in one place — task assignment, collaboration, communication, and payments.
 
 At its core, The DAO Tool integrates:
-- GitHub issues, automatically synced as bounties.
-- Discord announcements for real-time bounty visibility.  
-- Contributor dashboards for tracking applications, progress, and submissions.  
-- USDC payouts over Solana wallets using Privy.  
+
+* GitHub issues, automatically synced as bounties.
+* Discord announcements for real-time bounty visibility.
+* Contributor dashboards for tracking applications, progress, and submissions.
+* USDC payouts over Solana wallets using Privy.
 
 This means no more spreadsheets, DMs, or context-switching across four tools. **Just a smooth, async-friendly flow from issue to payout — all self-hosted and customizable**.
 
@@ -33,20 +42,22 @@ If you're a developer, you'll find a clean and extensible codebase built with Re
 ## Who It's Built For?
 
 The DAO Tool is especially useful for:
-- DAO operators and protocol teams managing async contributor programs.  
-- Open-source maintainers looking to track and reward external contributors.  
-- Hackathon teams and collectives that need a structured coordination layer.  
-- Ecosystem leads running bounties, microgrants, or recurring contributor tasks.  
-- Builders who want to fork and extend DAO infra for their own needs.  
+
+* DAO operators and protocol teams managing async contributor programs.
+* Open-source maintainers looking to track and reward external contributors.
+* Hackathon teams and collectives that need a structured coordination layer.
+* Ecosystem leads running bounties, microgrants, or recurring contributor tasks.
+* Builders who want to fork and extend DAO infra for their own needs.
 
 Whether you’re coordinating two people or a whole contributor network, this tool was made with you in mind.
 
 ## What’s Next?
 
 In the next few pages, you’ll learn how to:
-- Set up the project locally on your machine.  
-- Configure your environment. (Firebase, GitHub OAuth, Privy)  
-- Understand the backend / frontend architecture in depth. 
-- Contribute to the project or build custom features for your own team.  
+
+* Set up the project locally on your machine.
+* Configure your environment. (Firebase, GitHub OAuth, Privy)
+* Understand the backend / frontend architecture in depth.
+* Contribute to the project or build custom features for your own team.
 
 Thanks for checking this out — and welcome to a more efficient way of managing work in Web3.
