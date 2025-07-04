@@ -7,7 +7,7 @@
 * [Quickstart](getting-started/quickstart.md)
 
 ## Local Setup
-* [Overview](local-setup/overview.md)
+* [Start Here](local-setup/start-here.md)
 * [Running with Docker](local-setup/docker.md)
 * [GitHub](local-setup/github.md)
 * [Discord Bot](local-setup/discord-bot.md)
@@ -16,7 +16,6 @@
 * [Mail Setup](local-setup/mail-setup.md)
 
 ## Project Structure
-* [Overview](project-structure/overview.md)
 * [Client](project-structure/client.md)
 * [Server](project-structure/server.md)
 

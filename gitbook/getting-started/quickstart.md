@@ -1,19 +1,38 @@
 # Quickstart
 
-<figure><img src="https://gitbookio.github.io/onboarding-template-images/quickstart-hero.png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/quickstart.png" alt=""><figcaption><p>QUICKSTART</p></figcaption></figure>
 
-Beautiful documentation starts with the content you create — and GitBook makes it easy to get started with any pre-existing content.
+You’ve just discovered a fully open-source, developer-friendly, wallet-native DAO coordination tool — and if that sentence didn’t excite you, just wait until you see it run.
 
-{% hint style="info" %}
-Want to learn about writing content from scratch? Head to the [Basics](../basics/editor.md) section to learn more.
-{% endhint %}
+This quickstart isn’t here to lecture you — it’s here to get you building (or breaking things) as quickly as possible. Whether you're curious, nosy, or ready to fork this entire repo and launch your own contributor-powered empire, you’re in the right place.
 
-### Import
+## Try the Hosted Version First
 
-GitBook supports importing content from many popular writing tools and formats. If your content already exists, you can upload a file or group of files to be imported.
+Before you start fiddling with local configs and `npm install`, why not try the real thing?
 
-<div data-full-width="false"><figure><img src="https://gitbookio.github.io/onboarding-template-images/quickstart-import.png" alt=""><figcaption></figcaption></figure></div>
+👉 [**Go to app.thedaotool.com »**](https://app.thedaotool.com)
 
-### Sync a repository
+The hosted version is always up-to-date with the latest features and a guided flow that will walk you through the platform like a kind-but-firm onboarding bot.
 
-GitBook also allows you to set up a bi-directional sync with an existing repository on GitHub or GitLab. Setting up Git Sync allows you and your team to write content in GitBook or in code, and never have to worry about your content becoming out of sync.
+Test it. Click around. Break something (just not production, please).
+
+## Join the Community
+
+Got questions? Found a bug? Have an existential thought about contributor payouts?
+
+Join our builders' Telegram group and hang out with other curious humans:
+👉 [t.me/thedaotool »](https://t.me/thedaotool)
+
+We’re friendly. Probably.
+
+## Star the GitHub Repository
+
+Like what you're seeing? Toss us a star — it costs you nothing and helps others discover the project:
+
+👉 [github.com/kartikmehta8/thedaotool »](https://github.com/kartikmehta8/thedaotool)
+
+Bonus: Stargazers get good karma and slightly better local dev speeds. Probably.
+
+## Ready to Build? Let’s Set It Up Locally.
+
+Okay, jokes aside — if you’re serious about running this project locally, customizing it, or contributing, the next part is all yours.
