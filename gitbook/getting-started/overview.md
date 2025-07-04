@@ -4,7 +4,7 @@ Before we dive into setup steps or explore the internals of the platform, this s
 
 ## What is The DAO Tool?
 
-[![AS OF JULY 2025](../.gitbook/assets/product-video-banner.png)](https://youtu.be/eG6GO4EMYjc)
+<iframe src="https://youtu.be/eG6GO4EMYjc" frameborder="0" allowfullscreen></iframe>
 
 The DAO Tool is a modular, open-source coordination system designed to help decentralized teams work more efficiently. Instead of relying on multiple disconnected platforms, it brings everything together in one place — task assignment, collaboration, communication, and payments.
 
