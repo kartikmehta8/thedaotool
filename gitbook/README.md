@@ -4,7 +4,7 @@ icon: book
 
 # Welcome to The DAO Tool Documentation
 
-![TROUBLESHOOTING](.gitbook/assets/introduction.png)
+![WELCOME](.gitbook/assets/introduction.png)
 
 Hey there! I’m **Kartik Mehta**, the creator of **The DAO Tool** — and I’m genuinely excited to have you here.
 
