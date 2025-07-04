@@ -1,7 +1,3 @@
----
-icon: rocket
----
-
 # Overview
 
 <figure><img src="../.gitbook/assets/overview.png" alt=""><figcaption><p>OVERVIEW</p></figcaption></figure>
