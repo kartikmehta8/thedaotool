@@ -8,7 +8,7 @@ We’ll be using **Gmail's SMTP service** to send emails securely.
 
 ## Step 1: Enable 2-Step Verification (if not already)
 
-![MAIL SETUP](../.gitbook/assets/mail/google-2fa.png)
+![2FA](../.gitbook/assets/mail/google-2fa.png)
 
 First, make sure 2-Step Verification is enabled on your Google account.  
 You can enable it here: [myaccount.google.com/security](https://myaccount.google.com/security)
