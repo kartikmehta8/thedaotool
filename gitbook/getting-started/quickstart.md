@@ -6,17 +6,17 @@ icon: bullseye-arrow
 
 <figure><img src="../.gitbook/assets/quickstart.png" alt=""><figcaption><p>QUICKSTART</p></figcaption></figure>
 
-You’ve just discovered a fully open-source, developer-friendly, wallet-native DAO coordination tool — and if that sentence didn’t excite you, just wait until you see it run.
-
-This quickstart isn’t here to lecture you — it’s here to get you building (or breaking things) as quickly as possible. Whether you're curious, nosy, or ready to fork this entire repo and launch your own contributor-powered empire, you’re in the right place.
+This quick start isn’t here to lecture you — it’s here to get you building (or breaking things) as quickly as possible. Whether you're curious, nosy, or ready to fork this entire repo and launch your own contributor-powered empire, you’re in the right place.
 
 ## Try the Hosted Version First
 
-Before you start fiddling with local configs and `npm install`, why not try the real thing?
+Before you start fiddling with local configs, why not try the real thing?
 
 [**Go to app.thedaotool.com**](https://app.thedaotool.com)
 
+{% hint style="success" %}
 The hosted version is always up-to-date with the latest features and a guided flow that will walk you through the platform like a kind-but-firm onboarding bot.
+{% endhint %}
 
 Test it. Click around. Break something (just not production, please).
 
@@ -42,4 +42,4 @@ Like what you're seeing? Toss us a star — it costs you nothing and helps other
 
 ## Ready to Build? Let’s Set It Up Locally.
 
-Okay, jokes aside — if you’re serious about running this project locally, customizing it, or contributing, the next part is all yours.
+Okay, jokes aside — if you’re serious about running this project locally, customising it, or contributing, the next part is all yours.

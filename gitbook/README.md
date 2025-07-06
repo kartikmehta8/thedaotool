@@ -12,7 +12,7 @@ This guide is designed to help you get the most out of the platform, whether you
 
 * Setting up your local environment.
 * Integrating GitHub or Discord.
-* Exploring the backend architecture.
+* Exploring the project architecture.
 * Customising your own DAO workflows.
 * Using the REST API to extend the platform.
 
