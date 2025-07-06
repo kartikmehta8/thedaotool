@@ -59,4 +59,3 @@ DISCORD_BOT_TOKEN=your-bot-token
 ```
 
 That’s it! Your bot is ready to start sending updates — users will authorize it from their profile page directly.
-Next up: setting up **Mail Configuration**.
