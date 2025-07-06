@@ -10,7 +10,7 @@ We’ll be using **Gmail's SMTP service** to send emails securely.
 
 ![2FA](../.gitbook/assets/mail/google-2fa.png)
 
-First, make sure 2-Step Verification is enabled on your Google account.  
+First, make sure 2-Step Verification is enabled on your Google account.\
 You can enable it here: [myaccount.google.com/security](https://myaccount.google.com/security)
 
 ## Step 2: Create an App Password
@@ -19,7 +19,7 @@ You can enable it here: [myaccount.google.com/security](https://myaccount.google
 
 1. Go to your [Google App Passwords](https://myaccount.google.com/apppasswords) page.
 2. Please provide a valid name for your application.
-3. Click **Create**.  
+3. Click **Create**.\
    Google will give you a **16-character app password** (looks like `abcd efgh ijkl mnop`).
 
 ## Step 3: Add to `.env` File
@@ -31,6 +31,8 @@ SMTP_USER=your-gmail-address@gmail.com
 SMTP_PASS=your-16-character-app-password
 ```
 
-> Make sure your Gmail is a trusted sender (ideally not your personal account) for better deliverability on production.
+{% hint style="warning" %}
+Make sure your Gmail is a trusted sender (ideally not your personal account) for better deliverability on production.
+{% endhint %}
 
 That’s it! Your emails will now be sent using your Gmail account via secure SMTP.

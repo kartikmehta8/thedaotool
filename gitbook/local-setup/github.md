@@ -10,11 +10,9 @@ Go to [GitHub Developer Settings](https://github.com/settings/developers) and cr
 
 ![CREATE OAUTH APP](../.gitbook/assets/github/github-create-app.png)
 
-- Application Name: `GIVE IT A NAME`
-- Homepage URL: `http://localhost:3000` (Or use your deployed frontend URI.)
-- Authorization Callback URL: `http://localhost:5050/api/github/callback` (Or use your deployed GitHub callback URI.)
-
-> The `Authorization Callback URL` must match exactly in your `.env` and app settings.
+* Application Name: `GIVE IT A NAME`
+* Homepage URL: `http://localhost:3000` (Or use your deployed frontend URI.)
+* Authorisation Callback URL: `http://localhost:5050/api/github/callback` (Or use your deployed GitHub callback URI.)
 
 ## 2. Get Client ID & Secret
 
@@ -22,8 +20,8 @@ Go to [GitHub Developer Settings](https://github.com/settings/developers) and cr
 
 After creating the app:
 
-- You'll get the **Client ID**
-- Click "Generate a new client secret" to get the **Client Secret**
+* You'll get the **Client ID**
+* Click "Generate a new client secret" to get the **Client Secret**
 
 Copy these values and add them to your `.env` file inside the `/server` directory:
 
@@ -34,13 +32,13 @@ GITHUB_CLIENT_SECRET=your-client-secret
 
 These credentials will be used to authenticate users and sync GitHub issues automatically via background workers.
 
-## 3. Authorize from the Platform
+## 3. Authorise from the Platform
 
 Once the app is running locally:
 
-- Go to `https://app.thedaotool.com/profile/organization` or `https://app.thedaotool.com/profile/contributor`.
-- Click “Authorize GitHub”.
-- This will redirect you through the OAuth flow, store tokens securely, and begin syncing your repository issues (labeled `dao`) to the bounty board.
+* Go to `https://app.thedaotool.com/profile/organization` or `https://app.thedaotool.com/profile/contributor`.
+* Click “Authorize GitHub”.
+* This will redirect you through the OAuth flow, store tokens securely, and begin syncing your repository issues (labeled `dao`) to the bounty board.
 
 That’s it! GitHub is now successfully connected to your local environment.
 
