@@ -11,8 +11,8 @@ Go to [GitHub Developer Settings](https://github.com/settings/developers) and cr
 ![CREATE OAUTH APP](../.gitbook/assets/github/github-create-app.png)
 
 - Application Name: `GIVE IT A NAME`
-- Homepage URL: `http://localhost:3000` (or your hosted frontend)
-- Authorization Callback URL: `http://localhost:5050/api/github/callback`
+- Homepage URL: `http://localhost:3000` (Or use your deployed frontend URI.)
+- Authorization Callback URL: `http://localhost:5050/api/github/callback` (Or use your deployed GitHub callback URI.)
 
 > The `Authorization Callback URL` must match exactly in your `.env` and app settings.
 
