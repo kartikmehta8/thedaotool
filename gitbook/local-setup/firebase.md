@@ -9,7 +9,7 @@ This section will help you connect Firebase to your local server for real-time c
 Go to [Firebase Console](https://console.firebase.google.com/) and create a new project. Once it’s created, you’ll get access to:
 
 - Realtime Database URL
-- Storage Bucket ()
+- Storage Bucket (Although we don't need it right now, it's good to have.)
 - Service Account Credentials
 
 ![FIREBASE CONSOLE](../.gitbook/assets/firebase-setup/firebase-starter.png)

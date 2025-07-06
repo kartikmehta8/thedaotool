@@ -10,7 +10,7 @@
 * [Start Here](local-setup/start-here.md)
 * [Firebase](local-setup/firebase.md)
 * [GitHub](local-setup/github.md)
-* [Discord](local-setup/discord-bot.md)
+* [Discord](local-setup/discord.md)
 * [Mail Setup](local-setup/mail-setup.md)
 * [Privy](local-setup/privy.md)
 * [Running with Docker](local-setup/docker.md)
