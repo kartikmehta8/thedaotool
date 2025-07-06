@@ -12,11 +12,11 @@ Privy handles secure wallet creation, which is attached to your account upon sig
 
 Head to the [Privy Dashboard](https://dashboard.privy.io/) and follow these steps:
 
-- Click **"Create App"**
-- Select **"Web"** as the platform
-- Once created, you'll get:
-  - **Privy App ID**
-  - **Privy App Secret**
+* Click **"Create App"**
+* Select **"Web"** as the platform
+* Once created, you'll get:
+  * **Privy App ID**
+  * **Privy App Secret**
 
 You can also find these under **App Settings → Basic** section later.
 
@@ -37,7 +37,7 @@ To connect to the Solana network and perform wallet-based payouts, you need two 
 
 ### `SOLANA_CAIP2`
 
-This is a **chain ID** used for CAIP-2-compatible blockchain identification.  
+This is a **chain ID** used for CAIP-2-compatible blockchain identification.\
 For Solana Mainnet, use:
 
 ```env
@@ -50,11 +50,13 @@ For Devnet, use:
 SOLANA_CAIP2=solana:devnet
 ```
 
-Read more about CAIP-2: [Chain Agnostic Improvement Proposals](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-2.md)
+Read more about CAIP-2:
+
+{% @github-files/github-code-block url="https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-2.md" %}
 
 ### `SOLANA_RPC_URL`
 
-This is your **RPC endpoint** to send transactions and fetch account data.  
+This is your **RPC endpoint** to send transactions and fetch account data.\
 You can use the public RPC or a private one (recommended for scale). Example:
 
 ```env
