@@ -26,6 +26,8 @@ services:
       - SOLANA_CAIP2=${SOLANA_CAIP2}
       - SOLANA_RPC_URL=${SOLANA_RPC_URL}
     restart: unless-stopped
+    depends_on:
+      - redis
     networks:
       - nginx_proxy_net
 
