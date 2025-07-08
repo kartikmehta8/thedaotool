@@ -1,10 +1,10 @@
 services:
-  bizzynetwork:
+  thedaotool:
     build: .
-    container_name: bizzy-backend
+    container_name: ${CONTAINER_NAME:-thedaotool-backend}
     environment:
       - PORT=5050
-      - NODE_ENV=production
+      - NODE_ENV=${NODE_ENV}
       - FB_STORAGE_BUCKET=${FB_STORAGE_BUCKET}
       - FB_REALTIME_DATABASE=${FB_REALTIME_DATABASE}
       - FRONTEND_URL=${FRONTEND_URL}
