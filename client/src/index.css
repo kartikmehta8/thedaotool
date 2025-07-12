@@ -46,7 +46,7 @@ body.dark {
 .tour-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.45);
   z-index: 10000;
 }
 
@@ -55,6 +55,7 @@ body.dark {
   border: 2px solid #2684FF;
   border-radius: 4px;
   pointer-events: none;
+  box-shadow: 0 0 0 4px rgba(38, 132, 255, 0.3);
 }
 
 .tour-popover {
@@ -66,4 +67,22 @@ body.dark {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   z-index: 10001;
   max-width: 250px;
+}
+
+.tour-popover::after {
+  content: '';
+  position: absolute;
+  left: 20px;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+}
+
+.tour-popover.bottom::after {
+  top: -6px;
+  border-bottom: 6px solid var(--card-bg);
+}
+
+.tour-popover.top::after {
+  bottom: -6px;
+  border-top: 6px solid var(--card-bg);
 }

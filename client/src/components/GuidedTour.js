@@ -72,11 +72,34 @@ const GuidedTour = ({ run, stepIndex, role, next, prev, exit }) => {
 
     const update = () => {
       const r = el.getBoundingClientRect();
+      const scrollY = window.scrollY;
+      const scrollX = window.scrollX;
+      const viewportH = window.innerHeight;
+      const viewportW = window.innerWidth;
+      const popoverW = 280;
+      const popoverH = 130;
+
+      let popTop = r.bottom + scrollY + 8;
+      let placement = 'bottom';
+      if (popTop + popoverH > scrollY + viewportH) {
+        popTop = r.top + scrollY - popoverH - 8;
+        placement = 'top';
+      }
+
+      let popLeft = r.left + scrollX + r.width / 2 - popoverW / 2;
+      if (popLeft < scrollX + 8) popLeft = scrollX + 8;
+      if (popLeft + popoverW > scrollX + viewportW) {
+        popLeft = scrollX + viewportW - popoverW - 8;
+      }
+
       setRect({
-        top: r.top + window.scrollY,
-        left: r.left + window.scrollX,
+        top: r.top + scrollY,
+        left: r.left + scrollX,
         width: r.width,
         height: r.height,
+        popTop,
+        popLeft,
+        placement,
       });
     };
 
@@ -100,8 +123,8 @@ const GuidedTour = ({ run, stepIndex, role, next, prev, exit }) => {
   };
 
   const popoverStyle = {
-    top: rect.bottom + 8,
-    left: rect.left,
+    top: rect.popTop,
+    left: rect.popLeft,
   };
 
   const isLast = stepIndex === steps.length - 1;
@@ -110,7 +133,7 @@ const GuidedTour = ({ run, stepIndex, role, next, prev, exit }) => {
     <div className="tour-overlay" onClick={exit}>
       <div className="tour-highlight" style={highlightStyle} />
       <div
-        className="tour-popover"
+        className={`tour-popover ${rect.placement}`}
         style={popoverStyle}
         onClick={(e) => e.stopPropagation()}
       >
