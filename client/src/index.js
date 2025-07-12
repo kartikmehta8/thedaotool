@@ -6,7 +6,6 @@ import 'antd/dist/reset.css';
 import './index.css';
 import { Toaster } from 'react-hot-toast';
 import ThemeProvider, { useTheme } from './context/ThemeContext';
-import { TourProvider } from './context/TourContext';
 
 const Root = () => {
   const { algorithm } = useTheme();
@@ -29,9 +28,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <ThemeProvider>
-      <TourProvider>
-        <Root />
-      </TourProvider>
+      <Root />
     </ThemeProvider>
   </React.StrictMode>
 );

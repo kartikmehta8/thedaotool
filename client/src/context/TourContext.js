@@ -5,7 +5,7 @@ import GuidedTour from '../components/GuidedTour';
 const TourContext = createContext({});
 
 export const TourProvider = ({ children }) => {
-  const { user } = useAuth();
+  const { user } = useAuth() || {};
   const [run, setRun] = useState(false);
   const [stepIndex, setStepIndex] = useState(0);
   const [completed, setCompleted] = useState(false);

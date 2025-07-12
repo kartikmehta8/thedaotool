@@ -6,6 +6,7 @@ import {
   Navigate,
 } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { TourProvider } from './context/TourContext';
 import { routes } from './routes/RoutesConfig';
 
 import { OrganizationInsights, ContributorInsights } from './pages';
@@ -54,11 +55,13 @@ const AppRoutes = () => {
 const App = () => {
   return (
     <AuthProvider>
-      <Router>
-        <Suspense fallback={null}>
-          <AppRoutes />
-        </Suspense>
-      </Router>
+      <TourProvider>
+        <Router>
+          <Suspense fallback={null}>
+            <AppRoutes />
+          </Suspense>
+        </Router>
+      </TourProvider>
     </AuthProvider>
   );
 };
