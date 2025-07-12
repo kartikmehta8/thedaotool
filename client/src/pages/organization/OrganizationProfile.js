@@ -85,6 +85,7 @@ const OrganizationProfile = () => {
       }}
     >
       <Card
+        data-tour="profile-settings"
         className="form-card card-theme"
         style={{ marginBottom: 20 }}
         loading={loading}
@@ -161,6 +162,7 @@ const OrganizationProfile = () => {
       </Card>
       <Card
         className="card-theme"
+        data-tour="github-integration"
         style={{ width: 500, marginBottom: 20 }}
         loading={loading}
       >
@@ -172,6 +174,7 @@ const OrganizationProfile = () => {
       </Card>
       <Card
         className="form-card card-theme"
+        data-tour="discord-integration"
         loading={loading}
         bodyStyle={{ padding: '1rem' }}
       >

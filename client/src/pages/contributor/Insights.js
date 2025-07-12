@@ -150,7 +150,7 @@ const ContributorInsights = ({ user }) => {
 
   return (
     <AppLayout>
-      <Tabs defaultActiveKey="line" items={items} />
+      <Tabs data-tour="analytics-page" defaultActiveKey="line" items={items} />
     </AppLayout>
   );
 };

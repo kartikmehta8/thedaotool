@@ -42,3 +42,49 @@ body.dark {
   outline: 2px solid #2684FF;
   outline-offset: 2px;
 }
+
+.tour-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(2px);
+  z-index: 10000;
+}
+
+.tour-highlight {
+  position: absolute;
+  border: 3px solid #2684FF;
+  border-radius: 6px;
+  pointer-events: none;
+  box-shadow: 0 0 0 4px rgba(38, 132, 255, 0.4),
+    0 0 8px 4px rgba(38, 132, 255, 0.35);
+}
+
+.tour-popover {
+  position: absolute;
+  background: var(--card-bg);
+  color: var(--text-color);
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  z-index: 10001;
+  max-width: 280px;
+}
+
+.tour-popover::after {
+  content: '';
+  position: absolute;
+  left: 20px;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+}
+
+.tour-popover.bottom::after {
+  top: -8px;
+  border-bottom: 8px solid var(--card-bg);
+}
+
+.tour-popover.top::after {
+  bottom: -8px;
+  border-top: 8px solid var(--card-bg);
+}

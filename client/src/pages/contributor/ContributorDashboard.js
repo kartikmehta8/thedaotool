@@ -69,7 +69,7 @@ const ContributorDashboard = () => {
         />
       </div>
 
-      <Row gutter={[16, 16]}>
+      <Row gutter={[16, 16]} data-tour="bounty-list">
         {filteredBountys.map((bounty) => (
           <BountyCard
             key={bounty.id}

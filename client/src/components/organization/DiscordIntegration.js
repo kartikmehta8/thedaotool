@@ -65,7 +65,7 @@ const DiscordIntegration = ({ uid, profile, setProfile }) => {
   };
 
   return (
-    <>
+    <div data-tour="discord-integration">
       <Paragraph style={{ marginTop: '1rem' }}>
         Connect Discord to post new bounties automatically to your channel.
       </Paragraph>
@@ -138,7 +138,7 @@ const DiscordIntegration = ({ uid, profile, setProfile }) => {
           Add to Discord
         </Button>
       )}
-    </>
+    </div>
   );
 };
 
