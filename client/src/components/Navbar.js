@@ -55,7 +55,11 @@ const Navbar = () => {
       </div>
       {screens.md ? (
         <Space>
-          <Button type="default" onClick={() => navigate('/insights')}>
+          <Button
+            type="default"
+            data-tour="insights-nav"
+            onClick={() => navigate('/insights')}
+          >
             Insights
           </Button>
           <Button type="default" onClick={() => navigate('/wallet')}>
@@ -112,6 +116,7 @@ const Navbar = () => {
           <Button
             type="default"
             block
+            data-tour="insights-nav"
             style={{ marginBottom: 8 }}
             onClick={() => {
               navigate('/insights');

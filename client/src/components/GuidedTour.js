@@ -39,6 +39,16 @@ const GuidedTour = ({ run, stepIndex, role, next, prev, exit }) => {
       content: 'Send payments to contributors.',
       path: '/wallet',
     },
+    {
+      target: '[data-tour="insights-nav"]',
+      content: 'View analytics for your organization.',
+      path: '/dashboard',
+    },
+    {
+      target: '[data-tour="analytics-page"]',
+      content: 'Track bounty stats and payments here.',
+      path: '/insights',
+    },
   ];
 
   const contribSteps = [
@@ -57,6 +67,16 @@ const GuidedTour = ({ run, stepIndex, role, next, prev, exit }) => {
       content: 'View payouts and manage your wallet.',
       path: '/wallet',
     },
+    {
+      target: '[data-tour="insights-nav"]',
+      content: 'Check your analytics.',
+      path: '/dashboard',
+    },
+    {
+      target: '[data-tour="analytics-page"]',
+      content: 'Analyze your contributions and payments.',
+      path: '/insights',
+    },
   ];
 
   const steps = role === 'organization' ? orgSteps : contribSteps;
@@ -64,13 +84,15 @@ const GuidedTour = ({ run, stepIndex, role, next, prev, exit }) => {
 
   useEffect(() => {
     if (!run || !step) return;
+
     if (step.path && step.path !== location.pathname) {
       navigate(step.path);
     }
-    const el = document.querySelector(step.target);
-    if (!el) return;
+
+    let el = document.querySelector(step.target);
 
     const update = () => {
+      if (!el) return;
       const r = el.getBoundingClientRect();
       const scrollY = window.scrollY;
       const scrollX = window.scrollX;
@@ -103,11 +125,23 @@ const GuidedTour = ({ run, stepIndex, role, next, prev, exit }) => {
       });
     };
 
-    update();
-    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    const check = () => {
+      el = document.querySelector(step.target);
+      if (el) {
+        update();
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    };
+
+    check();
+    const observer = new MutationObserver(check);
+    observer.observe(document.body, { childList: true, subtree: true });
+
     window.addEventListener('resize', update);
     window.addEventListener('scroll', update);
+
     return () => {
+      observer.disconnect();
       window.removeEventListener('resize', update);
       window.removeEventListener('scroll', update);
     };
