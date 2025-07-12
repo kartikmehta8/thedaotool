@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
 import { Layout, Button, Space, Drawer, Grid, Switch } from 'antd';
-import { MenuOutlined, BulbOutlined } from '@ant-design/icons';
+import {
+  MenuOutlined,
+  BulbOutlined,
+  QuestionCircleOutlined,
+} from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
+import { useTour } from '../context/TourContext';
 
 const { Header } = Layout;
 
@@ -11,6 +16,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const { user, setUser } = useAuth();
   const { dark, toggleTheme } = useTheme();
+  const { startTour, completed } = useTour();
   const role = user?.role;
 
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -55,7 +61,11 @@ const Navbar = () => {
           <Button type="default" onClick={() => navigate('/wallet')}>
             Wallet
           </Button>
-          <Button type="default" onClick={handleProfile}>
+          <Button
+            data-tour="profile-menu"
+            type="default"
+            onClick={handleProfile}
+          >
             Profile
           </Button>
           <Switch
@@ -65,6 +75,14 @@ const Navbar = () => {
             checkedChildren={<BulbOutlined aria-hidden="true" />}
             unCheckedChildren={<BulbOutlined aria-hidden="true" />}
           />
+          {!completed && (
+            <Button
+              type="text"
+              aria-label="Start tour"
+              icon={<QuestionCircleOutlined aria-hidden="true" />}
+              onClick={startTour}
+            />
+          )}
           <Button type="primary" onClick={handleLogout}>
             Logout
           </Button>
@@ -114,6 +132,7 @@ const Navbar = () => {
             Wallet
           </Button>
           <Button
+            data-tour="profile-menu"
             type="default"
             block
             style={{ marginBottom: 8 }}
@@ -133,6 +152,20 @@ const Navbar = () => {
               unCheckedChildren={<BulbOutlined aria-hidden="true" />}
             />
           </div>
+          {!completed && (
+            <Button
+              block
+              type="text"
+              style={{ marginBottom: 8 }}
+              icon={<QuestionCircleOutlined aria-hidden="true" />}
+              onClick={() => {
+                startTour();
+                setDrawerOpen(false);
+              }}
+            >
+              Start Tour
+            </Button>
+          )}
           <Button type="primary" block onClick={handleLogout}>
             Logout
           </Button>

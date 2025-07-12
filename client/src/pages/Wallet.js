@@ -75,6 +75,7 @@ const Wallet = () => {
             onChange={(e) => setAmount(e.target.value)}
           />
           <Button
+            data-tour="wallet-send"
             type="primary"
             onClick={handleSend}
             disabled={!toAddress || !amount}

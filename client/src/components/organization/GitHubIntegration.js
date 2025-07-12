@@ -50,7 +50,7 @@ const GitHubIntegration = ({ uid, profile, setProfile }) => {
   };
 
   return (
-    <>
+    <div data-tour="github-integration">
       <Paragraph style={{ marginTop: '1rem' }}>
         Link a GitHub repo to sync issues labeled <code>dao</code> as bounties.
       </Paragraph>
@@ -87,7 +87,7 @@ const GitHubIntegration = ({ uid, profile, setProfile }) => {
           Authorize GitHub
         </Button>
       )}
-    </>
+    </div>
   );
 };
 

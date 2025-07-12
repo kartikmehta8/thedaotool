@@ -47,6 +47,7 @@ const OrganizationDashboard = () => {
       <Title level={3}>My Bounties</Title>
       {!emailVerified && <EmailVerificationBanner email={user.email} />}
       <Button
+        data-tour="create-bounty"
         icon={<PlusOutlined />}
         onClick={() => {
           if (!emailVerified) {
@@ -61,7 +62,7 @@ const OrganizationDashboard = () => {
         Create Bounty
       </Button>
 
-      <Row gutter={[16, 16]}>
+      <Row gutter={[16, 16]} data-tour="bounty-list">
         {bounties.map((bounty) => (
           <BountyCard
             key={bounty.id}

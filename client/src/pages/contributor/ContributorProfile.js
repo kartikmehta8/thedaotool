@@ -77,6 +77,7 @@ const ContributorProfile = () => {
       }}
     >
       <Card
+        data-tour="profile-settings"
         className="form-card card-theme"
         style={{ width: 500, marginBottom: 20 }}
         loading={loading}
