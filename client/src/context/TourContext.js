@@ -20,16 +20,14 @@ export const TourProvider = ({ children }) => {
     setRun(true);
   };
 
-  const handleCallback = (data) => {
-    const { status, index, type } = data;
-    if (status === 'finished' || status === 'skipped') {
-      setRun(false);
-      setCompleted(true);
-      localStorage.setItem('tour_completed', 'true');
-    } else if (type === 'step:after') {
-      setStepIndex(index + 1);
-    }
+  const exitTour = () => {
+    setRun(false);
+    setCompleted(true);
+    localStorage.setItem('tour_completed', 'true');
   };
+
+  const nextStep = () => setStepIndex((i) => i + 1);
+  const prevStep = () => setStepIndex((i) => (i > 0 ? i - 1 : 0));
 
   return (
     <TourContext.Provider value={{ startTour, completed }}>
@@ -39,7 +37,9 @@ export const TourProvider = ({ children }) => {
           run={run}
           stepIndex={stepIndex}
           role={user.role}
-          callback={handleCallback}
+          next={nextStep}
+          prev={prevStep}
+          exit={exitTour}
         />
       )}
     </TourContext.Provider>

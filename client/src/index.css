@@ -42,3 +42,28 @@ body.dark {
   outline: 2px solid #2684FF;
   outline-offset: 2px;
 }
+
+.tour-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 10000;
+}
+
+.tour-highlight {
+  position: absolute;
+  border: 2px solid #2684FF;
+  border-radius: 4px;
+  pointer-events: none;
+}
+
+.tour-popover {
+  position: absolute;
+  background: var(--card-bg);
+  color: var(--text-color);
+  padding: 1rem;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  z-index: 10001;
+  max-width: 250px;
+}
