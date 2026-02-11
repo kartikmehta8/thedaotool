@@ -33,7 +33,7 @@
   "dependencies": {
     "@privy-io/server-auth": "^1.27.1",
     "@solana/web3.js": "^1.91.9",
-    "axios": "^1.8.4",
+    "axios": "^1.13.5",
     "bcryptjs": "^3.0.2",
     "bull": "^4.10.0",
     "compression": "^1.8.0",
